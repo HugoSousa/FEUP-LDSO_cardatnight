@@ -1,0 +1,8 @@
+src/server/obj/
+src/server/.ntvs_analysis.dat
+src/server/Server.njsproj
+src/Client ( Mobile )/bin/
+src/server/node_modules/*
+!src/server/node_modules
+!src/server/node_modules/config
+
