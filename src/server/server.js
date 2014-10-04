@@ -13,10 +13,15 @@ var bodyParser = require('body-parser')
 //Configuration
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
-app.use(bodyParser({
+
+
+app.use(bodyParser.json({ type: ['json','text/*'] }));
+/*
+app.use(bodyParser.json({
     maxBodySize: 65535,
     mapParams: false
-}));
+}));*/
+
 
 app.set('port', port);
 
