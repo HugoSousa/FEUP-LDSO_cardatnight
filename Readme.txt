@@ -1,1 +1,2 @@
-App running at http://nightout-app.herokuapp.com/
+App running at http://nightout-app.herokuapp.com/ 
+
