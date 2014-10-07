@@ -2,9 +2,9 @@ DROP TABLE IF EXISTS OrdersProduct;
 DROP TABLE IF EXISTS Product;
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS Cart;
-DROP TABLE IF EXISTS Employee;
-DROP TABLE IF EXISTS Manager;
-DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS worker;
+DROP TABLE IF EXISTS customer;
+DROP TABLE IF EXISTS person;
 DROP TABLE IF EXISTS Establishment;
 
 CREATE TABLE Establishment(
@@ -12,28 +12,27 @@ CREATE TABLE Establishment(
    name TEXT NOT NULL
 );
 
-CREATE TABLE Customer(
-   customerId SERIAL PRIMARY KEY NOT NULL,
-   name TEXT NOT NULL,
-   email TEXT NOT NULL,
-   username TEXT NOT NULL,
+CREATE TABLE person(
+   personId SERIAL PRIMARY KEY NOT NULL,
+   username TEXT UNIQUE NOT NULL,
    password TEXT NOT NULL
 );
 
-CREATE TABLE Manager(
-   managerId SERIAL PRIMARY KEY NOT NULL,
-   username TEXT NOT NULL,
-   password TEXT NOT NULL,
-   establishmentId INT NOT NULL,
-   FOREIGN KEY (establishmentId) REFERENCES Establishment(establishmentId)
+CREATE TABLE customer(
+   customerId SERIAL PRIMARY KEY NOT NULL,
+   name TEXT NOT NULL,
+   email TEXT NOT NULL,
+   FOREIGN KEY (customerId) REFERENCES person(personId)
 );
 
-CREATE TABLE Employee(
-   employeeId SERIAL PRIMARY KEY NOT NULL,
-   username TEXT NOT NULL,
-   password TEXT NOT NULL,
-   establishmentId INT NOT NULL,
-    FOREIGN KEY (establishmentId) REFERENCES Establishment(establishmentId)
+CREATE TYPE worker_permission AS ENUM ('employee', 'manager', 'porter');
+CREATE TABLE worker(
+   workerId SERIAL PRIMARY KEY NOT NULL,
+   establishmentId SERIAL NOT NULL,
+   permission worker_permission,
+   FOREIGN KEY (workerId) REFERENCES person(personId),
+   FOREIGN KEY (establishmentId) REFERENCES Establishment(establishmentId)
+   
 );
 
 CREATE TABLE Cart(
