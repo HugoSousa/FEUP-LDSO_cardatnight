@@ -48,7 +48,6 @@ app.factory('Orders', function() {
 
 app.factory('Places', function(){
 
-
     //fake places
     var places = [
         { id: 0, name: 'Discoteca X'},
@@ -59,6 +58,10 @@ app.factory('Places', function(){
     return {
         all: function() {
             return places;
+        },
+        get: function(placeId) {
+            // Simple index lookup
+            return places[placeId];
         }
     }
 })

@@ -5,6 +5,18 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
         $state.go('menu');
     }
 
+    $scope.logout = function(){
+        $state.go('login');
+    }
+
+    $scope.choosePlace = function(){
+        $state.go('places');
+    }
+
+    $scope.qrcode = function(){
+        $state.go('qrcode');
+    }
+
     $scope.register = function() {
         $state.go('register');
     };
@@ -93,4 +105,5 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
 
 .controller('PlacesCtrl', function($scope, $stateParams, Places) {
     $scope.places = Places.all();
+    $scope.place = Places.get($stateParams.placeId);
 })

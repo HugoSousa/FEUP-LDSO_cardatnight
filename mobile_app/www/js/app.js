@@ -79,10 +79,28 @@ app.config(function($stateProvider, $urlRouterProvider) {
             controller: 'OrdersCtrl'
         })
 
+        .state('places', {
+            url: '/places',
+            templateUrl: 'templates/places.html',
+            controller: 'PlacesCtrl'
+        })
+
+        .state('place-detail', {
+            url: '/place/:placeId',
+            templateUrl: 'templates/place-detail.html',
+            controller: 'PlacesCtrl'
+        })
+
         .state('history', {
             url: '/history',
             templateUrl: 'templates/history.html',
             controller: 'PlacesCtrl'
+        })
+
+        .state('qrcode', {
+            url: '/qrcode',
+            templateUrl: 'templates/qrcode.html',
+            controller: 'NavCtrl'
         })
 
     $urlRouterProvider.otherwise('/login');
