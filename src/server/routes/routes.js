@@ -17,7 +17,7 @@ module.exports = function (app, io) {
         var email = req.body.email;
         if (!username || !password || !name || !email) res.json({error: 'missing parameters'}); 
         else
-        db.addCustomer('test', 'test', username, password, function (err, result) {
+        db.addCustomer(name, email, username, password, function (err, result) {
                 if (err) res.json(err);
                 else res.json(result);
 
