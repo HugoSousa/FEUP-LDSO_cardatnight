@@ -37,12 +37,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
             controller: 'NavCtrl'
         })
 
-        .state('account-delete', {
-            url: '/account-delete',
-            templateUrl: 'templates/account-delete.html',
-            controller: 'NavCtrl'
-        })
-
         .state('forgot-password', {
             url: '/forgot-password',
             templateUrl: 'templates/forgot-password.html',
