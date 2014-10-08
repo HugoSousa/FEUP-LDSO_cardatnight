@@ -1,6 +1,7 @@
 var app = angular.module('controllers', ['highcharts-ng']);
 
-app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
+app.controller('NavCtrl', function($scope, $state, $ionicPopup, Restangular) {
+
     $scope.login = function(){
         $state.go('menu');
     }
@@ -91,6 +92,47 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
         xAxis: {currentMin: 0, currentMax: 10, minRange: 1},
         loading: false
     }
+
+
+})
+
+.controller('RegisterCtrl', function($scope, Restangular){
+    $scope.registerSubmit = function(){
+        console.log("REGISTO");
+
+        var resource = Restangular.all('register');
+
+        //console.log($scope.user);
+        /*
+         var example_register = {
+             username: "test_restangular5",
+             email: "test_restangular@gmail.com",
+             name: "test_restangular",
+             password: "test"
+         }*/
+
+         resource.post($scope.user).then(function(resp) {
+            console.log("ok");
+         }, function(resp) {
+            console.log("error");
+             console.log(resp);
+
+             if(resp.status == 409){
+                 //name invalid
+                 console.log("A");
+                 angular.element(document.getElementsByName("username")[0]).parent().addClass('has-error').removeClass('has-success');
+             }
+             else if(resp.status == 422){
+                 //email invalid
+                 console.log("B");
+                 angular.element(document.getElementsByName("email")[0]).parent().addClass('has-error').removeClass('has-success');
+             }
+
+            $scope.error = resp.data.error;
+
+         });
+
+    };
 })
 
 .controller('ProductsCtrl', function($scope, $stateParams, Products) {

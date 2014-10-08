@@ -1,26 +1,31 @@
 <ion-view hide-back-button="true" ng-controller="NavCtrl" title="AppName">
     <ion-content >
+        <form class="simple-form" name="registry" ng-controller="RegisterCtrl" novalidate on-valid-submit="registerSubmit()">
         <div class="list list-inset" >
-            <label class="item item-input item-floating-label topRoundedForm" >
+            <label class="item item-input item-floating-label topRoundedForm validated" >
                 <span class="input-label">Name</span>
-                <input type="text" placeholder="Name">
+                <input name="name" type="text" placeholder="Name" ng-required="true" ng-model="user.name">
             </label>
-            <label class="item item-input item-floating-label">
-                <span class="input-label">E-mail</span>
-                <input type="text" placeholder="E-mail">
+            <label class="item item-input item-floating-label validated">
+                <span class="input-label">E-mail </span>
+                <input name="email" type="email" placeholder="E-mail" required  ng-model="user.email">
+
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-floating-label validated">
                 <span class="input-label">Username</span>
-                <input type="text" placeholder="Username">
+                <input name="username" type="text" placeholder="Username" ng-required="true" ng-model="user.username">
             </label>
-            <label class="item item-input item-floating-label bottomRoundedForm">
+            <label class="item item-input item-floating-label bottomRoundedForm validated">
                 <span class="input-label">Password</span>
-                <input type="password" placeholder="Password">
+                <input name="password" type="password" placeholder="Password" ng-required="true" ng-model="user.password">
             </label>
+            <h4 style="width: 100%; color: red; text-align:center;" class="title">{{error}}</h4>
             <button class="button button-positive btnRounded">
                 Register
             </button>
         </div>
+        </form>
+
     </ion-content>
     <ion-footer-bar class="bar-stable">
         <h1 class="title">powered by AppName</h1>
