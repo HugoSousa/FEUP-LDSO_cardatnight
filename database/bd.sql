@@ -1,78 +1,73 @@
-DROP TABLE IF EXISTS OrdersProduct;
-DROP TABLE IF EXISTS Product;
-DROP TABLE IF EXISTS Orders;
-DROP TABLE IF EXISTS Cart;
-DROP TABLE IF EXISTS worker;
-DROP TABLE IF EXISTS customer;
-DROP TABLE IF EXISTS person;
-DROP TABLE IF EXISTS Establishment;
+drop table if exists orders;
+drop table if exists product;
+drop table if exists cart;
+drop table if exists worker;
+drop table if exists customer;
+drop table if exists person;
+drop table if exists establishment;
+drop type if exists worker_permission;
 
-CREATE TABLE Establishment(
-   establishmentId SERIAL PRIMARY KEY NOT NULL,
-   name TEXT NOT NULL
+create table establishment(
+   establishmentid serial primary key not null,
+   name text not null
 );
 
-CREATE TABLE person(
-   personId SERIAL PRIMARY KEY NOT NULL,
-   username TEXT UNIQUE NOT NULL,
-   password TEXT NOT NULL
+create table person(
+   personid serial primary key not null,
+   username text unique not null,
+   password text not null
 );
 
-CREATE TABLE customer(
-   customerId SERIAL PRIMARY KEY NOT NULL,
-   name TEXT NOT NULL,
-   email TEXT NOT NULL,
-   FOREIGN KEY (customerId) REFERENCES person(personId)
+create table customer(
+   customerid int primary key not null,
+   name text not null,
+   email text not null,
+   foreign key (customerid) references person(personid)
 );
 
-CREATE TYPE worker_permission AS ENUM ('employee', 'manager', 'porter');
-CREATE TABLE worker(
-   workerId SERIAL PRIMARY KEY NOT NULL,
-   establishmentId SERIAL NOT NULL,
+create type worker_permission as enum ('employee', 'manager', 'doorman');
+
+create table worker(
+   workerid int primary key not null,
+   establishmentid int not null,
    permission worker_permission,
-   FOREIGN KEY (workerId) REFERENCES person(personId),
-   FOREIGN KEY (establishmentId) REFERENCES Establishment(establishmentId)
-   
+   foreign key (workerid) references person(personid),
+   foreign key (establishmentid) references establishment(establishmentid)
 );
 
-CREATE TABLE Cart(
-   cartId SERIAL PRIMARY KEY NOT NULL,
-   balance DOUBLE PRECISION CHECK (balance >= 0),
-   credit DOUBLE PRECISION CHECK (credit >= 0),
-   entranceTime TIMESTAMP DEFAULT current_timestamp,
-   exitTime TIMESTAMP,
-   paid BOOLEAN NOT NULL,
-   establishmentId INT NOT NULL,
-   customerId INT NOT NULL,
-   FOREIGN KEY (establishmentId) REFERENCES Establishment(establishmentId),
-   FOREIGN KEY (customerId) REFERENCES Customer(customerId)
+create table cart(
+   cartid serial primary key not null,
+   balance double precision check (balance >= 0),
+   credit double precision check (credit >= 0),
+   entrancetime timestamp default current_timestamp,
+   exittime timestamp,
+   paid boolean not null,
+   establishmentid int not null,
+   customerid int not null,
+   qrcode text not null,
+   foreign key (establishmentid) references establishment(establishmentid),
+   foreign key (customerid) references customer(customerid)
+);
+
+create table product(
+   productid serial primary key not null,
+   description text,
+   image text,
+   name text not null,
+   price double precision check (price >= 0),
+   establishmentid int not null,
+   foreign key (establishmentid) references establishment(establishmentid)
+);
+
+create table orders(
+   ordersid serial primary key not null,
+   orderstime timestamp default current_timestamp,
+   ready boolean not null,
+   cartid int not null,
+   productid int not null,
+   quantity int check(quantity>0),
+   foreign key (cartid) references cart(cartid),
+   foreign key (productid) references product(productid)
 );
 
 
-CREATE TABLE Orders(
-   ordersId SERIAL PRIMARY KEY NOT NULL,
-   ordersTime TIMESTAMP DEFAULT current_timestamp,
-   ready BOOLEAN NOT NULL,
-   cartId INT NOT NULL,
-   FOREIGN KEY (cartId) REFERENCES Cart(cartId)
-);
-
-
-CREATE TABLE Product(
-   productId SERIAL PRIMARY KEY NOT NULL,
-   description TEXT,
-   image TEXT,
-   name TEXT NOT NULL,
-   price DOUBLE PRECISION CHECK (price >= 0),
-	establishmentId INT NOT NULL,
-    FOREIGN KEY (establishmentId) REFERENCES Establishment(establishmentId)
-);
-
-CREATE TABLE OrdersProduct(
-quantity INT CHECK(quantity>0),
-ordersId INT NOT NULL,
-FOREIGN KEY (ordersId) REFERENCES Orders(ordersId),
-productId INT NOT NULL,
-FOREIGN KEY (productId) REFERENCES Product(productId),
-PRIMARY KEY (ordersId, productId)
-);
