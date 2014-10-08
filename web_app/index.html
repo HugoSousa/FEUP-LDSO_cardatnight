@@ -204,8 +204,8 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="customersModalLabel">Customers</h4>
       </div>
-      <div class="modal-body">
-                                    <table id="example1" class="table table-bordered table-striped">
+      <div class="modal-body" ng-app="customerApp">
+                                    <table id="example1" class="table table-bordered table-striped" ng-controller="CustomerController as bar">
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
@@ -215,40 +215,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>José Faria</td>
-                                                <td>rui_games@sapo.pt</td>
-                                                <td>9001</td>
-                                                <td>
-													<button type="button" class="btn btn-primary">
-														Delete information
-													</button>
-												</td>
-                                            </tr>
-											<tr>
-                                                <td>Gil Rocha</td>
-                                                <td>gilrocha1993@gmail.com</td>
-                                                <td>100</td>
-                                                <td>
-													<button type="button" class="btn btn-primary">
-														Delete information
-													</button>
-												</td>
-                                            </tr>
-											<tr>
-                                                <td>João Nadais</td>
-                                                <td>joaonadais@gmail.com</td>
-                                                <td>20</td>
-                                                <td>
-													<button type="button" class="btn btn-primary">
-														Delete information
-													</button>
-												</td>
-                                            </tr>
-											<tr>
-                                                <td>João Semedo</td>
-                                                <td>joaosousasemedo293@gmail.com</td>
-                                                <td>0</td>
+                                            <tr ng-repeat="customer in bar.customers">
+                                                <td>{{customer.name}}</td>
+                                                <td>{{customer.email}}</td>
+                                                <td>{{customer.balance}}</td>
                                                 <td>
 													<button type="button" class="btn btn-primary">
 														Delete information
@@ -274,7 +244,9 @@
 
         <!-- AdminLTE for demo purposes -->
         <script src="js/AdminLTE/demo.js" type="text/javascript"></script>
-		
+		<!-- AngularJS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js" type="text/javascript"></script>
+		<script src="js/angular/customers.js" type="text/javascript"></script>
 		<!-- Data tables -->
 		<script src="js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
         <script src="js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
