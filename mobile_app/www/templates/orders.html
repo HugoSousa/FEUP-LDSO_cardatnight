@@ -1,0 +1,25 @@
+<ion-view ng-controller="OrdersCtrl" title="hugo_sousa">
+    <ion-content has-header="true" class="padding">
+        <h1 class="tableTitle">Orders</h1>
+        <ion-list >
+            <ion-item ng-repeat="order in orders" type="item-text-wrap" href="#/order/{{order.id}}">
+                <div class="row">
+                    <div class="col col-25" style="text-align: left">{{order.date}}</div>
+                    <div class="col col-50" style="text-align: right">{{order.code}}</div>
+
+                    <div ng-if="order.ready == true" class="col col-25" style="text-align: right">
+                        <i style="font-size: 150%" class="ion-ios7-checkmark"></i>
+                    </div>
+                    <div ng-if="order.ready == false" class="col col-25" style="text-align: right">
+                        <i style="font-size: 150%" class="ion-ios7-more"></i>
+                    </div>
+
+                </div>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+    <ion-footer-bar class="bar-stable">
+        <h1 class="title">powered by AppName</h1>
+    </ion-footer-bar>
+</ion-view>

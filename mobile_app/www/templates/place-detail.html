@@ -1,0 +1,23 @@
+<ion-view ng-controller="NavCtrl" title="hugo_sousa">
+    <ion-content has-header="true" padding="true">
+        <div class="list card">
+            <div class="item item-avatar">
+                <img src="app_logo.jpg">
+                <h2>{{place.name}}</h2>
+            </div>
+
+            <div class="item item-body">
+                Morada
+            </div>
+        </div>
+
+        <div>
+            <button class="button button-positive btnRounded" ng-click="qrcode()">
+                Enter
+            </button>
+        </div>
+    </ion-content>
+    <ion-footer-bar class="bar-stable">
+        <h1 class="title">powered by AppName</h1>
+    </ion-footer-bar>
+</ion-view>

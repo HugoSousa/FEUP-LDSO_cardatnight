@@ -1,6 +1,6 @@
 
 var path = require('path');
-var register = require('./modules/register.js');
+var db = require('./modules/database.js');
 
 module.exports = function (app, io) {
     
@@ -11,19 +11,19 @@ module.exports = function (app, io) {
     
     app.post('/register', function (req, res) {
 
-        var email = req.body.email; // Getting the parameters
+        var username = req.body.username; // TODO CHECK PROPER REGEX EMAIL /USER/PW
         var password = req.body.password;
-        var error = 'Missing parameters';
-        if (!email || !password) res.json(error); // TODO body is as json
-        else res.json(register.register(email,password,null));
-        /*
-        register.useremail(email, password, function (found)
-        {
-            //Register function to perform register event
-            console.log(found); // Prints the results in Console.(Optional)
-            res.json(found); // Returns the result back to user in JSON format
+        var name = req.body.name;
+        var email = req.body.email;
+        if (!username || !password || !name || !email) res.json({error: 'missing parameters'}); 
+        else
+        db.addCustomer(name, email, username, password, function (err, result) {
+                if (err) res.json(err);
+                else res.json(result);
+
         });
-        */
+
+
     });
     
 

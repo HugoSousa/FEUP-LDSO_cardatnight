@@ -1,0 +1,40 @@
+<ion-view hide-back-button="true" ng-controller="NavCtrl" title="hugo_sousa">
+    <div class="bar bar-stable bar-subheader">
+        <h2 class="title">Via Rápida</h2>
+    </div>
+    <ion-content has-header="true">
+
+        <div class="row" style="margin-top: 15%">
+            <div class="col">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goProducts()">
+                    <i class="ionSize ion-ios7-paper"></i><br>Products
+                </button>
+            </div>
+            <div class="col">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goOrders()">
+                    <i class="ionSize ion-ios7-pricetags"></i><br>Orders
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goHistory()">
+                    <i class="ionSize ion-ios7-bookmarks"></i><br>History
+                </button>
+            </div>
+            <div class="col">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goAccount()">
+                    <i class="ionSize ion-ios7-person"></i><br>Account
+                </button>
+            </div>
+        </div>
+
+
+    </ion-content>
+    <ion-footer-bar class="bar-stable">
+        <h1 class="title">powered by AppName</h1>
+    </ion-footer-bar>
+</ion-view>
+
+
+

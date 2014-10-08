@@ -8,15 +8,22 @@ var app = express();
 var port = process.env.PORT || 1337;
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+
+
 
 //Configuration
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('dev'));
-app.use(bodyParser({
+
+
+app.use(bodyParser.json({ type: ['json','text/*'] }));
+/*
+app.use(bodyParser.json({
     maxBodySize: 65535,
     mapParams: false
-}));
+}));*/
+
 
 app.set('port', port);
 

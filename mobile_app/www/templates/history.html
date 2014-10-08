@@ -1,0 +1,22 @@
+<ion-view ng-controller="PlacesCtrl" title="hugo_sousa">
+    <ion-content has-header="true" class="padding">
+        <label class="item item-icon-right">
+            <select ng-model="selectedPlace" style="opacity:0; width:100%; position:absolute; z-index:100" ng-options="place.name for place in places">
+                <option value="" name="All" >All</option>
+            </select>
+            <span class="input-label">{{selectedPlace.name}}</span>
+            <i class="icon ion-ios7-arrow-down"></i>
+        </label>
+        <br>
+        <div class="item-note alignCenter" style="width:100%; font-size: 120%">Average Spending per Entrance</div>
+        <h3 class="alignCenter" style="font-weight: bold">5.50€</h3>
+
+        <div ng-controller="NavCtrl" style="width: 100%">
+            <highchart id="chart1" config="chartConfig"></highchart>
+        </div>
+
+    </ion-content>
+    <ion-footer-bar class="bar-stable">
+        <h1 class="title">powered by AppName</h1>
+    </ion-footer-bar>
+</ion-view>

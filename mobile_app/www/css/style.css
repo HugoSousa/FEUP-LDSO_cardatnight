@@ -1,0 +1,65 @@
+/* Empty. Add your own CSS if you like */
+.btnBlockHome{
+    height: 30vh;
+    width: 100%;
+    border-radius: 5px;
+    font-family: "Helvetica";
+}
+
+.ionSize{
+    font-size: 50px;
+}
+
+.row{
+    text-align: center;
+}
+
+.smallFont{
+    font-size: 90% !important;
+}
+
+a.item-content{
+    padding-right: 2% !important;
+    padding-left: 2% !important;
+    padding-bottom: 2% !important;
+    padding-top: 2% !important;
+}
+
+ion-item.item{
+    padding-right: 2% !important;
+    padding-left: 2% !important;
+    padding-bottom: 1% !important;
+    padding-top: 3% !important;
+}
+
+.btnRounded{
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.formRounded{
+    border-radius: 5px !important;
+}
+
+.alignRight{
+    text-align: right;
+}
+
+.alignCenter{
+    text-align: center;
+}
+
+.tableTitle{
+    style: "font-family: Trebuchet MS";
+}
+
+.bottomRoundedForm{
+    border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+
+.topRoundedForm{
+    border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
+}
