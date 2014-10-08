@@ -1,6 +1,7 @@
 
 var path = require('path');
 var db = require('./modules/database.js');
+var validator = require('validator');
 
 module.exports = function (app, io) {
     
@@ -11,17 +12,22 @@ module.exports = function (app, io) {
     
     app.post('/register', function (req, res) {
 
-        var username = req.body.username; // TODO CHECK PROPER REGEX EMAIL /USER/PW
+        var username = req.body.username;
         var password = req.body.password;
         var name = req.body.name;
         var email = req.body.email;
-        if (!username || !password || !name || !email) res.json({error: 'missing parameters'}); 
-        else
-        db.addCustomer(name, email, username, password, function (err, result) {
-                if (err) res.json(err);
-                else res.json(result);
+        res.status(422);
+        if (!username || !password || !name || !email) res.json( { error: 'missing parameters' });
+        else if (!(validator.isEmail(email) && validator.isLength(email,0,64))) res.json(422, { error: 'Email not valid' });
+        else if (!(validator.isLength(username,3,25) && !validator.contains(username,' '))) res.json( { error: 'Username not valid' });
+        else {
+            res.status(200);
+            db.addCustomer(name, email, username, password, function (err, result) {
+                if (err) res.status(409).json(err);
+                else res.status(200).json(result);
 
-        });
+            });
+        }
 
 
     });
