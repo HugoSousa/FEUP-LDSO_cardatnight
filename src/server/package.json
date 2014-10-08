@@ -10,6 +10,9 @@
     "pg": "^3.4.5",
     "connect": "^3.2.0",
     "csprng": "^0.1.1",
-    "body-parser": "^1.9.0"
+    "body-parser": "^1.9.0",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "validator": "^3.19.1"
   }
 }
