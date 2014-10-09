@@ -5,7 +5,7 @@ var database_url = process.env.DATABASE_URL || 'postgres://udkegzydszxlfg:abUNsy
 
 
 exports.addCustomer = function (name, email , username , password, callback) { //Improvement to do: encapsulate in transaction
-    pg.connect(database_url , function (err, client) {
+    pg.connect(database_url , function (err, client, done) {
         if (err) {
             callback({ error: 'Failed to connecto do database' }, null);
         }
@@ -30,6 +30,8 @@ exports.addCustomer = function (name, email , username , password, callback) { /
                 }
             });
         }
+
+        done();
     });
 
 }   

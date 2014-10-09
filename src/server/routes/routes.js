@@ -7,6 +7,18 @@ var validator = require('validator');
 
 module.exports = function (app, io, passport) {
     
+    app.all('*', function (req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+    
+    
+    
+    app.post('/', function (req, res, next) {
+ // Handle the post for this route
+    });
+
     // default route
     app.get('/', function (req, res) {
         res.sendFile(path.join(__dirname, 'index.html'));
