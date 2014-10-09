@@ -73,19 +73,19 @@ module.exports = function (app, io) {
     });
     
     app.get('/testlogin_customer', function (req, res, next) {
-        res.json(req.user);
+        res.status(200).json(req.user);
     
     });
     app.get('/testlogin_manager', function (req, res, next) {
-        res.json(req.user);
+        res.status(200).json(req.user);
     
     });
     app.get('/testlogin_employee', function (req, res, next) {
-        res.json(req.user);
+        res.status(200).json(req.user);
     
     });
     app.get('/testlogin_doorman', function (req, res, next) {
-        res.json(req.user);
+        res.status(200).json(req.user);
     
     });
 
