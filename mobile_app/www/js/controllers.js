@@ -96,72 +96,59 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, Restangular) {
 
 })
 
-    .controller('RegisterCtrl', function($scope, Restangular){
-        $scope.registerSubmit = function(){
-            var resource = Restangular.all('register');
+.controller('RegisterCtrl', function($scope, Restangular){
+    $scope.registerSubmit = function(){
+        console.log("REGISTO");
 
-            console.log($scope.user);
-            /*
-             var example_register = {
+        var resource = Restangular.all('register');
+
+        //console.log($scope.user);
+        /*
+         var example_register = {
              username: "test_restangular5",
              email: "test_restangular@gmail.com",
              name: "test_restangular",
              password: "test"
-             }*/
+         }*/
 
-            resource.post($scope.user).then(function(resp) {
-                console.log("ok");
-            }, function(resp) {
-                console.log("error");
-                console.log(resp);
+         resource.post($scope.user).then(function(resp) {
+            console.log("ok");
+         }, function(resp) {
+            console.log("error");
+             console.log(resp);
 
-                if(resp.status == 409){
-                    //name invalid
-                    console.log("A");
-                    angular.element(document.getElementsByName("username")[0]).parent().addClass('has-error').removeClass('has-success');
-                }
-                else if(resp.status == 422){
-                    //email invalid
-                    console.log("B");
-                    angular.element(document.getElementsByName("email")[0]).parent().addClass('has-error').removeClass('has-success');
-                }
+             if(resp.status == 409){
+                 //name invalid
+                 console.log("A");
+                 angular.element(document.getElementsByName("username")[0]).parent().addClass('has-error').removeClass('has-success');
+             }
+             else if(resp.status == 422){
+                 //email invalid
+                 console.log("B");
+                 angular.element(document.getElementsByName("email")[0]).parent().addClass('has-error').removeClass('has-success');
+             }
 
-                $scope.error = resp.data.error;
+            $scope.error = resp.data.error;
 
-            });
+         });
 
-        };
-    })
+    };
+})
 
-    .controller('ProductsCtrl', function($scope, $stateParams, Products, Restangular) {
-        $scope.products = Products.all();
-        $scope.product = Products.get($stateParams.productId);
+.controller('ProductsCtrl', function($scope, $stateParams, Products) {
+    $scope.products = Products.all();
+    //console.log(products);
+    //$scope.products = products;
 
-        $scope.orderSubmit = function(){
-            var resource = Restangular.all('order');
+    //$scope.product = Products.get($stateParams.productId);
+})
 
-            console.log($scope.orderData);
+.controller('OrdersCtrl', function($scope, $stateParams, Orders) {
+    $scope.orders = Orders.all();
+    $scope.order = Orders.get($stateParams.orderId);
+})
 
-            resource.post($scope.orderData).then(function(resp) {
-                console.log("ok");
-                console.log(resp);
-            }, function(resp) {
-                console.log("error");
-                console.log(resp);
-
-                $scope.error = resp.data.error;
-
-            });
-
-        };
-    })
-
-    .controller('OrdersCtrl', function($scope, $stateParams, Orders) {
-        $scope.orders = Orders.all();
-        $scope.order = Orders.get($stateParams.orderId);
-    })
-
-    .controller('PlacesCtrl', function($scope, $stateParams, Places) {
-        $scope.places = Places.all();
-        $scope.place = Places.get($stateParams.placeId);
-    })
+.controller('PlacesCtrl', function($scope, $stateParams, Places) {
+    $scope.places = Places.all();
+    $scope.place = Places.get($stateParams.placeId);
+})

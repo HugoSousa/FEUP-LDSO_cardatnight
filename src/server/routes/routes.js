@@ -1,24 +1,10 @@
 
 var path = require('path');
-var jwt = require ("jwt-simple")
-var moment = require('moment');
 var db = require('./modules/database.js');
 var validator = require('validator');
 
-module.exports = function (app, io, passport) {
+module.exports = function (app, io) {
     
-    app.all('*', function (req, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
-    });
-    
-    
-    
-    app.post('/', function (req, res, next) {
- // Handle the post for this route
-    });
-
     // default route
     app.get('/', function (req, res) {
         res.sendFile(path.join(__dirname, 'index.html'));
@@ -45,42 +31,15 @@ module.exports = function (app, io, passport) {
 
 
     });
-    
-    
-    app.post('/login', function (req, res, next) {
-        
-        passport.authenticate('local-login', function (err, user, info) {
-            if (err) return next(err);
-            if (!user)
-                return res.json(401, { error: 'error message' });
 
-            var expires = moment().add('days', 7).valueOf();
-            var token = generateToken(user.username, expires);
-             res.status(200).json({
-                access_token: token,
-                exp: expires,
-                user: user
-            });
+    app.get('/products/:estabid', function(req, res){
 
-        })(req, res);
-    
-    
+        db.getProductsEstablishment(req.params.estabid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
     });
-    
-    
-    app.get('/testlogin', function (req, res, next) {
-        res.json(req.user);
-    
-    });
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 
     io.on('connection', function (socket) {
@@ -97,14 +56,4 @@ module.exports = function (app, io, passport) {
 
     });
 
-    function generateToken(username, expirationDate) {
-        var token = jwt.encode({
-            username: username,
-            exp: expirationDate
-        }, app.get('tokenSecret'));
-        
-        return token;
-    }
-
 }
-
