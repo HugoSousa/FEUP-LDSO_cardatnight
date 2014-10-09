@@ -26,6 +26,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, Restangular) {
         $state.go('products');
     }
 
+    $scope.goProduct = function(id){
+        $state.go('product');
+    }
+
     $scope.goOrders = function(){
         $state.go('orders');
     }
@@ -96,72 +100,77 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, Restangular) {
 
 })
 
-    .controller('RegisterCtrl', function($scope, Restangular){
-        $scope.registerSubmit = function(){
-            var resource = Restangular.all('register');
+.controller('RegisterCtrl', function($scope, Restangular){
+    $scope.registerSubmit = function(){
+        console.log("REGISTO");
 
-            console.log($scope.user);
-            /*
-             var example_register = {
+        var resource = Restangular.all('register');
+
+        //console.log($scope.user);
+        /*
+         var example_register = {
              username: "test_restangular5",
              email: "test_restangular@gmail.com",
              name: "test_restangular",
              password: "test"
-             }*/
+         }*/
 
-            resource.post($scope.user).then(function(resp) {
-                console.log("ok");
-            }, function(resp) {
-                console.log("error");
-                console.log(resp);
+         resource.post($scope.user).then(function(resp) {
+            console.log("ok");
+         }, function(resp) {
+            console.log("error");
+             console.log(resp);
 
-                if(resp.status == 409){
-                    //name invalid
-                    console.log("A");
-                    angular.element(document.getElementsByName("username")[0]).parent().addClass('has-error').removeClass('has-success');
-                }
-                else if(resp.status == 422){
-                    //email invalid
-                    console.log("B");
-                    angular.element(document.getElementsByName("email")[0]).parent().addClass('has-error').removeClass('has-success');
-                }
+             if(resp.status == 409){
+                 //name invalid
+                 console.log("A");
+                 angular.element(document.getElementsByName("username")[0]).parent().addClass('has-error').removeClass('has-success');
+             }
+             else if(resp.status == 422){
+                 //email invalid
+                 console.log("B");
+                 angular.element(document.getElementsByName("email")[0]).parent().addClass('has-error').removeClass('has-success');
+             }
 
-                $scope.error = resp.data.error;
+            $scope.error = resp.data.error;
 
-            });
+         });
 
-        };
-    })
+    };
+})
 
-    .controller('ProductsCtrl', function($scope, $stateParams, Products, Restangular) {
-        $scope.products = Products.all();
-        //$scope.product = Products.get($stateParams.productId);
+.controller('ProductsCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
 
-        $scope.orderSubmit = function(){
-            var resource = Restangular.all('order');
+    console.log("here");
+    $scope.loading = $ionicLoading.show({
+        showBackdrop: false
+    });
 
-            console.log($scope.orderData);
+    var products = Restangular.one('products').getList(4).then(function(data){
+        $scope.products = data;
+        $ionicLoading.hide();
+    });
+})
 
-            resource.post($scope.orderData).then(function(resp) {
-                console.log("ok");
-                console.log(resp);
-            }, function(resp) {
-                console.log("error");
-                console.log(resp);
+.controller('ProductCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
 
-                $scope.error = resp.data.error;
+    $scope.loading = $ionicLoading.show({
+        showBackdrop: false
+    });
 
-            });
+    var product = Restangular.one('product', $stateParams.productId).get().then(function(data){
+        $scope.product = data[0];
 
-        };
-    })
+        $ionicLoading.hide();
+    });
+})
 
-    .controller('OrdersCtrl', function($scope, $stateParams, Orders) {
-        $scope.orders = Orders.all();
-        $scope.order = Orders.get($stateParams.orderId);
-    })
+.controller('OrdersCtrl', function($scope, $stateParams, Orders) {
+    $scope.orders = Orders.all();
+    $scope.order = Orders.get($stateParams.orderId);
+})
 
-    .controller('PlacesCtrl', function($scope, $stateParams, Places) {
-        $scope.places = Places.all();
-        $scope.place = Places.get($stateParams.placeId);
-    })
+.controller('PlacesCtrl', function($scope, $stateParams, Places) {
+    $scope.places = Places.all();
+    $scope.place = Places.get($stateParams.placeId);
+})

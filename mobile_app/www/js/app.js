@@ -65,7 +65,7 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
         .state('product-detail', {
             url: '/product/:productId',
             templateUrl: 'templates/product-detail.html',
-            controller: 'ProductsCtrl'
+            controller: 'ProductCtrl'
         })
 
         .state('orders', {
