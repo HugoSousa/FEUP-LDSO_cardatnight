@@ -37,7 +37,7 @@ module.exports = function (app, io, passport) {
         else {
             res.status(200);
             db.addCustomer(name, email, username, password, function (err, result) {
-                if (err) res.status(409).json(err);
+                if (err) res.status(409).json({ error: err });
                 else res.status(200).json(result);
 
             });
@@ -52,7 +52,7 @@ module.exports = function (app, io, passport) {
         passport.authenticate('local-login', function (err, user, info) {
             if (err) return next(err);
             if (!user)
-                return res.json(401, { error: 'error message' });
+                return res.json(401, { error: info});
 
             var expires = moment().add('days', 7).valueOf();
             var token = generateToken(user.username, expires);
@@ -68,7 +68,19 @@ module.exports = function (app, io, passport) {
     });
     
     
-    app.get('/testlogin', function (req, res, next) {
+    app.get('/testlogin_customer', function (req, res, next) {
+        res.json(req.user);
+    
+    });
+    app.get('/testlogin_manager', function (req, res, next) {
+        res.json(req.user);
+    
+    });
+    app.get('/testlogin_employee', function (req, res, next) {
+        res.json(req.user);
+    
+    });
+    app.get('/testlogin_doorman', function (req, res, next) {
         res.json(req.user);
     
     });
@@ -105,6 +117,7 @@ module.exports = function (app, io, passport) {
         
         return token;
     }
+
 
 }
 

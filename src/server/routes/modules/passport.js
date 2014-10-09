@@ -9,8 +9,8 @@ module.exports = function (passport) {
         done(null, user.username);
     });
     
-    passport.deserializeUser(function (id, done) {
-        User.findById(id, function (err, user) {
+    passport.deserializeUser(function (username, done) {
+        User.findById(username, function (err, user) {
             done(err, user);
         });
     });
@@ -22,11 +22,18 @@ module.exports = function (passport) {
         },
         function (req, username, password, done) {
         
-        db.getUser(username, password, function (err, user) { 
-                if (err || !user)
-                    return done(null, false, err);
-                else return done(null, user);
-            
+        db.getUser(username, function (err, user) {
+            if (err || !user)
+                return done(null, false, err);
+            else {
+                
+                if (user.password !== password)
+                    return done(null, false, "Wrong password.");
+                else {
+                    delete user.password; // line can be removed, only here to avoid sending password back where it should no longer be needed
+                    return done(null, user);
+                }
+            }
 
             });
         

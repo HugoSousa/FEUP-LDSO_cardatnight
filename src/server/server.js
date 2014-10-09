@@ -15,7 +15,11 @@ var session = require('express-session');
 require('./routes/modules/passport')(passport);
 require('./routes/modules/jwtAuth.js')(app);
 
-app.use(session({ secret: 'wealllikeicecream' }));
+app.use(session({
+    secret: 'wealllikeicecream' ,
+    saveUninitialized: true,
+    resave: true
+}));
 app.use(passport.session());
 
 //Configuration
