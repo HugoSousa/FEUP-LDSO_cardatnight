@@ -1,9 +1,11 @@
 
 var path = require('path');
+var jwt = require ("jwt-simple")
+var moment = require('moment');
 var db = require('./modules/database.js');
 var validator = require('validator');
 
-module.exports = function (app, io) {
+module.exports = function (app, io, passport) {
     
     // default route
     app.get('/', function (req, res) {
@@ -32,6 +34,42 @@ module.exports = function (app, io) {
 
     });
     
+    
+    app.post('/login', function (req, res, next) {
+        
+        passport.authenticate('local-login', function (err, user, info) {
+            if (err) return next(err);
+            if (!user)
+                return res.json(401, { error: 'error message' });
+
+            var expires = moment().add('days', 7).valueOf();
+            var token = generateToken(user.username, expires);
+             res.status(200).json({
+                access_token: token,
+                exp: expires,
+                user: user
+            });
+
+        })(req, res);
+    
+    
+    });
+    
+    
+    app.get('/testlogin', function (req, res, next) {
+        res.json(req.user);
+    
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     io.on('connection', function (socket) {
         console.log('a user connected');
@@ -47,4 +85,14 @@ module.exports = function (app, io) {
 
     });
 
+    function generateToken(username, expirationDate) {
+        var token = jwt.encode({
+            username: username,
+            exp: expirationDate
+        }, app.get('tokenSecret'));
+        
+        return token;
+    }
+
 }
+

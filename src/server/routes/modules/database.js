@@ -31,5 +31,17 @@ exports.addCustomer = function (name, email , username , password, callback) { /
             });
         }
     });
+
+}   
     
+exports.getUser = function (username, password, callback) {
+
+    callback(null, { username: username, password: password }); 
+
+
+
+
+
+
 }
+        
