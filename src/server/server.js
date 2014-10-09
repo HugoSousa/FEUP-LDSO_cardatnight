@@ -30,11 +30,8 @@ app.all('*', function(req, res, next) {
   next();
  });
 
-
-
 app.set('port', port);
-
-require('./routes/routes.js')(app, io);
+require('./routes/routes.js')(app, io, passport);
 
 //start server
 http.listen(port , function () {
