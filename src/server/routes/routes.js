@@ -4,12 +4,12 @@ var db = require('./modules/database.js');
 var validator = require('validator');
 
 module.exports = function (app, io) {
-    
+
     // default route
     app.get('/', function (req, res) {
         res.sendFile(path.join(__dirname, 'index.html'));
     });
-    
+
     app.post('/register', function (req, res) {
 
         var username = req.body.username;
@@ -32,6 +32,26 @@ module.exports = function (app, io) {
 
     });
 
+    app.post('/order', function (req, res) {
+
+        var cardid = req.body.cardid;
+        var productid = req.body.productid;
+        var quantity = req.body.quantity;
+
+        res.status(422);
+
+        if (!cardid || !productid || !quantity ) res.json( { error: 'missing parameters' });
+        else {
+            res.status(200);
+
+            db.addOrder(false, cardid, productid, quantity, function (err, result) {
+                if (err) res.status(409).json(err);
+                else res.status(200).json(result);
+
+            });
+        }
+    });
+
     app.get('/products/:estabid', function(req, res){
 
         db.getProductsEstablishment(req.params.estabid, function(err, result){
@@ -40,15 +60,25 @@ module.exports = function (app, io) {
         });
 
     });
-    
+
+
+    app.get('/product/:productid', function(req, res){
+
+        db.getProduct(req.params.productid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
+    });    
+
 
     io.on('connection', function (socket) {
         console.log('a user connected');
-                
+
         socket.on('disconnect', function () {
             console.log('user disconnected');
         });
-        
+
         socket.on('chat message', function (msg) {
             io.emit('chat message', msg);
             console.log('message: ' + msg);
