@@ -26,6 +26,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, Restangular) {
         $state.go('products');
     }
 
+    $scope.goProduct = function(id){
+        $state.go('product');
+    }
+
     $scope.goOrders = function(){
         $state.go('orders');
     }
@@ -135,9 +139,30 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, Restangular) {
     };
 })
 
-.controller('ProductsCtrl', function($scope, $stateParams, Products) {
-    $scope.products = Products.all();
-    $scope.product = Products.get($stateParams.productId);
+.controller('ProductsCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
+
+    console.log("here");
+    $scope.loading = $ionicLoading.show({
+        showBackdrop: false
+    });
+
+    var products = Restangular.one('products').getList(4).then(function(data){
+        $scope.products = data;
+        $ionicLoading.hide();
+    });
+})
+
+.controller('ProductCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
+
+    $scope.loading = $ionicLoading.show({
+        showBackdrop: false
+    });
+
+    var product = Restangular.one('product', $stateParams.productId).get().then(function(data){
+        $scope.product = data[0];
+
+        $ionicLoading.hide();
+    });
 })
 
 .controller('OrdersCtrl', function($scope, $stateParams, Orders) {
