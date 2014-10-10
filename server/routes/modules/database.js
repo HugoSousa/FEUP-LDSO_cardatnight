@@ -41,7 +41,7 @@ exports.addOrder = function (ready, cartid, productid, quantity, callback) { //I
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-                client.query({ text: "INSERT INTO orders(ready, cartid, productid, quantity) VALUES( $1, $2, $3, $4, $5)", name: 'insert orders', values: [ready, cartid, productid, quantity] }, function (err, result) {
+                client.query({ text: "INSERT INTO orders(ready, cartid, productid, quantity) VALUES( $1, $2, $3, $4)", name: 'insert orders', values: [ready, cartid, productid, quantity] }, function (err, result) {
                     
 					});
         }
