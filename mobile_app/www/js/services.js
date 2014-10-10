@@ -1,25 +1,6 @@
 var app = angular.module('services', [])
 
-app.factory('Products', function(){
 
-    //fake products
-    var products = [
-        { id: 0, name: 'Cuba', description: 'coca cola + rum', image: "C:\\Users\\Hugo\\Downloads\\drink.png", price: '5.00'},
-        { id: 1, name: 'Vodka Limão', description: 'vodka + limão', image: "C:\Users\Hugo\Downloads\drink.png", price: '4.00'},
-        { id: 2, name: 'Vodka Laranja', description: 'vodka + laranja', image: "C:\Users\Hugo\Downloads\drink.png", price: '5.00'},
-        { id: 3, name: 'Licor Beirão', description: 'o melhor licor de portugal', image: "C:\Users\Hugo\Downloads\drink.png", price: '3.50'}
-    ];
-
-    return {
-        all: function() {
-            return products;
-        },
-        get: function(productId) {
-            // Simple index lookup
-            return products[productId];
-        }
-    }
-})
 
 
 /**
