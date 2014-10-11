@@ -3,7 +3,7 @@ var path = require('path');
 var db = require('./modules/database.js');
 var validator = require('validator');
 
-module.exports = function (app, io) {
+module.exports = function (app, io, passport) {
 
     // default route
     app.get('/', function (req, res) {
@@ -38,7 +38,10 @@ module.exports = function (app, io) {
     passport.authenticate('local-login', function (err, user, info) {
         if (err) return next(err);
         if (!user)
-            return res.json(401, { error: info });
+            {
+			if (info && info.message) return res.json(401, { error: "Missing Credentials" });
+				else return res.json(401, { error: info });
+			}
         
         var expires = moment().add('days', 7).valueOf();
         var token = generateToken(user.username, expires);
@@ -48,7 +51,7 @@ module.exports = function (app, io) {
             user: user
         });
 
-    });
+    })(req,res);
 });
 
 
