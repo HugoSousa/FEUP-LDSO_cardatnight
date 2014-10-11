@@ -10,6 +10,20 @@ app.run(function($ionicPlatform) {
     });
 })
 
+
+app.service('AlertPopupService', ['$ionicPopup', function ($ionicPopup) {
+
+        this.createPopup = function (headerMessage, bodyMessage, okAction) {
+            $ionicPopup.alert({
+                title: headerMessage,
+                content: bodyMessage
+            }).then(function (res) {
+                if (okAction)
+                    okAction();
+            });
+        }
+    }])
+
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
     RestangularProvider.setBaseUrl('http://localhost:1337');

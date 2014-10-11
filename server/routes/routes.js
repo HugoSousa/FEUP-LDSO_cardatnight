@@ -22,6 +22,7 @@ module.exports = function (app, io, passport) {
         if (!username || !password || !name || !email) res.json( { error: 'missing parameters' });
         else if (!(validator.isEmail(email) && validator.isLength(email,0,64))) res.json(422, { error: 'Email not valid' });
         else if (!(validator.isLength(username,3,25) && !validator.contains(username,' '))) res.json( { error: 'Username not valid' });
+		else if (!(validator.isLength(username,1,50))) res.json( { error: 'Invalid Name' });
         else {
             res.status(200);
             db.addCustomer(name, email, username, password, function (err, result) {
