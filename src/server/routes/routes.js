@@ -2,6 +2,8 @@
 var path = require('path');
 var db = require('./modules/database.js');
 var validator = require('validator');
+var moment = require('moment');
+var jwt = require('jwt-simple');
 
 module.exports = function (app, io, passport) {
 
