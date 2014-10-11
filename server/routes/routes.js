@@ -2,8 +2,10 @@
 var path = require('path');
 var db = require('./modules/database.js');
 var validator = require('validator');
+var moment = require('moment');
+var jwt = require('jwt-simple');
 
-module.exports = function (app, io) {
+module.exports = function (app, io, passport) {
 
     // default route
     app.get('/', function (req, res) {
@@ -23,7 +25,7 @@ module.exports = function (app, io) {
         else {
             res.status(200);
             db.addCustomer(name, email, username, password, function (err, result) {
-                if (err) res.status(409).json(err);
+                if (err) res.status(409).json({ error: err });
                 else res.status(200).json(result);
 
             });
@@ -31,6 +33,29 @@ module.exports = function (app, io) {
 
 
     });
+
+    
+    app.post('/login', function (req, res, next) {
+    
+    passport.authenticate('local-login', function (err, user, info) {
+        if (err) return next(err);
+        if (!user)
+            {
+			if (info && info.message) return res.json(401, { error: "Missing Credentials" });
+				else return res.json(401, { error: info });
+			}
+        
+        var expires = moment().add(7,'days').valueOf();
+        var token = generateToken(user.username, expires);
+        res.status(200).json({
+            access_token: token,
+            exp: expires,
+            user: user
+        });
+
+    })(req,res);
+});
+
 
     app.post('/order', function (req, res) {
 
@@ -50,9 +75,43 @@ module.exports = function (app, io) {
 
             });
         }
+    });
+    
+    app.get('/testlogin_customer', function (req, res, next) {
+        res.status(200).json(req.user);
+    
+    });
+    app.get('/testlogin_manager', function (req, res, next) {
+        res.status(200).json(req.user);
+    
+    });
+    app.get('/testlogin_employee', function (req, res, next) {
+        res.status(200).json(req.user);
+    
+    });
+    app.get('/testlogin_doorman', function (req, res, next) {
+        res.status(200).json(req.user);
+    
+    });
 
+    app.get('/products/:estabid', function(req, res){
+
+        db.getProductsEstablishment(req.params.estabid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
 
     });
+
+
+    app.get('/product/:productid', function(req, res){
+
+        db.getProduct(req.params.productid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
+    });    
 
 
     io.on('connection', function (socket) {
@@ -68,5 +127,16 @@ module.exports = function (app, io) {
         });
 
     });
+
+    function generateToken(username, expirationDate) {
+        var token = jwt.encode({
+            username: username,
+            exp: expirationDate
+        }, app.get('tokenSecret'));
+        
+        return token;
+    }
+
+
 
 }

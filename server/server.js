@@ -9,8 +9,19 @@ var port = process.env.PORT || 1337;
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
+var passport = require('passport');
+app.use(passport.initialize());
+var session = require('express-session');
+require('./routes/modules/passport')(passport);
+require('./routes/modules/jwtAuth.js')(app);
 
+app.use(session({
+    secret: 'wealllikeicecream' ,
+    saveUninitialized: true,
+    resave: true
+}));
 
+app.use(passport.session());
 
 //Configuration
 app.use(express.static(__dirname + '/public'));
@@ -30,11 +41,8 @@ app.all('*', function(req, res, next) {
   next();
  });
 
-
-
 app.set('port', port);
-
-require('./routes/routes.js')(app, io);
+require('./routes/routes.js')(app, io, passport);
 
 //start server
 http.listen(port , function () {
