@@ -10,6 +10,32 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 var passport = require('passport');
+app.use(morgan('dev'));
+
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.header('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    // Request headers you wish to allow
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, content-type, x-access-token');
+
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.header('Access-Control-Allow-Credentials', true);
+    
+    if (req.method === 'OPTIONS') {
+        // Bypass browser's CORS options requests
+        res.send(200);
+    } else {
+        // Pass to next layer of middleware
+        next();
+    }
+});
+
 app.use(passport.initialize());
 var session = require('express-session');
 require('./routes/modules/passport')(passport);
@@ -25,7 +51,6 @@ app.use(passport.session());
 
 //Configuration
 app.use(express.static(__dirname + '/public'));
-app.use(morgan('dev'));
 
 
 app.use(bodyParser.json({ type: ['json','text/*'] }));
@@ -35,11 +60,7 @@ app.use(bodyParser.json({
     mapParams: false
 }));*/
 
-app.all('*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
- });
+
 
 app.set('port', port);
 require('./routes/routes.js')(app, io, passport);

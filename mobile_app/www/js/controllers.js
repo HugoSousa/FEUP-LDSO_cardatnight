@@ -132,39 +132,46 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
 })
 
 
-.controller('RegisterCtrl', function($scope, Restangular){
-    $scope.registerSubmit = function(){
-        console.log("REGISTO");
+.controller('RegisterCtrl', function($scope, Restangular, $ionicLoading, AlertPopupService){
+	$scope.attempt = false;
+	$scope.invalid_email = false;
+	$scope.invalid_username = false;
 
+
+    $scope.registerSubmit = function(){
+		$ionicLoading.show({
+			template: 'Signing up...'
+		});
         var resource = Restangular.all('register');
 
-        //console.log($scope.user);
-        /*
-         var example_register = {
-             username: "test_restangular5",
-             email: "test_restangular@gmail.com",
-             name: "test_restangular",
-             password: "test"
-         }*/
-
          resource.post($scope.user).then(function(resp) {
-            console.log("ok");
+            //console.log(resp.data);
+			$ionicLoading.hide();
+			$scope.login();
          }, function(resp) {
-            console.log("error");
+		 
+			$scope.attempt = true;
              console.log(resp);
 
              if(resp.status == 409){
                  //name invalid
-                 console.log("A");
-                 angular.element(document.getElementsByName("username")[0]).parent().addClass('has-error').removeClass('has-success');
+				$scope.invalid_username = true;
+				$scope.user.username = '';
+
              }
              else if(resp.status == 422){
                  //email invalid
-                 console.log("B");
-                 angular.element(document.getElementsByName("email")[0]).parent().addClass('has-error').removeClass('has-success');
+				 if (resp.data.error.indexOf("Email") != -1) {
+				 			$scope.invalid_email = true;
+							$scope.user.email = '';
+				 } else if (resp.data.error.indexOf("Username") != -1) {
+				$scope.invalid_username = true;
+				$scope.user.username = '';
+				}
+				
              }
-
-            $scope.error = resp.data.error;
+			AlertPopupService.createPopup("Error", resp.data.error);
+            $ionicLoading.hide();
 
          });
 

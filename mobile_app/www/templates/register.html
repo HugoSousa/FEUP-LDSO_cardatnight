@@ -6,12 +6,12 @@
                 <span class="input-label">Name</span>
                 <input name="name" type="text" placeholder="Name" ng-required="true" ng-model="user.name">
             </label>
-            <label class="item item-input item-floating-label validated">
+            <label ng-class="{'error': attempt && invalid_email , 'has-success': attempt && !invalid_email}" class="item item-input item-floating-label validated">
                 <span class="input-label">E-mail </span>
                 <input name="email" type="email" placeholder="E-mail" required  ng-model="user.email">
 
             </label>
-            <label class="item item-input item-floating-label validated">
+            <label ng-class="{'has-error': attempt && invalid_username , 'has-success': attempt && !invalid_username}" class="item item-input item-floating-label validated">
                 <span class="input-label">Username</span>
                 <input name="username" type="text" placeholder="Username" ng-required="true" ng-model="user.username">
             </label>
@@ -19,8 +19,7 @@
                 <span class="input-label">Password</span>
                 <input name="password" type="password" placeholder="Password" ng-required="true" ng-model="user.password">
             </label>
-            <h4 style="width: 100%; color: red; text-align:center;" class="title">{{error}}</h4>
-            <button class="button button-positive btnRounded">
+            <button  ng-class="{disabled: registry.$invalid}" class="button button-positive btnRounded">
                 Register
             </button>
         </div>
