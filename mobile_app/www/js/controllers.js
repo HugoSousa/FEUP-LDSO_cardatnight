@@ -101,28 +101,32 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
 
 })
 
-.controller('LoginCtrl', function($scope, Restangular, AuthService){
+.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading){
     //console.log(AuthService.loggedUser());
 
     $scope.loginSubmit = function() {
         console.log("Login");
 
         console.log($scope.user);
-
+        $ionicLoading.show({
+            template: 'Logging in...'
+        });
         //TODO: encrypt password
         Restangular.all('login').post($scope.user).then(function (resp){
             console.log("ok");
             console.log(resp);
 
             AuthService.login(resp.user, resp.access_token);
+            $ionicLoading.hide();
+            $state.go('menu');
+            //console.log(AuthService.loggedUser());
 
-            console.log(AuthService.loggedUser());
-
-            console.log("SENT TOKEN: " +resp.access_token);
-
+            //console.log("SENT TOKEN: " +resp.access_token);
+            /*
             Restangular.one('testlogin_customer').customGET("", {}, {'x-access-token': resp.access_token}).then(function(response) {
                 console.log(response);
             });
+            */
         }, function(resp){
             console.log("error");
             console.log(resp);
@@ -185,6 +189,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
         showBackdrop: false
     });
 
+    //hardcoded establishment id=4
     var products = Restangular.one('products').getList(4).then(function(data){
         $scope.products = data;
         $ionicLoading.hide();
@@ -204,9 +209,16 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
     });
 })
 
-.controller('OrdersCtrl', function($scope, $stateParams, Orders) {
-    $scope.orders = Orders.all();
-    $scope.order = Orders.get($stateParams.orderId);
+.controller('OrdersCtrl', function($scope, Restangular) {
+    //$scope.orders = Orders.all();
+
+    //get active cart (could be stored in a variable instead of asking the server every time)
+    //get orders from that cart (hardcoded cartid=6)
+    Restangular.one('actualorders').getList(1).then(function(data){
+        $scope.orders = data;
+        //console.log($scope.orders.ordersid);
+    });
+    //$scope.order = Orders.get($stateParams.orderId);
 })
 
 .controller('PlacesCtrl', function($scope, $stateParams, Places) {

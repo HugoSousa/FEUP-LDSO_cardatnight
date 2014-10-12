@@ -105,10 +105,16 @@ module.exports = function (app, io, passport) {
 				}
 			}
 			});
-		
-      
     });
 	
+    app.get('/actualorders/:cartid', function (req, res) {
+
+        db.getActualOrders(req.params.cartid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        })
+    })
+
 	app.post('/gate/entry/:token', function (req, res) {
 		//check autentication of porter,etc
 		//check token, get establishmentid, customerid
@@ -116,7 +122,7 @@ module.exports = function (app, io, passport) {
 		//generate cart for user
 		
 
-      		res.json("TODO");
+      	res.json("TODO");
     });
 	
 	app.post('/gate/exit/:customerid', function (req, res) {

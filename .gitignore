@@ -6,3 +6,10 @@ src/server/node_modules/*
 !src/server/node_modules
 !src/server/node_modules/config
 
+mobile_app/.idea/encodings.xml
+mobile_app/.idea/misc.xml
+mobile_app/.idea/mobile_app.iml
+mobile_app/.idea/modules.xml
+mobile_app/.idea/scopes/scope_settings.xml
+mobile_app/.idea/vcs.xml
+mobile_app/.idea/workspace.xml

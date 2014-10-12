@@ -108,6 +108,29 @@ exports.getActiveCart = function(user, callback) {
 
 }
 
+exports.getActualOrders = function(cartid, callback){
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({text: "select * from orders where cartid = $1 order by orderstime", name: 'getactualorders', values: [cartid]}, function (err, result) {
+                if (err) {                    
+                        callback( err , null);
+                }
+                else {
+                    callback( null , result.rows);   
+                }
+ 
+            });
+
+        }
+
+        done();
+    });
+}
+
 exports.addOrder = function (ready, cartid, productid, quantity, callback) { //Improvement to do: encapsulate in transaction
     pg.connect(database_url , function (err, client, done) {
         if (err) {
