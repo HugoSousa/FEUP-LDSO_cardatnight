@@ -147,7 +147,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
          resource.post($scope.user).then(function(resp) {
             //console.log(resp.data);
 			$ionicLoading.hide();
-			$scope.login();
+			$scope.logout();
          }, function(resp) {
 		 
 			$scope.attempt = true;
