@@ -10,6 +10,12 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 var passport = require('passport');
+app.use(morgan('dev'));
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+ });
 app.use(passport.initialize());
 var session = require('express-session');
 require('./routes/modules/passport')(passport);
@@ -25,7 +31,6 @@ app.use(passport.session());
 
 //Configuration
 app.use(express.static(__dirname + '/public'));
-app.use(morgan('dev'));
 
 
 app.use(bodyParser.json({ type: ['json','text/*'] }));
@@ -35,11 +40,7 @@ app.use(bodyParser.json({
     mapParams: false
 }));*/
 
-app.all('*', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
- });
+
 
 app.set('port', port);
 require('./routes/routes.js')(app, io, passport);
