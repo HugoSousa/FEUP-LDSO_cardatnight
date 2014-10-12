@@ -1,6 +1,7 @@
 var app = angular.module('starter', ['ionic', 'controllers', 'services', 'restangular']);
 
 app.run(function($ionicPlatform) {
+
     $ionicPlatform.ready(function() {
         /*
         if(window.StatusBar) {
@@ -9,14 +10,33 @@ app.run(function($ionicPlatform) {
         */
     });
 })
-
+/*
+app.factory('TokenRestangular', function(Restangular, AuthService) {
+    return Restangular.withConfig(function(RestangularConfigurer) {
+        console.log("TOKEN BEFORE");
+        if(AuthService.loggedUser) {
+            console.log("TOKEN:" + AuthService.loggedUser.access_token);
+            RestangularConfigurer.setDefaultHeaders({'x-access-token': AuthService.loggedUser.access_token});
+        }
+    });
+});
+*/
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    RestangularProvider.setBaseUrl('http://localhost:1337');
-    //RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+    //RestangularProvider.setBaseUrl('http://localhost:1337');
+    RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
 
-    RestangularProvider.setDefaultHttpFields
-    timeout: 1000
+    //RestangularProvider.setDefaultHeaders({'x-access-token': AuthServiceProvider.token()});
+
+    /*
+    RestangularProvider.addFullRequestInterceptor(function (element, operation, what, url, headers) {
+        return {
+            headers: _.extend(headers, {'x-access-token': AuthServiceProvider.token()})
+        }
+    });*/
+
+    RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 10 seconds
+
 
     $stateProvider
 
@@ -162,4 +182,4 @@ app.directive('validated', ['$parse', function($parse) {
         }
     }
 }])
-;
+

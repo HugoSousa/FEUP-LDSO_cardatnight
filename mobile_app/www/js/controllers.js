@@ -1,10 +1,11 @@
 var app = angular.module('controllers', ['highcharts-ng']);
 
-app.controller('NavCtrl', function($scope, $state, $ionicPopup, Restangular) {
+app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
 
+    /*
     $scope.login = function(){
         $state.go('menu');
-    }
+    }*/
 
     $scope.logout = function(){
         $state.go('login');
@@ -99,6 +100,37 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, Restangular) {
 
 
 })
+
+.controller('LoginCtrl', function($scope, Restangular, AuthService){
+    //console.log(AuthService.loggedUser());
+
+    $scope.loginSubmit = function() {
+        console.log("Login");
+
+        console.log($scope.user);
+
+        //TODO: encrypt password
+        Restangular.all('login').post($scope.user).then(function (resp){
+            console.log("ok");
+            console.log(resp);
+
+            AuthService.login(resp.user, resp.access_token);
+
+            console.log(AuthService.loggedUser());
+
+            console.log("SENT TOKEN: " +resp.access_token);
+
+            Restangular.one('testlogin_customer').customGET("", {}, {'x-access-token': resp.access_token}).then(function(response) {
+                console.log(response);
+            });
+        }, function(resp){
+            console.log("error");
+            console.log(resp);
+        });
+    };
+
+})
+
 
 .controller('RegisterCtrl', function($scope, Restangular){
     $scope.registerSubmit = function(){
