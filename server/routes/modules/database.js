@@ -82,6 +82,32 @@ exports.getUser = function (username, callback) {
 
 }
 
+exports.getActiveCart = function(user, callback) {
+	    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+			var id = user.id;
+			client.query({text: "select * from cart where paid = false and customerid = $1", name: 'getactivecart', values: [id]}, function (err, result) {
+                    if (err) {                    
+                            callback( err , null);
+                    }
+					else {
+						callback( null , result.rows[0]);
+					
+					}
+					
+					
+					});
+
+        }
+
+        done();
+    });
+
+}
+
 exports.addOrder = function (ready, cartid, productid, quantity, callback) { //Improvement to do: encapsulate in transaction
     pg.connect(database_url , function (err, client, done) {
         if (err) {
@@ -117,6 +143,30 @@ exports.getProductsEstablishment = function (establishmentId, callback) {
             done();
         });
 
+}                         
+
+
+exports.getProduct = function (productId, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+
+                client.query({ text: "SELECT * FROM product WHERE productid = $1", name: 'get product', values: [productId] }, function (err, result) {
+                if (err) {
+                    //any specific error?
+                    callback({ error: "Error occurred" }, null);
+                }
+                else {
+                    callback(null, result.rows);
+                }
+            });
+        }
+
+        done();
+    });
+    
 }
 
     function getCustomerManagerData(client, id, callback) {
@@ -150,29 +200,4 @@ exports.getProductsEstablishment = function (establishmentId, callback) {
             }
         });
         
-    }                             
-
-
-exports.getProduct = function (productId, callback) {
-    pg.connect(database_url , function (err, client, done) {
-        if (err) {
-            callback({ error: 'Failed to connect do database' }, null);
-        }
-        else {
-
-                client.query({ text: "SELECT * FROM product WHERE productid = $1", name: 'get product', values: [productId] }, function (err, result) {
-                if (err) {
-                    //any specific error?
-                    callback({ error: "Error occurred" }, null);
-                }
-                else {
-                    callback(null, result.rows);
-                }
-            });
-        }
-
-        done();
-    });
-    
-}
-
+    }    

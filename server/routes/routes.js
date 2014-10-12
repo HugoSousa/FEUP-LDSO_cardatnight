@@ -77,6 +77,55 @@ module.exports = function (app, io, passport) {
             });
         }
     });
+	
+	 app.post('/requestentry/:estabid', function (req, res) { //requested by customer to get access token
+		
+		db.getActiveCart(req.user, function(err, cart) {
+			if (err) res.status(409).json({error: err});
+			else {
+			if (cart) res.status(409).json({error: "Customer already has an active card. Current cart ID [" + cart.cartid + "] of establishment nr " + cart.establishmentid});
+			else {
+				// generate entry token and return it
+				res.status(200).json({token: "testtoken"});
+			}
+			}
+			});
+		
+      
+    });
+	
+	app.post('/getcart/:estabid', function (req, res) { // requested by customer to get cart
+		
+		db.getActiveCart(req.user, function(err, cart) {
+			if (err) res.status(409).json({error: err});
+			else {
+				if (cart) res.status(200).json({status: 'valid' , cart: cart});
+				else {
+					res.status(200).json({error: 'no cart found', status: 'none'});
+				}
+			}
+			});
+		
+      
+    });
+	
+	app.post('/gate/entry/:token', function (req, res) {
+		//check autentication of porter,etc
+		//check token, get establishmentid, customerid
+		//compare auth of porter with estabid in token
+		//generate cart for user
+		
+
+      		res.json("TODO");
+    });
+	
+	app.post('/gate/exit/:customerid', function (req, res) {
+		//check estab id from auth
+		//get active cart and mark as paid
+		
+
+		res.json("TODO");
+    });
     
     app.get('/testlogin_customer', function (req, res, next) {
         res.status(200).json(req.user);
