@@ -1,6 +1,8 @@
 var app = angular.module('controllers', ['highcharts-ng']);
 
-app.controller('NavCtrl', function($scope, $state, $ionicPopup) {
+app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
+
+    $scope.loggedUser = AuthService.loggedUser();
 
     /*
     $scope.login = function(){

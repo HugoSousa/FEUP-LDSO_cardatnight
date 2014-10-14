@@ -169,6 +169,14 @@ module.exports = function (app, io, passport) {
 
     });    
 
+    app.get('/incomingorders/:estabid', function(req, res){
+
+        db.getIncomingOrders(req.params.estabid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+    })
+
 
     io.on('connection', function (socket) {
         console.log('a user connected');

@@ -192,35 +192,58 @@ exports.getProduct = function (productId, callback) {
     
 }
 
-    function getCustomerManagerData(client, id, callback) {
-        
-        
-        client.query({ text: "SELECT * FROM customer WHERE customerid = $1", name: 'get customer', values: [id] }, function (err, result) {
-            if (err) callback(err, null);
-            else {
-                var customer = result.rows[0];
-                
-                if (customer) {
-                    delete customer.customerid;
-                    callback(null, customer);
-                }
-                else {
-                    client.query({ text: "SELECT * FROM worker WHERE workerid = $1", name: 'get worker', values: [id] }, function (err, result) {
-                        if (err) callback(err, null);
-                        else {
-                            var worker = result.rows[0];
-                            
-                            if (worker) {
-                                delete worker.workerid;
-                                callback(null, worker);
-                            }
-                            else callback("person not customer nor worker", null);
-
-                        }
-                    });
-                }
-
+function getCustomerManagerData(client, id, callback) {
+    
+    
+    client.query({ text: "SELECT * FROM customer WHERE customerid = $1", name: 'get customer', values: [id] }, function (err, result) {
+        if (err) callback(err, null);
+        else {
+            var customer = result.rows[0];
+            
+            if (customer) {
+                delete customer.customerid;
+                callback(null, customer);
             }
-        });
+            else {
+                client.query({ text: "SELECT * FROM worker WHERE workerid = $1", name: 'get worker', values: [id] }, function (err, result) {
+                    if (err) callback(err, null);
+                    else {
+                        var worker = result.rows[0];
+                        
+                        if (worker) {
+                            delete worker.workerid;
+                            callback(null, worker);
+                        }
+                        else callback("person not customer nor worker", null);
+
+                    }
+                });
+            }
+
+        }
+    });
+    
+}    
+
+exports.getIncomingOrders = function (establishmentId, callback) {
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({ text: "SELECT *, product.name as productname FROM orders, cart, establishment, product WHERE orders.cartid = cart.cartid AND cart.establishmentid = establishment.establishmentid AND orders.productid = product.productid AND cart.establishmentid = $1 AND orders.ready = false ORDER BY orders.orderstime", name: 'getincomingorders', values: [establishmentId] }, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+            callback(null, result.rows);
+            }
+          });
+        }
         
-    }    
+        done();
+    });
+
+}  
