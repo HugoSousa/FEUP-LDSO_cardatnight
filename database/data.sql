@@ -110,12 +110,12 @@ insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,custo
 insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,customerId,qrcode) values (8.0,0,'2014-10-03 20:00:00',NULL,false,4,6,'');
 
 --orders 
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:00:00',true,1,1,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:00:00',true,1,2,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:30:00',true,1,3,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 01:00:00',true,2,3,2);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-01 04:00:00',true,3,4,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-27 02:00:00',true,4,4,3);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-10 23:10:00',true,5,10,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 21:00:00',true,6,9,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 21:00:00',false,7,8,1);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:00:00','delivered',1,1,1);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:00:00','delivered',1,2,1);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:30:00','delivered',1,3,1);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 01:00:00','delivered',2,3,2);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-01 04:00:00','delivered',3,4,1);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-27 02:00:00','delivered',4,4,3);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-10 23:10:00','delivered',5,10,1);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 21:00:00','delivered',6,9,1);
+insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 21:00:00','notified',7,8,1);
