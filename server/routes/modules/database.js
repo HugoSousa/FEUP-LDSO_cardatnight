@@ -232,7 +232,7 @@ exports.getIncomingOrders = function (establishmentId, callback) {
             callback({ error: 'Failed to connect do database' }, null);
         }
         else {
-            client.query({ text: "SELECT *, product.name as productname FROM orders, cart, establishment, product WHERE orders.cartid = cart.cartid AND cart.establishmentid = establishment.establishmentid AND orders.productid = product.productid AND cart.establishmentid = $1 AND orders.ready = false ORDER BY orders.orderstime", name: 'getincomingorders', values: [establishmentId] }, function (err, result) {
+            client.query({ text: "SELECT *, product.name as productname FROM orders, cart, establishment, product WHERE orders.cartid = cart.cartid AND cart.establishmentid = establishment.establishmentid AND orders.productid = product.productid AND cart.establishmentid = $1 AND orders.orderstate != 'delivered'  ORDER BY orders.orderstime", name: 'getincomingorders', values: [establishmentId] }, function (err, result) {
             if (err) {
                 //any specific error?
                 callback({ error: "Error occurred" }, null);
