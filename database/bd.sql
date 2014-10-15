@@ -23,7 +23,7 @@ create table customer(
    customerid int primary key not null,
    name text not null,
    email text unique not null,
-   foreign key (customerid) references person(personid)
+   foreign key (customerid) references person(personid) on delete cascade
 );
 
 create type worker_permission as enum ('employee', 'manager', 'doorman');
@@ -32,7 +32,7 @@ create table worker(
    workerid int primary key not null,
    establishmentid int not null,
    permission worker_permission,
-   foreign key (workerid) references person(personid),
+   foreign key (workerid) references person(personid) on delete cascade,
    foreign key (establishmentid) references establishment(establishmentid)
 );
 
@@ -47,7 +47,7 @@ create table cart(
    customerid int not null,
    qrcode text not null,
    foreign key (establishmentid) references establishment(establishmentid),
-   foreign key (customerid) references customer(customerid)
+   foreign key (customerid) references customer(customerid) on delete cascade
 );
 
 create table product(
@@ -69,7 +69,7 @@ create table orders(
    cartid int not null,
    productid int not null,
    quantity int check(quantity>0),
-   foreign key (cartid) references cart(cartid),
+   foreign key (cartid) references cart(cartid) on delete cascade,
    foreign key (productid) references product(productid)
 );
 
