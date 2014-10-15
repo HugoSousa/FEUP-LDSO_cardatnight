@@ -11,7 +11,7 @@ insert into establishment (name) values ('Oyobar');
 
 --person id 
 
-insert into person (username, password) values ('jrodriguez0', 'dRWEQ6M9H');
+insert into person (username, password) values ('aaa', 'aaa');
 insert into person (username, password) values ('bburke1', 'PLBlp31Qd');
 insert into person (username, password) values ('dfoster2', 'YyR8bX');
 insert into person (username, password) values ('cbradley3', 'DY1COCnEKS');
@@ -27,13 +27,13 @@ insert into person (username, password) values ('rhamiltonc', '7yOEbufwiR');
 insert into person (username, password) values ('staylord', 'djtHnp52mDK');
 insert into person (username, password) values ('gharrisone', '7DADz9qZvg');
 
-insert into person (username, password) values ('dhughes0', 'hs30t5Ost');
+insert into person (username, password) values ('man', 'man');
 insert into person (username, password) values ('kfisher1', 'CtqxRK8y');
 insert into person (username, password) values ('thunt2', 'JynjtZ');
 insert into person (username, password) values ('plewis3', 'qy78RIObRE');
 insert into person (username, password) values ('janderson4', 'D0BOAAGMNj1Y');
 
-insert into person (username,password) values ('jcrawford0', 'XoFK5jTM');
+insert into person (username,password) values ('emp', 'emp');
 insert into person (username,password) values ('chughes1', 'E7V6G3ftzI');
 insert into person (username,password) values ('abarnes2', 'i2y3ZF');
 insert into person (username,password) values ('nnguyen3', '2X7bIXQT215');
@@ -110,12 +110,12 @@ insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,custo
 insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,customerId,qrcode) values (8.0,0,'2014-10-03 20:00:00',NULL,false,4,6,'');
 
 --orders 
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:00:00','delivered',1,1,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:00:00','delivered',1,2,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-01 21:30:00','delivered',1,3,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 01:00:00','delivered',2,3,2);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-01 04:00:00','delivered',3,4,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-27 02:00:00','delivered',4,4,3);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-09-10 23:10:00','delivered',5,10,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 21:00:00','delivered',6,9,1);
-insert into orders(ordersTime,ready,cartId,productid,quantity) values ('2014-10-03 21:00:00','notified',7,8,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-01 21:00:00','delivered',1,1,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-01 21:00:00','delivered',1,2,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-01 21:30:00','delivered',1,3,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-10-03 01:00:00','delivered',2,3,2);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-10-01 04:00:00','delivered',3,4,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-27 02:00:00','delivered',4,4,3);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-10 23:10:00','delivered',5,10,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-10-03 21:00:00','delivered',6,9,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-10-03 21:00:00','notified',7,8,1);

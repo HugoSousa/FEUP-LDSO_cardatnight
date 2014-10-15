@@ -6,6 +6,7 @@ drop table if exists customer;
 drop table if exists person;
 drop table if exists establishment;
 drop type if exists worker_permission;
+drop type if exists productState;
 
 create table establishment(
    establishmentid serial primary key not null,
@@ -21,7 +22,7 @@ create table person(
 create table customer(
    customerid int primary key not null,
    name text not null,
-   email text not null,
+   email text unique not null,
    foreign key (customerid) references person(personid)
 );
 
@@ -59,10 +60,12 @@ create table product(
    foreign key (establishmentid) references establishment(establishmentid)
 );
 
+create type productState as enum ('ordered','notified', 'delivered');
+
 create table orders(
    ordersid serial primary key not null,
    orderstime timestamp default current_timestamp,
-   ready boolean not null,
+   orderState productState not null,
    cartid int not null,
    productid int not null,
    quantity int check(quantity>0),
