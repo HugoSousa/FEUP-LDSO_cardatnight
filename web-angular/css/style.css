@@ -1,0 +1,45 @@
+.incoming-order-span:hover{
+    cursor: pointer;
+}
+
+.disabled{
+    opacity: 0.5;
+    cursor: auto !important;
+}
+
+/*CHECKBOX STYLING FROM http://codepen.io/konsumer/pen/GjFIH*/
+input[type="radio"],
+input[type="checkbox"] {
+    display:none;
+}
+
+input[type="radio"] + span:before,
+input[type="checkbox"] + span:before {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+input[type="radio"] + span:before {
+    content: "\e165"; /* record */
+    color: red;
+}
+
+input[type="radio"]:checked + span:before {
+    content: "\e089"; /* ok-circle */
+    color: green;
+}
+
+input[type="checkbox"] + span:before {
+    content: "\e157"; /* unchecked */
+}
+
+input[type="checkbox"]:checked + span:before {
+    content: "\e067";; /* check */
+}
