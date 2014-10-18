@@ -35,12 +35,21 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
     $scope.notifyOrder = function(orderid){
         console.log("Notify Order Function");
 
-        for( var i = 0; i < $scope.orders.length; i++ ) {
-            if( $scope.orders[i].ordersid === orderid ) {
-                $scope.orders[i].orderstate = 'notified';
-                break;
+        var notify_order = {"orderid": orderid};
+        console.log(notify_order);
+        Restangular.all('notify').post(notify_order).then(function(resp){
+            for( var i = 0; i < $scope.orders.length; i++ ) {
+                if( $scope.orders[i].ordersid === orderid ) {
+                    $scope.orders[i].orderstate = 'notified';
+                    break;
+                }
             }
-        }
+            console.log("User notifed");
+        }, function(resp){
+            console.log("Error notifying user");
+        });
+
+
     }
 
     //JUST AN EXAMPLE

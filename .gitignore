@@ -21,3 +21,5 @@ web-angular/.idea/scopes/scope_settings.xml
 web-angular/.idea/vcs.xml
 web-angular/.idea/web-angular.iml
 web-angular/.idea/workspace.xml
+server/routes/modules/database.js.rej
+server/routes/routes.js.rej
