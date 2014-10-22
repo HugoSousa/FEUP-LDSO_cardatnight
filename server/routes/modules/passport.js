@@ -10,6 +10,7 @@ module.exports = function (passport) {
     });
     
     passport.deserializeUser(function (username, done) {
+		// this code should fail
         User.findById(username, function (err, user) {
             done(err, user);
         });
