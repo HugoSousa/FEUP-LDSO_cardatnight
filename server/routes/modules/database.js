@@ -116,6 +116,13 @@ exports.changePassword = function (username, newPassword, callback) {
         else {
             client.query({ text: "UPDATE person SET password=$2 WHERE username=$1", name: 'update person', values: [username, newPassword] }, function (err, result) {
 
+			if (err) {                    
+                        callback(err , null);
+                    }
+					else {
+						callback(null, result);
+					}
+					
             });
         }
 

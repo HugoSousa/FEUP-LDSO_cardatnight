@@ -26,10 +26,10 @@ app.service('AlertPopupService', ['$ionicPopup', function ($ionicPopup) {
 
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    RestangularProvider.setBaseUrl('http://localhost:1337');
-    //RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+    // RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+	RestangularProvider.setBaseUrl('http://localhost:1337');
 
-    //RestangularProvider.setDefaultHeaders({'x-access-token': AuthServiceProvider.token()});
+    // RestangularProvider.setDefaultHeaders({'x-access-token': AuthServiceProvider.token()});
 
     /*
     RestangularProvider.addFullRequestInterceptor(function (element, operation, what, url, headers) {

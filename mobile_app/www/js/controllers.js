@@ -4,10 +4,11 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
     $scope.loggedUser = AuthService.loggedUser();
 
-    /*
+	/*
     $scope.login = function(){
         $state.go('menu');
-    }*/
+    }
+	*/
 
     $scope.logout = function(){
         $state.go('login');
@@ -49,20 +50,6 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         $state.go('account-change-password');
     };
 
-    $scope.showConfirmDeleteAccount = function() {
-        var confirmPopup = $ionicPopup.confirm({
-            title: 'Delete Account',
-            template: 'Are you sure you want to delete your account?'
-        });
-        confirmPopup.then(function(res) {
-            if(res) {
-                console.log('You are sure');
-            } else {
-                console.log('You are not sure');
-            }
-        });
-    };
-
     $scope.forgotPassword = function() {
         $state.go('forgot-password');
     };
@@ -101,6 +88,94 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     }
 
 
+})
+
+
+.controller('AccountCtrl', function($scope, $stateParams, $ionicPopup, Restangular, AuthService) {
+
+    var loggedUser = AuthService.loggedUser();
+	
+	$scope.changePasswordSubmit = function(){
+		var resource = Restangular.all('change-password');
+
+		console.log($scope.user);
+
+		if($scope.user.newPassword != $scope.user.newPasswordRetyped)
+		{
+			var alertPopup = $ionicPopup.alert({
+				title: 'Error!',
+				template: 'New password and new password retyped dont match!'
+			});
+			alertPopup.then(function(res) {
+				console.log('New password and new password retyped dont match!');
+			});
+		}
+		else{
+
+			resource.post($scope.user).then(function(resp) {
+				console.log("ok");
+				
+				console.log('Username:' + loggedUser.username);
+				
+				var alertPopup = $ionicPopup.alert({
+					 title: 'Change Password',
+					 template: 'Password changed successfully!'
+				   });
+				   alertPopup.then(function(res) {
+					 console.log('Password changed successfully!');
+				   });
+				
+				
+			}, function(resp) {
+				console.log("error");
+
+				$scope.error = resp.data.error;
+				
+				var alertPopup = $ionicPopup.alert({
+					 title: 'Change Password',
+					 template: 'Error changing password!'
+				   });
+				   alertPopup.then(function(res) {
+					 console.log('Error changing password!');
+				   });
+
+			});
+		
+		}
+		
+
+	};
+	
+	$scope.showConfirmDeleteAccount = function() {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Delete Account',
+            template: 'Are you sure you want to delete your account?'
+        });
+        confirmPopup.then(function(res) {
+            if(res) {
+                console.log('You are sure');
+
+                var user = {
+                    username: "dfoster2"
+                }
+
+                var resource = Restangular.all('delete-account');
+
+                resource.post(user).then(function(resp) {
+                    console.log("ok");
+                    console.log(resp);
+                }, function(resp) {
+                    console.log("error");
+                    console.log(resp);
+
+                    $scope.error = resp.data.error;
+
+                });
+            } else {
+                console.log('You are not sure');
+            }
+        });
+    };
 })
 
 .controller('LoginCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading){
@@ -196,6 +271,25 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         $scope.products = data;
         $ionicLoading.hide();
     });
+	
+	$scope.orderSubmit = function(){
+		var resource = Restangular.all('order');
+
+		console.log($scope.orderData);
+
+		resource.post($scope.orderData).then(function(resp) {
+			console.log("ok");
+			console.log(resp);
+		}, function(resp) {
+			console.log("error");
+			console.log(resp);
+
+			$scope.error = resp.data.error;
+
+		});
+
+	};
+	
 })
 
 .controller('ProductCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
