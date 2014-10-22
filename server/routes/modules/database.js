@@ -9,21 +9,26 @@ exports.addCustomer = function (name, email , username , password, callback)
     pg.connect(database_url , function (err, client, done) {
         if (err) {
             callback('Failed to connecto do database' , null);
-            callback({ error: 'Failed to connect to database' }, null);
         }
         else {
             
-            client.query({ text: "INSERT INTO person(username,password) VALUES( $1, $2) RETURNING personId", name: 'insert person', values: [username,password] }, function (err, result) {
+            client.query({ text: "INSERT INTO person(username,password) VALUES( $1, $2) RETURNING personId", name: 'insert_person', values: [username,password] }, function (err, result) {
                 if (err) {
                     if (err.code == 23505) //username already exists (unique key constraint code)
                         callback("Username already exists" , null);
                     else callback(err, null);
                 }
                 else {
+
                     var id = result.rows[0].personid;
                     
-                    client.query({ text: "INSERT INTO customer(customerId,name,email) VALUES( $1, $2, $3)", name: 'insert customer', values: [id, name, email] }, function (err, result) {
-                        if (err) callback({ error: err }, null);
+                    client.query({ text: "INSERT INTO customer(customerId,name,email) VALUES( $1, $2, $3)", name: 'insert_customer', values: [id, name, email] }, function (err, result) {
+                         if (err) {
+
+								if (err.code == 23505) //username already exists (unique key constraint code)
+									callback("Email already exists" , null);
+								else callback(err, null);
+							}
                         else {
                             callback(null, { name: name, email: email, username: username, password: password });
 

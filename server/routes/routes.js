@@ -20,7 +20,7 @@ module.exports = function (app, io, passport) {
         var email = req.body.email;
         res.status(422);
         if (!username || !password || !name || !email) res.json( { error: 'missing parameters' });
-        else if (!(validator.isEmail(email) && validator.isLength(email,0,64))) res.json(422, { error: 'Email not valid' });
+        else if (!(validator.isEmail(email) && validator.isLength(email,0,64))) res.json( { error: 'Email not valid' });
         else if (!(validator.isLength(username,3,25) && !validator.contains(username,' '))) res.json( { error: 'Username not valid' });
 		else if (!(validator.isLength(username,1,50))) res.json( { error: 'Invalid Name' });
         else {
@@ -28,7 +28,6 @@ module.exports = function (app, io, passport) {
             db.addCustomer(name, email, username, password, function (err, result) {
                 if (err) res.status(409).json({ error: err });
                 else res.status(200).json(result);
-
             });
         }
 
@@ -88,8 +87,8 @@ module.exports = function (app, io, passport) {
             if (err) return next(err);
             if (!user)
                 {
-    			if (info && info.message) return res.json(401, { error: "Missing Credentials" });
-    				else return res.json(401, { error: info });
+    			if (info && info.message) return res.status(401).json( { error: "Missing Credentials" });
+    				else return res.status(401).json( { error: info });
     			}
             
             var expires = moment().add(7,'days').valueOf();
@@ -102,6 +101,19 @@ module.exports = function (app, io, passport) {
 
         })(req,res);
     });
+	
+	function generateToken(username, expirationDate) {
+        var token = jwt.encode({
+            username: username,
+            exp: expirationDate
+        }, app.get('tokenSecret'));
+        
+        return token;
+    }
+
+
+
+
 
 
     app.post('/order', function (req, res) {
