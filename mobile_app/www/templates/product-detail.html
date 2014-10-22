@@ -1,6 +1,6 @@
 <ion-view title="hugo_sousa">
-    <ion-content>
-        <form class="simple-form" name="orderForm" ng-controller="ProductsCtrl" novalidate on-valid-submit="orderSubmit()">
+    <ion-content padding="true">
+        <form class="simple-form" name="orderForm" ng-controller="ProductCtrl" novalidate on-valid-submit="orderSubmit()">
             <div class="list card">
 
                 <div class="item item-avatar">
@@ -24,8 +24,8 @@
                 </button>
             </div>
 
-            <input type="hidden" name="cardid" ng-model="orderData.cardid" ng-init="orderData.cardid = 1">
-            <input type="hidden" name="productid" ng-model="orderData.productid" ng-init="orderData.productid = product.id">
+            <input type="hidden" name="cartid" ng-model="orderData.cartid" ng-init="orderData.cartid = 1">
+            <input type="hidden" name="productid" ng-model="orderData.productid" ng-init="orderData.productid = 1">
             <input type="hidden" name="quantity" ng-model="orderData.quantity" ng-init="orderData.quantity = 1">
 
         </form>

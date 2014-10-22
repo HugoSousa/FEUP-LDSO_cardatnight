@@ -9,6 +9,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         $state.go('menu');
     }
 	*/
+	
+	$scope.menu = function(){
+        $state.go('menu');
+    }
 
     $scope.logout = function(){
         $state.go('login');
@@ -219,6 +223,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         }, function(resp){
             console.log("error");
             console.log(resp);
+			
+			$ionicLoading.hide();
         });
     };
 
@@ -284,27 +290,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         $ionicLoading.hide();
     });
 	
-	$scope.orderSubmit = function(){
-		var resource = Restangular.all('order');
-
-		console.log($scope.orderData);
-
-		resource.post($scope.orderData).then(function(resp) {
-			console.log("ok");
-			console.log(resp);
-		}, function(resp) {
-			console.log("error");
-			console.log(resp);
-
-			$scope.error = resp.data.error;
-
-		});
-
-	};
-	
 })
 
-.controller('ProductCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
+.controller('ProductCtrl', function($state, $scope, $stateParams, $ionicPopup, Restangular, $ionicLoading) {
 
     $scope.loading = $ionicLoading.show({
         showBackdrop: false
@@ -315,6 +303,47 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
         $ionicLoading.hide();
     });
+	
+	
+	
+	$scope.orderSubmit = function(){
+		var resource = Restangular.all('order');
+		
+		console.log($scope.orderData);
+
+		resource.post($scope.orderData).then(function(resp) {
+			console.log("ok");
+			console.log(resp);
+			
+			var alertPopup = $ionicPopup.alert({
+			 title: 'Order',
+			 template: 'Order made successfully!'
+		   });
+		   alertPopup.then(function(res) {
+		   
+			 $state.go('products');
+				
+		   });
+			
+		}, function(resp) {
+			console.log("error");
+			console.log(resp);
+
+			$scope.error = resp.data.error;
+			
+			var alertPopup = $ionicPopup.alert({
+			 title: 'Order',
+			 template: 'Error making order!'
+		   });
+		   alertPopup.then(function(res) {
+		   
+			 
+				
+		   });
+
+		});
+
+	};
 })
 
 .controller('OrdersCtrl', function($scope, Restangular) {

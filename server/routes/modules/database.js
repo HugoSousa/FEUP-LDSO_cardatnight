@@ -159,14 +159,22 @@ exports.deleteAccount = function (username, callback) {
 
 }
 
-exports.addOrder = function (ready, cartid, productid, quantity, callback) {
+exports.addOrder = function (orderstate, cartid, productid, quantity, callback) {
     pg.connect(database_url , function (err, client, done) {
-        if (err) {
+	
+		if (err) {
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-            client.query({ text: "INSERT INTO orders(ready, cartid, productid, quantity) VALUES($1, $2, $3, $4)", name: 'insert orders', values: [ready, cartid, productid, quantity] }, function (err, result) {
+            client.query({ text: "INSERT INTO orders(orderstate, cartid, productid, quantity) VALUES($1, $2, $3, $4)", name: 'insert orders', values: [orderstate, cartid, productid, quantity] }, function (err, result) {
 
+            if (err) {                    
+                        callback(err , null);
+                    }
+					else {
+						callback(null, result);
+					}
+			
             });
         }
 

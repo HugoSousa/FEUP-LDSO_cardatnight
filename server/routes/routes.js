@@ -114,17 +114,17 @@ module.exports = function (app, io, passport) {
 
     app.post('/order', function (req, res) {
 
-        var cardid = req.body.cardid;
+        var cartid = req.body.cartid;
         var productid = req.body.productid;
         var quantity = req.body.quantity;
 
         res.status(422);
 
-        if (!cardid || !productid || !quantity ) res.json( { error: 'missing parameters' });
+        if (!cartid || !productid || !quantity ) res.json( { error: 'missing parameters' });
         else {
             res.status(200);
 
-            db.addOrder(false, cardid, productid, quantity, function (err, result) {
+            db.addOrder('delivered', cartid, productid, quantity, function (err, result) {
                 if (err) res.status(409).json(err);
                 else res.status(200).json(result);
 

@@ -26,8 +26,8 @@ app.service('AlertPopupService', ['$ionicPopup', function ($ionicPopup) {
 
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    // RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
-	RestangularProvider.setBaseUrl('http://localhost:1337');
+   // RestangularProvider.setBaseUrl('http://localhost:1337');
+   RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
 
     // RestangularProvider.setDefaultHeaders({'x-access-token': AuthServiceProvider.token()});
 
@@ -38,7 +38,7 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
         }
     });*/
 
-    RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 10 seconds
+    RestangularProvider.setDefaultHttpFields({timeout: 5000}); // set timeout of 5 seconds
 
 
     $stateProvider
