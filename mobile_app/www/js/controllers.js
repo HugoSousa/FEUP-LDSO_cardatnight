@@ -91,9 +91,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('AccountCtrl', function($scope, $stateParams, $ionicPopup, Restangular, AuthService) {
+.controller('AccountCtrl', function($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService) {
 
-    var loggedUser = AuthService.loggedUser();
+	var loggedUser = AuthService.loggedUser();
+	$scope.loggedUser = AuthService.loggedUser().username;
 	
 	$scope.changePasswordSubmit = function(){
 		var resource = Restangular.all('change-password');
@@ -115,16 +116,15 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 			resource.post($scope.user).then(function(resp) {
 				console.log("ok");
 				
-				console.log('Username:' + loggedUser.username);
-				
 				var alertPopup = $ionicPopup.alert({
 					 title: 'Change Password',
 					 template: 'Password changed successfully!'
 				   });
 				   alertPopup.then(function(res) {
-					 console.log('Password changed successfully!');
+				   
+					 $state.go('login');
+						
 				   });
-				
 				
 			}, function(resp) {
 				console.log("error");
@@ -136,7 +136,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 					 template: 'Error changing password!'
 				   });
 				   alertPopup.then(function(res) {
-					 console.log('Error changing password!');
+				   
+					 
 				   });
 
 			});
@@ -153,10 +154,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         });
         confirmPopup.then(function(res) {
             if(res) {
-                console.log('You are sure');
+                console.log('You are sure!');
 
                 var user = {
-                    username: "dfoster2"
+                    username: loggedUser.username
                 }
 
                 var resource = Restangular.all('delete-account');
@@ -164,6 +165,17 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                 resource.post(user).then(function(resp) {
                     console.log("ok");
                     console.log(resp);
+					
+					var alertPopup = $ionicPopup.alert({
+					 title: 'Delete Account',
+					 template: 'Account deleted successfully!'
+				   });
+				   alertPopup.then(function(res) {
+				   
+					 $state.go('login');
+						
+				   });
+					
                 }, function(resp) {
                     console.log("error");
                     console.log(resp);

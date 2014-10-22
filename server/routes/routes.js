@@ -112,10 +112,6 @@ module.exports = function (app, io, passport) {
     }
 
 
-
-
-
-
     app.post('/order', function (req, res) {
 
         var cardid = req.body.cardid;

@@ -144,6 +144,13 @@ exports.deleteAccount = function (username, callback) {
         else {
             client.query({ text: "DELETE FROM person WHERE username=$1", name: 'delete person', values: [username] }, function (err, result) {
 
+			if (err) {                    
+                        callback(err , null);
+                    }
+					else {
+						callback(null, result);
+					}
+			
             });
         }
 
@@ -241,6 +248,73 @@ exports.notifyOrder = function (orderId, callback){
           });
         }
         
+        done();
+    });
+}
+
+exports.getProductsEstablishment = function (establishmentId, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+                client.query({ text: "SELECT * FROM product WHERE establishmentid = $1", name: 'get products establishment', values: [establishmentId] }, function (err, result) {
+                if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+                }
+              else {
+                callback(null, result.rows);
+                }
+          });
+                }
+            done();
+        });
+
+}
+
+exports.getProduct = function (productId, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+
+                client.query({ text: "SELECT * FROM product WHERE productid = $1", name: 'get product', values: [productId] }, function (err, result) {
+                if (err) {
+                    //any specific error?
+                    callback({ error: "Error occurred" }, null);
+                }
+                else {
+                    callback(null, result.rows);
+                }
+            });
+        }
+
+        done();
+    });
+    
+}
+
+exports.getActualOrders = function(cartid, callback){
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({text: "select * from orders where cartid = $1 order by orderstime", name: 'getactualorders', values: [cartid]}, function (err, result) {
+                if (err) {                    
+                        callback( err , null);
+                }
+                else {
+                    callback( null , result.rows);   
+                }
+ 
+            });
+
+        }
+
         done();
     });
 }
