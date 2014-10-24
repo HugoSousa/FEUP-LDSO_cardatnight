@@ -8,17 +8,17 @@ app.run(function() {
 
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    RestangularProvider.setBaseUrl('http://localhost:1337');
-    //RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+    //RestangularProvider.setBaseUrl('http://localhost:1337');
+    RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
 
     RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 10 seconds
 
 
     $stateProvider
 
-        .state('login', {
-            url: '/login',
-            templateUrl: 'templates/login.html'
+		.state('products', {
+            url: '/products',
+            templateUrl: 'templates/products.html'
         })
 
         .state('incoming-orders', {
@@ -26,9 +26,14 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
             templateUrl: 'templates/incoming-orders.html',
             controller: 'IncomingOrdersCtrl'
         })
+		
+		.state('customers', {
+            url: '/customers',
+            templateUrl: 'templates/customers.html'
+        })
 
         
 
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/incoming-orders');
 
 });

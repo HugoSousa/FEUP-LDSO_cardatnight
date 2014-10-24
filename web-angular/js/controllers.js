@@ -1,5 +1,20 @@
 var app = angular.module('controllers', []);
 
+app.controller('SidebarCtrl', function($scope, $state){
+
+    $scope.toggleSidebar = false;
+
+    $scope.toggle =  function(e){
+        //e.preventDefault();
+        //document.getElementById('wrapper').toggleClass("toggled");
+        $scope.toggleSidebar = !$scope.toggleSidebar;
+        
+        
+    };
+
+})
+
+
 app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
 
     $scope.notify = true;
@@ -7,6 +22,7 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
     $scope.orders = null;
     $scope.all_orders = null;
 
+	
     Restangular.one('incomingorders').getList(1).then(function(data){
         $scope.orders = data;
         $scope.all_orders = angular.copy($scope.orders);

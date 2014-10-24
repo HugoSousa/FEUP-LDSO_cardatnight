@@ -1,39 +1,57 @@
-<div class="page-header">
-    <h1>Incoming Orders</h1>
-</div>
 
-<div style="text-align: center;margin-bottom: 30px">
-    <label class="checkbox-inline">
-        <input type="checkbox" ng-change="changeNotify()" ng-model="notify"> <span> To be Notified </span>
-    </label>
-    <label class="checkbox-inline">
-        <input type="checkbox" ng-change="changeDeliver()" ng-model="deliver"> <span> To be Delivered </span>
-    </label>
-</div>
+	<div class="page-header">
+		<h1>Incoming Orders</h1>
+	</div>
 
-<table class="table" style="width:90%; margin:auto">
-    <tr>
-        <th>
-            <div class="row">
-                <div class="col-md-3">Time</div>
-                <div class="col-md-3">Code</div>
-                <div class="col-md-3">Product</div>
-                <div class="col-md-1">Qty.</div>
-                <div class="col-md-1"></div>
-                <div class="col-md-1"></div>
-            </div>
-        </th>
-    </tr>
-    <tr ng-repeat="order in orders">
-        <td valign="bottom">
-            <div class="row" >
-                <div class="col-md-3">{{order.orderstime}}</div>
-                <div class="col-md-3">Should have an unique code here!</div>
-                <div class="col-md-3">{{order.productname}}</div>
-                <div class="col-md-1">{{order.quantity}}</div>
-                <div class="col-md-1"><span ng-class="{'disabled': order.orderstate == 'notified'}" tooltip="mark order as ready" style="color:steelblue; font-size: 150%; text-align: center" class="glyphicon glyphicon-bullhorn incoming-order-span" ng-click="order.orderstate == 'ordered' && notifyOrder(order.ordersid)"></span></div>
-                <div class="col-md-1"><span ng-class="{'disabled': order.orderstate == 'ordered'}" tooltip="mark order as received" style="color:red; font-size: 150%; text-align: center" class="glyphicon glyphicon-remove-circle incoming-order-span" ng-click="order.orderstate == 'notified' && removeOrder(order.ordersid)"></span></div>
-            </div>
-        </td>
-    </tr>
-</table>
+	<div style="text-align: center;margin-bottom: 30px">
+		<label class="checkbox-inline">
+			<input type="checkbox" ng-change="changeNotify()" ng-model="notify"> <span> To be Notified </span>
+		</label>
+		<label class="checkbox-inline">
+			<input type="checkbox" ng-change="changeDeliver()" ng-model="deliver"> <span> To be Delivered </span>
+		</label>
+	</div>
+
+	<table class="table" style="width:90%; margin:auto">
+		<tr>
+			<th>
+				<div class="row">
+					<div class="col-md-3">Time</div>
+					<div class="col-md-3">Code</div>
+					<div class="col-md-3">Product</div>
+					<div class="col-md-1">Qty.</div>
+					<div class="col-md-1"></div>
+					<div class="col-md-1"></div>
+				</div>
+			</th>
+		</tr>
+		<tr ng-repeat="order in orders">
+			<td valign="bottom">
+				<div class="row" >
+					<div class="col-md-3">{{order.orderstime}}</div>
+					<div class="col-md-3">Should have an unique code here!</div>
+					<div class="col-md-3">{{order.productname}}</div>
+					<div class="col-md-1">{{order.quantity}}</div>
+					<div class="col-md-1"><span ng-class="{'disabled': order.orderstate == 'notified'}" tooltip="mark order as ready" style="color:steelblue; font-size: 150%; text-align: center" class="glyphicon glyphicon-bullhorn incoming-order-span" ng-click="order.orderstate == 'ordered' && notifyOrder(order.ordersid)"></span></div>
+					<div class="col-md-1"><span ng-class="{'disabled': order.orderstate == 'ordered'}" tooltip="mark order as received" style="color:red; font-size: 150%; text-align: center" class="glyphicon glyphicon-remove-circle incoming-order-span" ng-click="order.orderstate == 'notified' && removeOrder(order.ordersid)"></span></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	</div>
+	
+	<!--
+	<button class="btn btn-default" ng-click="toggle()" >Toggle Menu</button>
+
+	<div> TOGGLE VAR: {{toggleSidebar}} </div>
+	-->
+	
+	<!-- Menu Toggle Script -->
+    <!-- <script>
+	console.log(document);
+    document.getElementById('menu-toggle').on('click', function(e) {
+		console.log("clicked");
+        //e.preventDefault();
+       // document.getElementById('wrapper').toggleClass("toggled");
+    });
+    </script> -->

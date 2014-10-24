@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link rel="stylesheet" href = "css/style.css">
+	 <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+
+    <!--angularjs js -->
+    <script src="js/libraries/angular.js"></script>
+	<script src="js/libraries/angular-ui-router.js"></script>
+	<script src="js/libraries/ui-bootstrap-tpls-0.11.2.min.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/libraries/standalone-framework.js"></script>
+    <script src="js/libraries/highcharts.js"></script>
+    <script src="js/libraries/highcharts-ng.js"></script>
+    <script src="js/libraries/restangular.js"></script>
+    <script src="js/libraries/lodash.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+	
+</head>
+
+<body ng-app="starter"  ng-controller="SidebarCtrl">
+
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<div class="navbar-left">
+				<ul class="nav navbar-nav">
+					<li><a href="#" class="btn" ng-click="toggle()" style="font-size: 200%; text-rendering: geometricPrecision">&#9776;</a></li>
+				</ul>	
+				<!--
+				<button class="btn btn-default navbar-btn" ng-click="toggle()" >
+					&#9776; 
+				</button>
+				-->
+			</div>
+			
+			
+			
+		</div>
+		<a class="navbar-brand navbar-right" href="#">card@night</a>
+	</div>
+ </nav>
+
+ <div id="wrapper" ng-class="{toggled: toggleSidebar}" style="margin-top: 50px">
+
+
+	<div id="sidebar-wrapper" style="background-color:#222">
+		 <ul class="sidebar-nav">
+			<li class="sidebar-brand">
+				<a href="#" style="font-size: 150%">
+					 Menu
+				</a>
+			</li>
+			<li>
+				<a ui-sref="customers"><span class="glyphicon glyphicon-user"></span>&nbsp; Customers</a>
+			</li>
+			<li>
+				<a ui-sref="incoming-orders"><span class="glyphicon glyphicon-tags"></span>&nbsp; Orders</a>
+			</li>
+			<li>
+				<a ui-sref="products"><span class="glyphicon glyphicon-book"></span>&nbsp; Products</a>
+			</li>
+
+			<li>
+				<a href="#" style="margin-top: 80%"><span class="glyphicon glyphicon-cog"></span>&nbsp; Account</a>
+			</li>
+			<li>
+				<a href="#"><span class="glyphicon glyphicon-home"></span>&nbsp; My Establishment (manager)</a>
+			</li>
+			<li>
+				<a href="#"><span class="glyphicon glyphicon-lock"></span>&nbsp; Logout</a>
+			</li>
+		</ul>
+	</div>
+	
+	<div id="page-content-wrapper">
+		<!--<div> TOGGLE VAR1: {{toggleSidebar}} </div>-->
+	<ui-view>
+	</ui-view>
+	</div>
+</div>
+
+
+	
+</body>
+</html>
