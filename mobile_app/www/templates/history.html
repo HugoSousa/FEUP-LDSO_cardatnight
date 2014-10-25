@@ -1,4 +1,4 @@
-<ion-view title="hugo_sousa">
+<ion-view title="{{loggedUser.username}}">
     <ion-content padding="true">
         <label class="item item-icon-right">
             <select ng-model="selectedPlace" style="opacity:0; width:100%; position:absolute; z-index:100" ng-options="place.name for place in places">
@@ -15,7 +15,4 @@
             <highchart id="chart1" config="chartConfig"></highchart>
         </div>
     </ion-content>
-    <ion-footer-bar class="bar-stable">
-        <h1 class="title">powered by AppName</h1>
-    </ion-footer-bar>
 </ion-view>

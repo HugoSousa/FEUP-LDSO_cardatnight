@@ -2,12 +2,9 @@ var app = angular.module('starter', ['ionic', 'controllers', 'services', 'restan
 
 app.run(function($ionicPlatform) {
 
+
     $ionicPlatform.ready(function() {
-        /*
-        if(window.StatusBar) {
-            StatusBar.styleDefault();
-        }
-        */
+        $ionicPlatform.isFullScreen = true;
     });
 })
 
