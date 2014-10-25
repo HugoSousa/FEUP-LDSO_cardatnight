@@ -88,17 +88,25 @@ insert into worker (workerid,establishmentid,permission) values (28,3,'doorman')
 insert into worker (workerid,establishmentid,permission) values (29,4,'doorman');
 insert into worker (workerid,establishmentid,permission) values (30,5,'doorman');
 
+--categories
+insert into category(categoryid, name) values (1,'cocktail');
+insert into category(categoryid, name) values (2,'shot');
+insert into category(categoryid, name) values (3,'bebidas espirituosas');
+insert into category(categoryid, name) values (4,'refrigerante');
+insert into category(categoryid, name) values (5,"whisky's");
+insert into category(categoryid, name) values (6,'outros');
+
 --products
-insert into product(description,image,name,price,establishmentId) values('', '', 'Bacardi', 7.5, 1);
-insert into product(description,image,name,price,establishmentId) values('', '', 'Cabana Cachaça', 8.0, 1);
-insert into product(description,image,name,price,establishmentId) values('Scotch single malt and amaretto', '', 'GodFather', 9.0, 2);
-insert into product(description,image,name,price,establishmentId) values('', '', 'Vodka Absolut', 7.5, 2);
-insert into product(description,image,name,price,establishmentId) values('', '', 'Gin Voyager', 10.0, 3);
-insert into product(description,image,name,price,establishmentId) values('', '', 'Tequila Patron Platinum', 15.0, 3);
-insert into product(description,image,name,price,establishmentId) values('', '', 'Absinthe Drip', 13.0, 4);
-insert into product(description,image,name,price,establishmentId) values('', '', 'Vodka Absolut Citron', 8.0, 4);
-insert into product(description,image,name,price,establishmentId) values('vodka, rum, lime and pineaple juice', '', 'Key Lime Twist', 12.0, 4);
-insert into product(description,image,name,price,establishmentId) values('Tequila, creme de banana, white creme de cacao, and fresh lime juice', '', 'Mad Dog', 11.0, 4);
+insert into product(description,image,name,price,establishmentid,categoryid) values('', '', 'Bacardi', 7.5, 1, 3);
+insert into product(description,image,name,price,establishmentid,categoryid) values('', '', 'Cabana Cachaça', 8.0, 1, 3);
+insert into product(description,image,name,price,establishmentid,categoryid) values('Scotch single malt and amaretto', '', 'GodFather', 9.0, 2, 5);
+insert into product(description,image,name,price,establishmentid,categoryid) values('', '', 'Vodka Absolut', 7.5, 2, 3);
+insert into product(description,image,name,price,establishmentid,categoryid) values('', '', 'Gin Voyager', 10.0, 3, 6);
+insert into product(description,image,name,price,establishmentid,categoryid) values('', '', 'Tequila Patron Platinum', 15.0, 3, 3);
+insert into product(description,image,name,price,establishmentid,categoryid) values('', '', 'Absinthe Drip', 13.0, 4, 6);
+insert into product(description,image,name,price,establishmentid,categoryid) values('', '', 'Vodka Absolut Citron', 8.0, 4, 3);
+insert into product(description,image,name,price,establishmentid,categoryid) values('vodka, rum, lime and pineaple juice', '', 'Key Lime Twist', 12.0, 4, 3);
+insert into product(description,image,name,price,establishmentid,categoryid) values('Tequila, creme de banana, white creme de cacao, and fresh lime juice', '', 'Mad Dog', 11.0, 4, 6);
 
 --cart
 insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,customerId,qrcode) values (23.50,5.00,'2014-09-01 20:00:00','2014-09-01 23:00:00',true,1,1,'');
@@ -110,13 +118,13 @@ insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,custo
 insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,customerId,qrcode) values (8.0,0,'2014-10-03 20:00:00',NULL,false,4,6,'');
 
 --orders 
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-01 21:00:00','delivered',1,1,1);
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-01 21:00:00','delivered',1,2,1);
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-01 21:30:00','delivered',1,3,1);
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-10-03 01:00:00','delivered',2,3,2);
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-10-01 04:00:00','delivered',3,4,1);
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-27 02:00:00','delivered',4,4,3);
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-09-10 23:10:00','delivered',5,10,1);
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-10-03 21:00:00','delivered',6,9,1);
-insert into orders(ordersTime,orderState,cartId,productid,quantity) values ('2014-10-03 21:00:00','notified',7,8,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-01 21:00:00','delivered',1,1,1,'AB234AR');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-01 21:00:00','delivered',1,2,1,'B364ASD');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-01 21:30:00','delivered',1,3,1,'9FGF41A');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-10-03 01:00:00','delivered',2,3,2,'JGI532A');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-10-01 04:00:00','delivered',3,4,1,'M9521AY');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-27 02:00:00','delivered',4,4,3,'BEQ3AF2');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-10 23:10:00','delivered',5,10,1,'OP004S3');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-10-03 21:00:00','delivered',6,9,1,'YE79902S');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-10-03 21:00:00','notified',7,8,1,'REQ414S');
 

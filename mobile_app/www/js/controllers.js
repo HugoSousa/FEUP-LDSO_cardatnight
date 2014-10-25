@@ -194,7 +194,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading){
+.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicPopup){
     //console.log(AuthService.loggedUser());
 
     $scope.loginSubmit = function() {
@@ -221,7 +221,20 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             });
             */
         }, function(resp){
-            console.log("error");
+
+            var error = "";
+            if(resp.status == 0)
+                error = "Please check your Internet connection.";
+            else if(resp.status == 401)
+                error = resp.data.error;
+            else
+                error = "Something went wrong.";
+
+            $ionicPopup.alert({
+                title: 'Error',
+                template: '<p style="text-align: center">'+error+'</p>'
+            });
+
             console.log(resp);
 			
 			$ionicLoading.hide();

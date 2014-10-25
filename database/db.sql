@@ -23,7 +23,8 @@ create table customer(
    customerid int primary key not null,
    name text not null,
    email text unique not null,
-   foreign key (customerid) references person(personid) on delete cascade
+   deleted boolean not null default false,
+   foreign key (customerid) references person(personid)
 );
 
 create type worker_permission as enum ('employee', 'manager', 'doorman');
@@ -50,6 +51,11 @@ create table cart(
    foreign key (customerid) references customer(customerid) on delete cascade
 );
 
+create table category(
+   categoryid serial primary key not null,
+   name text not null
+);
+
 create table product(
    productid serial primary key not null,
    description text,
@@ -57,7 +63,9 @@ create table product(
    name text not null,
    price double precision check (price >= 0),
    establishmentid int not null,
-   foreign key (establishmentid) references establishment(establishmentid)
+   categoryid int not null,
+   foreign key (establishmentid) references establishment(establishmentid),
+   foreign key (categoryid) references category(categoryid)
 );
 
 create type product_state as enum ('ordered','notified', 'delivered');
@@ -69,7 +77,7 @@ create table orders(
    cartid int not null,
    productid int not null,
    quantity int check(quantity>0),
+   code text not null,
    foreign key (cartid) references cart(cartid) on delete cascade,
    foreign key (productid) references product(productid)
 );
-
