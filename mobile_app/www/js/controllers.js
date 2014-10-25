@@ -293,7 +293,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 .controller('ProductsCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
 
     console.log("here");
-    $scope.loading = $ionicLoading.show({
+    $ionicLoading.show({
+        template: '',
         showBackdrop: false
     });
 
@@ -307,7 +308,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
 .controller('ProductCtrl', function($state, $scope, $stateParams, $ionicPopup, Restangular, $ionicLoading) {
 
-    $scope.loading = $ionicLoading.show({
+    $ionicLoading.show({
         showBackdrop: false
     });
 
@@ -316,45 +317,73 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
         $ionicLoading.hide();
     });
-	
-	
+
 	
 	$scope.orderSubmit = function(){
-		var resource = Restangular.all('order');
+
+
+
+        $ionicPopup.show({
+
+            template: '<div counter value="orderData.quantity" min="1" max="5" step="1"></div>',
+            title: 'Choose the Quantity',
+            scope: $scope,
+            buttons: [
+                { text: 'Cancel' },
+                {
+                    text: '<b>Ok</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        console.log($scope.orderData);
+                        orderProduct();
+                    }
+                }
+            ]
+        });
 		
 		console.log($scope.orderData);
 
-		resource.post($scope.orderData).then(function(resp) {
-			console.log("ok");
-			console.log(resp);
-			
-			var alertPopup = $ionicPopup.alert({
-			 title: 'Order',
-			 template: 'Order made successfully!'
-		   });
-		   alertPopup.then(function(res) {
-		   
-			 $state.go('products');
-				
-		   });
-			
-		}, function(resp) {
-			console.log("error");
-			console.log(resp);
 
-			$scope.error = resp.data.error;
-			
-			var alertPopup = $ionicPopup.alert({
-			 title: 'Order',
-			 template: 'Error making order!'
-		   });
-		   alertPopup.then(function(res) {
-		   
-			 
-				
-		   });
+		var orderProduct = function(){
 
-		});
+            console.log("ordering product");
+            console.log($scope.orderData);
+
+            var resource = Restangular.all('order');
+
+            resource.post($scope.orderData).then(function(resp) {
+                console.log("ok");
+                console.log(resp);
+
+                var alertPopup = $ionicPopup.alert({
+                 title: 'Order',
+                 template: "<p style='text-align:center'>Order made successfully!</p>"
+               });
+               alertPopup.then(function(res) {
+
+                 $state.go('products');
+
+               });
+
+            }, function(resp) {
+                console.log("error");
+                console.log(resp);
+                var error = "";
+                if(resp.status == 0)
+                    error = "Service unavailable.<br>Please try again later.";
+                else
+                    error = "An error occurred.<br> Please try again later.";
+
+
+                var alertPopup = $ionicPopup.alert({
+                 title: 'Order',
+                 template: "<p style='text-align:center'>"+error+"</p>"
+               });
+               alertPopup.then(function(res) {
+               });
+
+            });
+        }
 
 	};
 })

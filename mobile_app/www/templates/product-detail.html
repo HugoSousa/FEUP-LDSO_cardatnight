@@ -14,7 +14,7 @@
                 </div>
                 <div class="item item-divider row">
                     <div class="col col-75" style="text-align: left">Price</div>
-                    <div class="col col-25">{{product.price}}</div>
+                    <div class="col col-25">{{product.price}}€</div>
                 </div>
             </div>
 
@@ -23,7 +23,7 @@
                     Order
                 </button>
             </div>
-
+            {{quantity}}
             <input type="hidden" name="cartid" ng-model="orderData.cartid" ng-init="orderData.cartid = 1">
             <input type="hidden" name="productid" ng-model="orderData.productid" ng-init="orderData.productid = 1">
             <input type="hidden" name="quantity" ng-model="orderData.quantity" ng-init="orderData.quantity = 1">

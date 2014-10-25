@@ -124,7 +124,7 @@ module.exports = function (app, io, passport) {
         else {
             res.status(200);
 
-            db.addOrder('delivered', cartid, productid, quantity, function (err, result) {
+            db.addOrder('ordered', cartid, productid, quantity, function (err, result) {
                 if (err) res.status(409).json(err);
                 else res.status(200).json(result);
 

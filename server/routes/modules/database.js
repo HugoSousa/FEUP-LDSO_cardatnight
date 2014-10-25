@@ -142,7 +142,7 @@ exports.deleteAccount = function (username, callback) {
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-            client.query({ text: "DELETE FROM person WHERE username=$1", name: 'delete person', values: [username] }, function (err, result) {
+            client.query({ text: "UPDATE person SET deleted = true WHERE username=$1", name: 'delete person', values: [username] }, function (err, result) {
 
 			if (err) {                    
                         callback(err , null);
@@ -166,7 +166,7 @@ exports.addOrder = function (orderstate, cartid, productid, quantity, callback) 
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-            client.query({ text: "INSERT INTO orders(orderstate, cartid, productid, quantity) VALUES($1, $2, $3, $4)", name: 'insert orders', values: [orderstate, cartid, productid, quantity] }, function (err, result) {
+            client.query({ text: "INSERT INTO orders(orderstate, cartid, productid, quantity, code) VALUES($1, $2, $3, $4, 'ABCDEF')", name: 'insert orders', values: [orderstate, cartid, productid, quantity] }, function (err, result) {
 
             if (err) {                    
                         callback(err , null);
