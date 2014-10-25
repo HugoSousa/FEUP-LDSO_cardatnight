@@ -18,7 +18,14 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
 		.state('products', {
             url: '/products',
-            templateUrl: 'templates/products.html'
+            templateUrl: 'templates/products.html',
+			controller:	'ProductsCtrl'
+        })
+		
+		.state('product-detail', {
+            url: '/product/:productDetails',
+            templateUrl: 'templates/product-detail.html',
+            controller: 'ProductCtrl'
         })
 
         .state('incoming-orders', {

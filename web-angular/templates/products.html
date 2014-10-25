@@ -1,4 +1,37 @@
 
-	<h1>Products</h1>
-
-
+	<div class="page-header">
+		<h1>Products</h1>
+	</div>
+	
+	<br></br>
+	<div class="col-md-9">
+	</div>
+	
+	<div class="col-md-3">
+	<button> Add Product </button>
+	</div>
+		
+	<br></br>
+	<table class="table" style="width:90%; margin:auto">
+		<tr>
+			<th>
+				<div class="row">
+					<div class="col-md-3">Name</div>
+					<div class="col-md-3">Description</div>
+					<div class="col-md-3">Category</div>
+					<div class="col-md-1">Price</div>
+				</div>
+			</th>
+		</tr>
+		<tr ng-repeat="product in products">
+			<td valign="bottom">
+				<div class="row" >
+					<div class="col-md-3"> <a href="#/product/{{product.productid}}">{{product.name}}</a></div>
+					<div class="col-md-3">{{product.description}}</div>
+					<div class="col-md-3">bebida</div>
+					<div class="col-md-1">{{product.price}}€</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	</div>

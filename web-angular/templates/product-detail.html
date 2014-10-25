@@ -1,0 +1,20 @@
+
+
+<form class="simple-form" name="orderForm" ng-controller="ProductCtrl" novalidate on-valid-submit="orderSubmit()">
+            <div>
+
+                <div class="item item-avatar">
+                    <h2>{{product.name}}</h2>
+                    <p>Slogan da Bebida</p>
+                </div>
+
+                <div class="item item-body">
+                    {{product.description}}
+                </div>
+                <div class="item item-divider row">
+                    <div class="col col-75" style="text-align: left">Price</div>
+                    <div class="col col-25">{{product.price}}</div>
+                </div>
+            </div>
+
+        </form>
