@@ -12,7 +12,7 @@ app.controller('SidebarCtrl', function($scope, $state){
         
     };
 
-})
+});
 
 
 app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
@@ -66,7 +66,7 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
         });
 
 
-    }
+    };
 
     //JUST AN EXAMPLE
     $scope.changeNotify = function(){
@@ -110,8 +110,8 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
             $scope.orders.sort(function(a,b){
                 return a.orderstime > b.orderstime;
             })
-        }
-    }
+        };
+    };
 
 
     $scope.changeDeliver = function() {
@@ -157,9 +157,26 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
             })
         }
     }
+});
+
+app.controller('ProductsCtrl', function($scope, $stateParams, Restangular) {
 
 
-})
+    //hardcoded establishment id=4
+    var products = Restangular.one('products').getList(4).then(function(data){
+        $scope.products = data;
+    })
+	
+});
+
+app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular) {
+
+
+    var product = Restangular.one('product', $stateParams.productId).get().then(function(data){
+        $scope.product = data[0];
+		console.log($scope.product);
+      })
+	  });
 
 
 
