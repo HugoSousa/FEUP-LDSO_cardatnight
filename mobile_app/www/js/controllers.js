@@ -209,6 +209,31 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             console.log("ok");
             console.log(resp);
 
+            //window.plugin.notification.local.add({ message: 'Teste notificação.', autoCancel: true });
+
+
+            var socket = io.connect('http://localhost:1337');
+
+            socket.on('connect', function() {
+                console.log("connected");
+
+
+                socket.emit('storeClientInfo', { username: resp.user.username });
+
+                socket.on('text', function(text) {
+                    console.log(text);
+                });
+
+                socket.on('notify', function(text) {
+                    $ionicPopup.alert({
+                        title: 'Order Ready',
+                        template: '<p style="text-align: center">'+text+'</p>'
+                    });
+
+                });
+            });
+
+
             AuthService.login(resp.user, resp.access_token);
             $ionicLoading.hide();
             $state.go('menu');

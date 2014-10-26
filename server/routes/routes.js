@@ -82,7 +82,6 @@ module.exports = function (app, io, passport) {
 
     
     app.post('/login', function (req, res, next) {
-    
         passport.authenticate('local-login', function (err, user, info) {
             if (err) return next(err);
             if (!user)
@@ -232,17 +231,43 @@ module.exports = function (app, io, passport) {
 
     app.post('/notify', function(req, res){
 
+        console.log("notify");
         var orderid = req.body.orderid;
         res.status(422);
 
         if (!orderid) res.json( { error: 'missing parameters' });
-        //after changing database, send a message to the client devi
-        db.notifyOrder(orderid, function(err, result){
+        //after changing database, send a message to the client device
+        //get the username of the customer who ordered
+        db.getUserOrder(orderid, function(err, result){
             if (err) res.status(409).json(err);
-            else res.status(200).json(result);
+            
+            else {
+
+                //lookup for the socket of that username
+                console.log("USER ID OF THIS ORDER: " + result.username);
+                for(var a=0; a < clients.length; a++){
+                    console.log("USERNAME: " + clients[a].username + "\n");
+                    if(clients[a].username == result.username){
+                        console.log("EMIT TO SOCKET " + clients[a].clientId);
+                        var toSocket = clients[a].clientId;
+
+                        io.to(toSocket).emit('notify', 'Your order number X is ready');
+                    }
+                }
+
+                db.notifyOrder(orderid, function(err, result){
+                    if (err) res.status(409).json(err);
+                    else res.status(200).json(result);
+                });
+            }
         });
+        
+        //emit a notification to that socket
+
+        
     });
 
+    /*
     io.on('connection', function (socket) {
         console.log('a user connected');
 
@@ -256,5 +281,45 @@ module.exports = function (app, io, passport) {
         });
 
     });
+    */
+
+    var clients = []
+
+    io.on('connection', function (socket) {
+
+        console.log('socket connected');
+        
+
+        socket.on('storeClientInfo', function (data) {
+            console.log("STORE CLIENT INFO");
+
+            var clientInfo = new Object();
+            clientInfo.username = data.username;
+            clientInfo.clientId = socket.id;
+            clients.push(clientInfo);
+
+            for(var i=0; i < clients.length; i++){
+                console.log(i+1 + " - ");
+                console.log(clients[i].username);
+                console.log(clients[i].clientId);
+                console.log("");
+            }
+            
+            
+        });
+
+        socket.on('disconnect', function (socket) {
+            //remove the client from array
+            console.log('socket disconnected');
+            console.log(socket.id);
+
+        });
+
+        socket.emit('text', 'wow. such event. very real time.');
+    });
+
+
+
+    //http.listen(3000);
 
 }

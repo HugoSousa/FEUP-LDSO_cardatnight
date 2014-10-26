@@ -8,6 +8,9 @@ var app = express();
 var port = process.env.PORT || 1337;
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
+//http.listen(1234);
+
 var bodyParser = require('body-parser');
 var passport = require('passport');
 app.use(morgan('dev'));
