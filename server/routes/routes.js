@@ -34,6 +34,24 @@ module.exports = function (app, io, passport) {
 
     });
 
+	app.post('/delete-product', function (req, res) {
+
+        var id = req.body.id;
+
+        res.status(422);
+
+        if (!id ) res.json( { error: 'missing parameters' });
+        else {
+                res.status(200);
+
+                db.deleteProduct(id, function (err, result) {
+                    if (err) res.status(409).json(err);
+                    else res.status(200).json(result);
+                });
+        }
+    });
+	
+	
     app.post('/change-password', function (req, res) {
 
         var username = req.body.username;

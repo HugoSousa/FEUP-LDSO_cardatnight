@@ -176,7 +176,7 @@ app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular)
         $scope.product = data[0];
 		console.log($scope.product);
       })
-	  });
+});
 
 
 

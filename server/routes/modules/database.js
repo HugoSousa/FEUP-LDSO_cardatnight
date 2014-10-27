@@ -159,6 +159,31 @@ exports.deleteAccount = function (username, callback) {
 
 }
 
+exports.deleteProduct = function (id, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({ text: "DELETE FROM WHERE id=$1", values: [id] }, function (err, result) {
+
+			if (err) {                    
+                        callback(err , null);
+                    }
+					else {
+						callback(null, result);
+					}
+			
+            });
+        }
+
+        done();
+    });
+
+}
+
+
+
 exports.addOrder = function (orderstate, cartid, productid, quantity, callback) {
     pg.connect(database_url , function (err, client, done) {
 	
