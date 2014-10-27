@@ -313,7 +313,7 @@ exports.getProductsEstablishment = function (establishmentId, callback) {
             callback({ error: 'Failed to connect do database' }, null);
         }
         else {
-                client.query({ text: "SELECT * FROM product WHERE establishmentid = $1", name: 'get products establishment', values: [establishmentId] }, function (err, result) {
+                client.query({ text: "SELECT product.name, price, description, category.name as category, image FROM product, category WHERE product.categoryid = category.categoryid AND establishmentid = $1 AND product.deleted = false", name: 'get products establishment', values: [establishmentId] }, function (err, result) {
                 if (err) {
                 //any specific error?
                 callback({ error: "Error occurred" }, null);

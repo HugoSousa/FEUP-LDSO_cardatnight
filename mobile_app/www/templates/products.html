@@ -1,8 +1,33 @@
 <ion-view title="{{loggedUser.username}}">
     <ion-content padding="true">
         <h1 class="tableTitle">Products</h1>
+
+        <div style="margin-bottom: 20px; width:100%">
+            <label class="item item-icon-right" style="padding:0; width: 45%; display:inline-block" >
+                <div>
+                    <select ng-model="selectedCategory" class="pull-right" style="opacity:0; width:100%; padding: 0; display:inline-block" ng-options="product.category for product in products | unique: 'category'">
+                        <option value="" name="All" >All</option>
+                    </select>
+                    <!--<span class="input-label" style="display:inline-block">{{selectedCategory.category}}</span>-->
+                    <input type="text" placeholder="Category" value="{{selectedCategory.category}}" style="display:inline-block; ">
+                    <i class="icon ion-ios7-arrow-down"></i>
+                </div>
+            </label>
+
+            <label class="item item-icon-right" style="padding:0; width: 45%; display:inline-block; float:right; ">
+                <input type="search" placeholder="Search" ng-model="filterName" style="">
+                <i class="icon ion-ios7-search-strong"></i>
+            </label>
+        </div>
+
         <ion-list>
-            <ion-item ng-repeat="product in products" type="item-text-wrap" href="#/product/{{product.productid}}">
+            <ion-item type="item-text-wrap"  style="font-weight: bold" class="item-divider">
+                Name
+                <span class="pull-right" style="margin-right: 2%">
+                  Price
+                </span>
+            </ion-item>
+            <ion-item ng-repeat="product in products | filter:{category:selectedCategory.category}:strict | filter:{name:filterName}:strict" type="item-text-wrap" href="#/product/{{product.productid}}" item="item">
                 {{product.name}}
                 <span class="item-note">
                   {{product.price}}€

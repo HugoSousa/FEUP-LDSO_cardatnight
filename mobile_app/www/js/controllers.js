@@ -1,12 +1,10 @@
 var app = angular.module('controllers', ['highcharts-ng']);
 
 app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
-    console.log("footer ctrl");
     $scope.showFooter = true;
 
     window.addEventListener('native.keyboardshow', function() {
         $scope.showFooter = false;
-        //$window.location.reload(true);
         $scope.$apply();
         /*
         $ionicPopup.alert({
@@ -18,7 +16,6 @@ app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
 
     window.addEventListener('native.keyboardhide', function() {
         $scope.showFooter = true;
-        //$window.location.reload(true);
         $scope.$apply();
         /*
         $ionicPopup.alert({
@@ -257,10 +254,15 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                 });
 
                 socket.on('notify', function(text) {
+                    //popup notification -> bad for usability
+                    /*
                     $ionicPopup.alert({
                         title: 'Order Ready',
                         template: '<p style="text-align: center">'+text+'</p>'
                     });
+                    */
+
+                    window.plugin.notification.local.add({ message: 'Teste notificação.', autoCancel: true });
 
                 });
             });
@@ -349,7 +351,6 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
 .controller('ProductsCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
 
-    console.log("here");
     $ionicLoading.show({
         template: '',
         showBackdrop: false
@@ -358,9 +359,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     //hardcoded establishment id=4
     var products = Restangular.one('products').getList(4).then(function(data){
         $scope.products = data;
+
         $ionicLoading.hide();
     });
-	
 })
 
 .controller('ProductCtrl', function($state, $scope, $stateParams, $ionicPopup, Restangular, $ionicLoading) {

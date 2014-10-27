@@ -1,4 +1,4 @@
-var app = angular.module('starter', ['ionic', 'controllers', 'services', 'restangular']);
+var app = angular.module('starter', ['ionic', 'controllers', 'services', 'restangular', 'ui.unique']);
 
 app.run(function($ionicPlatform) {
 
