@@ -1,6 +1,38 @@
 var app = angular.module('controllers', ['highcharts-ng']);
 
+app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
+    console.log("footer ctrl");
+    $scope.showFooter = true;
+
+    window.addEventListener('native.keyboardshow', function() {
+        $scope.showFooter = false;
+        //$window.location.reload(true);
+        $scope.$apply();
+        /*
+        $ionicPopup.alert({
+            title: 'Keyboard Show',
+            template: 'Keyboard Show'
+        });
+        */
+    });
+
+    window.addEventListener('native.keyboardhide', function() {
+        $scope.showFooter = true;
+        //$window.location.reload(true);
+        $scope.$apply();
+        /*
+        $ionicPopup.alert({
+            title: 'Keyboard Hide',
+            template: 'Keyboard Hide'
+        });
+        */
+
+    });
+
+})
+
 app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
+
 
     $scope.loggedUser = AuthService.loggedUser();
 
@@ -212,7 +244,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             //window.plugin.notification.local.add({ message: 'Teste notificação.', autoCancel: true });
 
 
-            var socket = io.connect('http://localhost:1337');
+            var socket = io.connect('http://nightout-app.herokuapp.com:80');
 
             socket.on('connect', function() {
                 console.log("connected");

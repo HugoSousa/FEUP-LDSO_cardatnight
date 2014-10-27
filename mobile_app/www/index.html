@@ -41,9 +41,11 @@
 <ion-nav-view>
 </ion-nav-view>
 
-<ion-footer-bar class="bar-stable hide-on-keyboard-open">
+<div ng-controller="FooterCtrl">
+<ion-footer-bar  class="bar-stable" ng-if="showFooter">
     <h1 class="title">powered by card@night</h1>
 </ion-footer-bar>
+</div>
 
 </body>
 </html>

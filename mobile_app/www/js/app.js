@@ -2,9 +2,18 @@ var app = angular.module('starter', ['ionic', 'controllers', 'services', 'restan
 
 app.run(function($ionicPlatform) {
 
-
     $ionicPlatform.ready(function() {
-        $ionicPlatform.isFullScreen = true;
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
+        if(window.cordova && window.cordova.plugins.Keyboard) {
+            cordova.plugins.Keyboard.disableScroll(true);
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        }
+        if(window.StatusBar) {
+            // Set the statusbar to use the default style, tweak this to
+            // remove the status bar on iOS or change it to use white instead of dark colors.
+            StatusBar.styleDefault();
+        }
     });
 })
 
@@ -23,8 +32,8 @@ app.service('AlertPopupService', ['$ionicPopup', function ($ionicPopup) {
 
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-   RestangularProvider.setBaseUrl('http://localhost:1337');
-   //RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+   //RestangularProvider.setBaseUrl('http://localhost:1337');
+   RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
 
     RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 5 seconds
 
