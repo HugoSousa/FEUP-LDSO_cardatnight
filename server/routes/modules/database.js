@@ -165,7 +165,7 @@ exports.deleteProduct = function (id, callback) {
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-            client.query({ text: "DELETE FROM WHERE id=$1", values: [id] }, function (err, result) {
+            client.query({ text: "UPDATE product SET deleted = true WHERE productid=$1", values: [id] }, function (err, result) {
 
 			if (err) {                    
                         callback(err , null);

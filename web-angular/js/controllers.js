@@ -89,6 +89,17 @@ app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular)
         $scope.product = data[0];
 		console.log($scope.product);
       })
+	  
+	  $scope.deleteProduct=function()
+	  {
+	   console.log($scope.product.productid);
+	   var productid = {"productid": $scope.product.productid};
+	   
+	    var teste =Restangular.all('delete-product').post(productid).then(function (resp){
+            console.log("ok");
+            console.log(resp);
+	  });
+	  }
 });
 
 
