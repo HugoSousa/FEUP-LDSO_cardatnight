@@ -4,8 +4,6 @@ app.run(function() {
 
 })
 
-
-
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
     //RestangularProvider.setBaseUrl('http://localhost:1337');
@@ -16,31 +14,68 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
     $stateProvider
 
+        .state('login', {
+            url: '/login',
+            templateUrl: 'login.html'
+        })
+
 		.state('products', {
             url: '/products',
-            templateUrl: 'templates/products.html',
-			controller:	'ProductsCtrl'
+            views: {
+                // the main template will be placed here (relatively named)
+                '': { templateUrl: 'card@night.html' },
+
+                // the child views will be defined here (absolutely named)
+                'content@products': {
+                    templateUrl: 'templates/products.html',
+                    controller:	'ProductsCtrl'
+                }
+            }
         })
 		
 		.state('product-detail', {
             url: '/product/:productId',
-            templateUrl: 'templates/product-detail.html',
-            controller: 'ProductCtrl'
+            views: {
+                // the main template will be placed here (relatively named)
+                '': { templateUrl: 'card@night.html' },
+
+                // the child views will be defined here (absolutely named)
+                'content@product-detail': {
+                    templateUrl: 'templates/product-detail.html',
+                    controller: 'ProductCtrl'
+                }
+            }
         })
 
         .state('incoming-orders', {
             url: '/incoming-orders',
-            templateUrl: 'templates/incoming-orders.html',
-            controller: 'IncomingOrdersCtrl'
+            views: {
+
+                // the main template will be placed here (relatively named)
+                '': { templateUrl: 'card@night.html' },
+
+                // the child views will be defined here (absolutely named)
+                'content@incoming-orders': { templateUrl: 'templates/incoming-orders.html' }
+
+            }
         })
 		
 		.state('customers', {
             url: '/customers',
-            templateUrl: 'templates/customers.html'
+            views: {
+
+                // the main template will be placed here (relatively named)
+                '': { templateUrl: 'card@night.html' },
+
+                // the child views will be defined here (absolutely named)
+                'content@customers': {
+                    templateUrl: 'templates/customers.html'
+                }
+            }
         })
 
         
 
-    $urlRouterProvider.otherwise('/incoming-orders');
+    $urlRouterProvider.otherwise('/login');
 
 });
