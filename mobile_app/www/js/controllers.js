@@ -86,6 +86,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     $scope.forgotPassword = function() {
         $state.go('forgot-password');
     };
+	
+	$scope.generateQRCode = function(establishmentid, customerid) {
+        new QRCode(document.getElementById("qrcode"), "{" + "establishmentid:" + establishmentid + "," + "customerid:" + customerid + "}");
+    };
 
     $scope.chartConfig = {
         options: {
