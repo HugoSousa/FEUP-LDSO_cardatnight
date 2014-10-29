@@ -4,8 +4,6 @@ app.run(function() {
 
 })
 
-
-
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
     //RestangularProvider.setBaseUrl('http://localhost:1337');
@@ -64,16 +62,22 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 		
 		.state('customers', {
             url: '/customers',
-			views: {
+<<<<<<< HEAD
+            templateUrl: 'templates/customers.html',
+			controller: 'CustomersCtrl'
+=======
+            views: {
+
                 // the main template will be placed here (relatively named)
                 '': { templateUrl: 'card@night.html' },
 
                 // the child views will be defined here (absolutely named)
                 'content@customers': {
-                    templateUrl: 'templates/customers.html',
-					controller: 'CustomersCtrl'
+                    templateUrl: 'templates/customers.html'
                 }
-        }})
+            }
+>>>>>>> 04a1a2e08825795d03b1455444005bdcb3f47cf2
+        })
 
         
 
