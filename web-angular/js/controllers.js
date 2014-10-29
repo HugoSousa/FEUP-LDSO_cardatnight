@@ -20,7 +20,6 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
     $scope.ordered = 'ordered';
     $scope.notified = 'notified';
     $scope.orders = null;
-    $scope.all_orders = null;
 
     $scope.showOrder = function(order){
         return order.orderstate === $scope.ordered || order.orderstate === $scope.notified;
@@ -28,7 +27,6 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
 	
     Restangular.one('incomingorders').getList(1).then(function(data){
         $scope.orders = data;
-        $scope.all_orders = angular.copy($scope.orders);
     }), function(data){
         console.log("Error");
     };
