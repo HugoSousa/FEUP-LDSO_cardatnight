@@ -86,6 +86,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     $scope.forgotPassword = function() {
         $state.go('forgot-password');
     };
+	
+	$scope.generateQRCode = function(establishmentid, customerid) {
+        new QRCode(document.getElementById("qrcode"), "{" + "establishmentid:" + establishmentid + "," + "customerid:" + customerid + "}");
+    };
 
     $scope.chartConfig = {
         options: {
@@ -524,16 +528,19 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 	};
 })
 
-.controller('OrdersCtrl', function($scope, Restangular) {
+.controller('OrdersCtrl', function($scope, Restangular, $ionicLoading) {
     //$scope.orders = Orders.all();
+    $ionicLoading.show({
+        noBackdrop: false,
+        template: 'Loading'
+    });
 
     //get active cart (could be stored in a variable instead of asking the server every time)
     //get orders from that cart (hardcoded cartid=6)
     Restangular.one('actualorders').getList(1).then(function(data){
         $scope.orders = data;
-        //console.log($scope.orders.ordersid);
+        $ionicLoading.hide();
     });
-    //$scope.order = Orders.get($stateParams.orderId);
 })
 
 .controller('PlacesCtrl', function($scope, $stateParams, Places) {

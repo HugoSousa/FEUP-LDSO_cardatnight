@@ -2,16 +2,26 @@
     <ion-content padding="true">
         <h1 class="tableTitle">Orders</h1>
         <ion-list >
-            <ion-item ng-repeat="order in orders" type="item-text-wrap" href="#/order/{{order.ordersid}}">
+            <ion-item type="item-text-wrap"  style="font-weight: bold" class="item-divider">
                 <div class="row">
+                    <div class="col col-25" style="text-align: left">Time</div>
+                    <div class="col col-50" style="text-align: center">Code</div>
+                    <div class="col col-25" style="text-align: right">State</div>
+                </div>
+            </ion-item>
+            <ion-item ng-repeat="order in orders" type="item-text-wrap" href="#/order/{{order.ordersid}}">
+                <div class="row" style="margin:0; padding:0">
                     <div class="col col-25" style="text-align: left">{{order.orderstime | date:'HH:mm:ss'}}</div>
-                    <div class="col col-50" style="text-align: right">No code yet on DB{{order.code}}</div>
+                    <div class="col col-50" style="text-align: center">{{order.code}}</div>
 
-                    <div ng-if="order.ready == true" class="col col-25" style="text-align: right">
-                        <i style="font-size: 150%" class="ion-ios7-checkmark"></i>
+                    <div ng-if="order.orderstate == 'ordered'" class="col col-25" style="text-align: right">
+                        <i style="font-size: 150%" class="ion-ios7-loop assertive"></i>
                     </div>
-                    <div ng-if="order.ready == false" class="col col-25" style="text-align: right">
-                        <i style="font-size: 150%" class="ion-ios7-more"></i>
+                    <div ng-if="order.orderstate == 'notified'" class="col col-25" style="text-align: right">
+                        <i style="font-size: 150%" class="ion-ios7-upload-outline energized"></i>
+                    </div>
+                    <div ng-if="order.orderstate == 'delivered'" class="col col-25" style="text-align: right">
+                        <i style="font-size: 150%" class="ion-ios7-checkmark-outline balanced"></i>
                     </div>
 
                 </div>

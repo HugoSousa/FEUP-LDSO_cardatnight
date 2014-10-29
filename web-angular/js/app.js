@@ -57,7 +57,10 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
                 '': { templateUrl: 'card@night.html' },
 
                 // the child views will be defined here (absolutely named)
-                'content@incoming-orders': { templateUrl: 'templates/incoming-orders.html' }
+                'content@incoming-orders': { 
+                    templateUrl: 'templates/incoming-orders.html',
+                    controller: 'IncomingOrdersCtrl'
+            }
 
             }
         })
