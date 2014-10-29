@@ -36,7 +36,7 @@ module.exports = function (app, io, passport) {
 
 	app.post('/delete-product', function (req, res) {
 
-        var id = req.body.id;
+        var id = req.body.productid;
 
         res.status(422);
 

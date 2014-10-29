@@ -11,11 +11,11 @@
                     <!--<span class="input-label" style="display:inline-block">{{selectedCategory.category}}</span>-->
                     <input type="text" placeholder="Category" value="{{selectedCategory.category}}" style="display:inline-block; ">
                     <i class="icon ion-ios7-arrow-down"></i>
-                </div>
+               </div>
             </label>
 
             <label class="item item-icon-right" style="padding:0; width: 45%; display:inline-block; float:right; ">
-                <input type="search" placeholder="Search" ng-model="filterName" style="">
+                <input type="search" placeholder="Search" ng-model="filterName">
                 <i class="icon ion-ios7-search-strong"></i>
             </label>
         </div>
@@ -27,7 +27,7 @@
                   Price
                 </span>
             </ion-item>
-            <ion-item ng-repeat="product in products | filter:{category:selectedCategory.category}:strict | filter:{name:filterName}:strict" type="item-text-wrap" href="#/product/{{product.productid}}" item="item">
+            <ion-item ng-repeat="product in products | filter:{category:selectedCategory.category} | filter:{name:filterName}" type="item-text-wrap" href="#/product/{{product.productid}}" item="item">
                 {{product.name}}
                 <span class="item-note">
                   {{product.price}}€
