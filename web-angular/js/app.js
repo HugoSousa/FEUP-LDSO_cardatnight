@@ -64,17 +64,16 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 		
 		.state('customers', {
             url: '/customers',
-            templateUrl: 'templates/customers.html',
-			controller: 'CustomersCtrl'
+			views: {
                 // the main template will be placed here (relatively named)
                 '': { templateUrl: 'card@night.html' },
 
                 // the child views will be defined here (absolutely named)
                 'content@customers': {
-                    templateUrl: 'templates/customers.html'
+                    templateUrl: 'templates/customers.html',
+					controller: 'CustomersCtrl'
                 }
-            }
-        })
+        }})
 
         
 
