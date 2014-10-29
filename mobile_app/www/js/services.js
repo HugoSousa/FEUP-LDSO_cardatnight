@@ -5,7 +5,7 @@ app.factory('AuthService', ['$window', function($window){
 
     var loggedUser;
     var localStorageUser = $window.localStorage['user'];
-    if (localStorageUser != 'undefined') loggedUser = JSON.parse(localStorageUser);
+    if (localStorageUser && localStorageUser != '' && localStorageUser != 'undefined' && typeof localStorageUser != 'undefined') loggedUser = JSON.parse(localStorageUser);
       
     return{ 
         login: function(user, access_token) {
