@@ -223,9 +223,13 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicPopup){
+.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup){
     //console.log(AuthService.loggedUser());
-
+    if ($stateParams.username) {
+        $scope.user = {username: ''};
+        $scope.user.username = $stateParams.username;
+    }
+ 
     $scope.loginSubmit = function() {
         console.log("Login");
 
@@ -303,7 +307,14 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('RegisterCtrl', function($scope, Restangular, $ionicLoading, AlertPopupService){
+.controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService ){
+    //console.log(AuthService.loggedUser());
+     $ionicViewService.clearHistory();
+     console.log('Deleted History');
+})
+
+
+.controller('RegisterCtrl', function($scope, $state, Restangular, $ionicLoading, AlertPopupService, StateManager){
 	$scope.attempt = false;
 	$scope.invalid_email = false;
 	$scope.invalid_username = false;
@@ -318,7 +329,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
          resource.post($scope.user).then(function(resp) {
             //console.log(resp.data);
 			$ionicLoading.hide();
-			$scope.logout();
+            AlertPopupService.createPopup("Registration successfully complete!", "Welcome " + $scope.user.name,  function() {
+            	 StateManager.go('login', { username: $scope.user.username });
+            });
+
          }, function(resp) {
 		 
 			$scope.attempt = true;
@@ -326,9 +340,15 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
              if(resp.status == 409){
                  //name invalid
-				$scope.invalid_username = true;
-				$scope.user.username = '';
-
+                    if (resp.data.error.indexOf("Email") != -1) 
+                    {
+                    $scope.invalid_email = true;
+					$scope.user.email = '';
+                  }
+                  else if (resp.data.error.indexOf("Username") != -1) {
+                    $scope.invalid_username = true;
+                    $scope.user.username = '';
+                }
              }
              else if(resp.status == 422){
                  //email invalid

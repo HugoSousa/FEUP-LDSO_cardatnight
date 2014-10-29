@@ -30,6 +30,22 @@ app.service('AlertPopupService', ['$ionicPopup', function ($ionicPopup) {
         }
     }])
 
+
+app.service('StateManager', ['$state', '$stateParams', '$rootScope', function($state, $stateParams, $rootScope)
+{
+    this.go = function(state, params, options)
+    {
+        var destroyListener = $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams)
+        {
+            angular.extend( toParams, params);
+            destroyListener();
+        });
+
+        return $state.go(state, params, options);
+    };
+}])
+
+
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
    //RestangularProvider.setBaseUrl('http://localhost:1337');
@@ -150,6 +166,7 @@ app.directive('onValidSubmit', ['$parse', '$timeout', function($parse, $timeout)
     }
 
 }])
+
 
 app.directive('validated', ['$parse', function($parse) {
     return {

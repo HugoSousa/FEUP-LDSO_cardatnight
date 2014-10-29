@@ -1,4 +1,32 @@
-
-	<h1>Customers</h1>
-
-
+<div class="page-header">
+		<h1>Customers</h1>
+</div>
+	
+	<div style="text-align: center;margin-bottom: 30px">
+		<label class="checkbox-inline">
+			<input type="checkbox" ng-change="changeNotify()" ng-model="notify"> <span> In establishment </span>
+		</label>
+	</div>
+	
+	<table class="table" style="width:90%; margin:auto">
+		<tr>
+			<th>
+				<div class="row">
+					<div class="col-md-3">Name</div>
+					<div class="col-md-3">Amount Spent</div>
+					<div class="col-md-3">Entry Time</div>
+					<div class="col-md-1">Mark as paid</div>
+				</div>
+			</th>
+		</tr>
+		<tr ng-repeat="customer in customers">
+			<td valign="bottom">
+				<div class="row" >
+					<div class="col-md-3">{{customer.name}}</div>
+					<div class="col-md-3">{{customer.name}}</div>
+					<div class="col-md-3">{{customer.name}}</div>
+					<div class="col-md-3">{{customer.name}}</div>
+				</div>
+			</td>
+		</tr>
+	</table>
