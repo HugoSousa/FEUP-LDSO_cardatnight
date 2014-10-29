@@ -340,10 +340,12 @@ module.exports = function (app, io, passport) {
         socket.on('disconnect', function (socket) {
             //remove the client from array
             for(var a=0; a < clients.length; a++){
+                /*
+                // FIX THIS result is undefined
                 if(clients[a].username == result.username){
                     clients.splice(a,1);
                     break;
-                }
+                }*/
             }
 
             console.log('socket disconnected');
