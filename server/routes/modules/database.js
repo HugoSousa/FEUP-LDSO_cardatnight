@@ -95,12 +95,11 @@ exports.getActiveCart = function(user, callback) {
         else {
 			var id = user.id;
 			client.query({text: "select * from cart where paid = false and customerid = $1", name: 'getactivecart', values: [id]}, function (err, result) {
-                    if (err) {                    
-                            callback( err , null);
-                    }
+                    if (err) {
+						callback( err , null);
+					}
 					else {
 						callback( null , result.rows[0]);
-					
 					}
 					
 					
@@ -160,15 +159,15 @@ exports.deleteAccount = function (username, callback) {
 }
 
 exports.deleteProduct = function (id, callback) {
-    pg.connect(database_url , function (err, client, done) {
-        if (err) {
-            callback({ error: 'Failed to connect to database' }, null);
+	pg.connect(database_url , function (err, client, done) {
+		if (err) {
+			callback({ error: 'Failed to connect to database' }, null);
         }
-        else {
-            client.query({ text: "DELETE FROM WHERE id=$1", values: [id] }, function (err, result) {
+		else {
+			client.query({ text: "DELETE FROM WHERE id=$1", values: [id] }, function (err, result) {
 
 			if (err) {                    
-                        callback(err , null);
+						callback(err , null);
                     }
 					else {
 						callback(null, result);
@@ -208,7 +207,30 @@ exports.addOrder = function (orderstate, cartid, productid, quantity, callback) 
     
 }
 
-function getCustomerManagerData(client, id, callback) {
+exports.getCustomersEstablishment=function(establishmentid) {
+
+	pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({text: "SELECT CUSTOMER.NAME AS NAME,CUSTOMER.EMAIL AS EMAIL,CART.ENTRANCETIME AS ENTRANCETIME,CART.EXITTIME AS EXITTIME,CART.BALANCE AS BALANCE FROM CUSTOMER,CART,ESTABLISHMENT WHERE CART.ESTABLISHMENTID= $1 AND CART.CUSTOMERID=CUSTOMER.CUSTOMERID",name: "get customers",values:[establishmentid]}, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+            callback(null, result.rows);
+            }
+          });
+        }
+        
+        done();
+    });
+
+}
+
+exports.getCustomerManagerData=function(client, id, callback) {
     
     
     client.query({ text: "SELECT * FROM customer WHERE customerid = $1", name: 'get customer', values: [id] }, function (err, result) {

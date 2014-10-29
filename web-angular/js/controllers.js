@@ -163,7 +163,7 @@ app.controller('ProductsCtrl', function($scope, $stateParams, Restangular) {
 
 
     //hardcoded establishment id=4
-    var products = Restangular.one('products').getList(4).then(function(data){
+    var products = Restangular.one('products').getList(1).then(function(data){
         $scope.products = data;
     })
 	
@@ -178,6 +178,12 @@ app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular)
       })
 });
 
+app.controller('CustomersCtrl', function($state, $scope, $stateParams, Restangular) {
 
+	var customer = Restangular.one('customer').getList(2).then(function(data){
+		$scope.customers=data;
+	})
+
+});
 
 

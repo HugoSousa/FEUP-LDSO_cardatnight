@@ -36,7 +36,8 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 		
 		.state('customers', {
             url: '/customers',
-            templateUrl: 'templates/customers.html'
+            templateUrl: 'templates/customers.html',
+			controller: 'CustomersCtrl'
         })
 
         

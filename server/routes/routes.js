@@ -52,7 +52,7 @@ module.exports = function (app, io, passport) {
     });
 	
 	
-    app.post('/change-password', function (req, res) {
+	app.post('/change-password', function (req, res) {
 
         var username = req.body.username;
         var currentPassword = req.body.currentPassword;
@@ -149,6 +149,7 @@ module.exports = function (app, io, passport) {
         }
     });
 	
+	
 	 app.post('/requestentry/:estabid', function (req, res) { //requested by customer to get access token
 		
 		db.getActiveCart(req.user, function(err, cart) {
@@ -220,7 +221,17 @@ module.exports = function (app, io, passport) {
         res.status(200).json(req.user);
     
     });
+	
+	app.get('/customers/:estabid', function(req, res){
 
+        db.getCustomersEstablishment(req.params.estabid, function(err, result){
+		console.log(result);
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
+    });
+	
     app.get('/products/:estabid', function(req, res){
 
         db.getProductsEstablishment(req.params.estabid, function(err, result){
