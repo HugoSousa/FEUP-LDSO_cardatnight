@@ -232,13 +232,16 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
  
     $scope.loginSubmit = function() {
         console.log("Login");
+        var bitArray = sjcl.hash.sha256.hash($scope.user.password);
+        var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
 
+        
         console.log($scope.user);
         $ionicLoading.show({
             template: 'Logging in...'
         });
         //TODO: encrypt password
-        Restangular.all('login').post($scope.user).then(function (resp){
+        Restangular.all('login').post({username: $scope.user.username, password: digest_sha256} ).then(function (resp){
             console.log("ok");
             console.log(resp);
 
@@ -315,18 +318,78 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
 
 .controller('RegisterCtrl', function($scope, $state, Restangular, $ionicLoading, AlertPopupService, StateManager){
-	$scope.attempt = false;
 	$scope.invalid_email = false;
 	$scope.invalid_username = false;
+    $scope.user = {username: '', name: '', email: '', password: ''};
+    var EMAIL_REGEXP = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i;
+    
+    $scope.validateName = function(name) {
+        if (name) {
+            if (name.length >= 1 && name.length <= 50) 
+                return 'has-success';
+            else return 'has-error';
+        }
+        else return '';
+    }
+        
+    $scope.validateEmail = function(email) {
+        if (email) {
+            if ($scope.invalid_email == email) return 'has-warning';
+            if (EMAIL_REGEXP.test(email)) {
+                return 'has-success';
+            } else return 'has-error'; 
+           
+        }
+        else return '';
+    }
+    
+        $scope.validateUsername = function(user) {
+        if (user) {
+        if ($scope.invalid_username == user) return 'has-warning';
 
-
+            console.log(user.length);
+            if (user.length >= 3 && user.length <= 25 && !(user.indexOf(' ') > -1)) 
+                return 'has-success';
+            else return 'has-error';
+           
+        }
+        else return '';
+    }
+    
+    $scope.validatePassword = function(password) {
+        if (password) {
+            console.log(password.length);
+            if (password.length >= 3 && password.length <= 50 && !(password.indexOf(' ') > -1)) 
+                return 'has-success';
+            else return 'has-error';
+           
+        }
+        else return '';
+    }
+    
+        $scope.validateUser = function(user) {
+            return $scope.validateName(user.name) == 'has-success' &&
+                    $scope.validateEmail(user.email)  == 'has-success'&& 
+                    $scope.validateUsername(user.username)  == 'has-success'&&    
+                    $scope.validatePassword(user.password)  == 'has-success';
+        }
+    
     $scope.registerSubmit = function(){
 		$ionicLoading.show({
 			template: 'Signing up...'
 		});
         var resource = Restangular.all('register');
+        
+        var bitArray = sjcl.hash.sha256.hash($scope.user.password);
+        var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
 
-         resource.post($scope.user).then(function(resp) {
+        var send_user = 
+        { username: $scope.user.username,
+        name: $scope.user.name,
+        email: $scope.user.email,
+        password: digest_sha256
+        }
+         resource.post(send_user).then(function(resp) {
             //console.log(resp.data);
 			$ionicLoading.hide();
             AlertPopupService.createPopup("Registration successfully complete!", "Welcome " + $scope.user.name,  function() {
@@ -335,29 +398,24 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
          }, function(resp) {
 		 
-			$scope.attempt = true;
              console.log(resp);
 
              if(resp.status == 409){
                  //name invalid
                     if (resp.data.error.indexOf("Email") != -1) 
                     {
-                    $scope.invalid_email = true;
-					$scope.user.email = '';
+                    $scope.invalid_email = $scope.user.email;
                   }
                   else if (resp.data.error.indexOf("Username") != -1) {
-                    $scope.invalid_username = true;
-                    $scope.user.username = '';
+                    $scope.invalid_username =  $scope.user.username;
                 }
              }
              else if(resp.status == 422){
                  //email invalid
 				 if (resp.data.error.indexOf("Email") != -1) {
-				 			$scope.invalid_email = true;
-							$scope.user.email = '';
+				 			$scope.invalid_email = $scope.user.email;
 				 } else if (resp.data.error.indexOf("Username") != -1) {
-				$scope.invalid_username = true;
-				$scope.user.username = '';
+				$scope.invalid_username = $scope.user.username;
 				}
 				
              }

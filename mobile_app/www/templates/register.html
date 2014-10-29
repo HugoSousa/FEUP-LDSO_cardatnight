@@ -1,25 +1,25 @@
 <ion-view hide-back-button="true" title="card@night">
     <ion-content padding="true">
-        <form class="simple-form" name="registry" ng-controller="RegisterCtrl" novalidate on-valid-submit="registerSubmit()">
+        <form class="simple-form" name="registry" ng-controller="RegisterCtrl" novalidate ng-submit="registerSubmit()">
         <div class="list list-inset" >
-            <label class="item item-input item-floating-label topRoundedForm validated" >
+            <label ng-class="validateName(user.name)"  class="item item-input item-floating-label topRoundedForm " >
                 <span class="input-label">Name</span>
-                <input name="name" type="text" placeholder="Name" ng-required="true" ng-model="user.name">
+                <input name="name" ng-trim="false"  type="text" placeholder="Name" ng-required="true" ng-model="user.name">
             </label>
-            <label ng-class="{'error': attempt && invalid_email , 'has-success': attempt && !invalid_email}" class="item item-input item-floating-label validated">
+            <label ng-class="validateEmail(user.email)"  class="item item-input item-floating-label ">
                 <span class="input-label">E-mail </span>
-                <input name="email" type="email" placeholder="E-mail" required  ng-model="user.email">
+                <input name="email" ng-trim="false"  type="text" placeholder="E-mail" required  ng-model="user.email">
 
             </label>
-            <label ng-class="{'has-error': attempt && invalid_username , 'has-success': attempt && !invalid_username}" class="item item-input item-floating-label validated">
+            <label ng-class="validateUsername(user.username)" class="item item-input item-floating-label ">
                 <span class="input-label">Username</span>
-                <input name="username" type="text" placeholder="Username" ng-required="true" ng-model="user.username">
+                <input name="username" ng-trim="false" type="text" placeholder="Username" ng-required="true" ng-model="user.username">
             </label>
-            <label class="item item-input item-floating-label bottomRoundedForm validated">
+            <label ng-class="validatePassword(user.password)" class="item item-input item-floating-label bottomRoundedForm ">
                 <span class="input-label">Password</span>
-                <input name="password" type="password" placeholder="Password" ng-required="true" ng-model="user.password">
+                <input name="password" ng-trim="false"  type="password" placeholder="Password" ng-required="true" ng-model="user.password">
             </label>
-            <button  ng-class="{disabled: registry.$invalid}" class="button button-positive btnRounded">
+            <button  ng-class="{disabled: !validateUser(user)}" class="button button-positive btnRounded">
                 Register
             </button>
         </div>

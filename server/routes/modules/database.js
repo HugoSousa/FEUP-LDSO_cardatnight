@@ -245,7 +245,7 @@ exports.getCustomersEstablishment=function(establishmentid) {
 
 }
 
-exports.getCustomerManagerData=function(client, id, callback) {
+function getCustomerManagerData(client, id, callback) {
     
     
     client.query({ text: "SELECT * FROM customer WHERE customerid = $1", name: 'get customer', values: [id] }, function (err, result) {
