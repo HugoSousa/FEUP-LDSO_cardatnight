@@ -1,15 +1,18 @@
 var app = angular.module('services', [])
 
 
-app.factory('AuthService', function(){
-
+app.factory('AuthService', ['$window', function($window){
+   
     var loggedUser;
-
+     
+    loggedUser = JSON.parse($window.localStorage['user']);
+     
     return{
         login: function(user, access_token) {
             if (user && access_token) {
                 loggedUser = user;
                 loggedUser.access_token = access_token;
+                $window.localStorage['user'] = JSON.stringify(loggedUser);
             }
         },
         loggedUser: function(){
@@ -24,7 +27,7 @@ app.factory('AuthService', function(){
         }
     }
 
-});
+}]);
 
 app.factory('Places', function(){
 
