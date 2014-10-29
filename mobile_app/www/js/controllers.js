@@ -11,7 +11,7 @@ app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
             title: 'Keyboard Show',
             template: 'Keyboard Show'
         });
-        */
+        */ 
     });
 
     window.addEventListener('native.keyboardhide', function() {
@@ -133,6 +133,13 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 	var loggedUser = AuthService.loggedUser();
 	$scope.loggedUser = AuthService.loggedUser().username;
 	
+        
+    $scope.logout = function() {
+        AuthService.logout();
+        $state.go('login');
+    }
+    
+    
 	$scope.changePasswordSubmit = function(){
 		var resource = Restangular.all('change-password');
 
@@ -233,6 +240,11 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         $scope.user = {username: ''};
         $scope.user.username = $stateParams.username;
     }
+    
+
+    var loggedUser = AuthService.loggedUser();
+    
+    if (loggedUser) $state.go('menu');
  
     $scope.loginSubmit = function() {
         console.log("Login");
@@ -316,8 +328,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
 .controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService ){
     //console.log(AuthService.loggedUser());
+    
+
      $ionicViewService.clearHistory();
-     console.log('Deleted History');
 })
 
 

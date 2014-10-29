@@ -43,7 +43,7 @@ app.service('StateManager', ['$state', '$stateParams', '$rootScope', function($s
 
         return $state.go(state, params, options);
     };
-}])
+}]) 
 
 
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
