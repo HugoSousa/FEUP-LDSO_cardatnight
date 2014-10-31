@@ -86,10 +86,6 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     $scope.forgotPassword = function() {
         $state.go('forgot-password');
     };
-	
-	$scope.generateQRCode = function(establishmentid, customerid) {
-        new QRCode(document.getElementById("qrcode"), "{" + "establishmentid:" + establishmentid + "," + "customerid:" + customerid + "}");
-    };
 
     $scope.chartConfig = {
         options: {
@@ -123,8 +119,6 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         xAxis: {currentMin: 0, currentMax: 10, minRange: 1},
         loading: false
     }
-
-
 })
 
 
@@ -488,4 +482,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 .controller('PlacesCtrl', function($scope, $stateParams, Places) {
     $scope.places = Places.all();
     $scope.place = Places.get($stateParams.placeId);
+	
+	$scope.generateqrcode = function(establishmentid, customerid) {
+        new QRCode(document.getElementById("qrcode"), "{" + "establishmentid:" + establishmentid + "," + "customerid:" + customerid + "}");
+    };
 })

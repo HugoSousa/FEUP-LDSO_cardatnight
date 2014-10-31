@@ -48,8 +48,8 @@ app.service('StateManager', ['$state', '$stateParams', '$rootScope', function($s
 
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-   //RestangularProvider.setBaseUrl('http://localhost:1337');
-   RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+    //RestangularProvider.setBaseUrl('http://localhost:1337');
+    RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
 
     RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 5 seconds
 
@@ -128,16 +128,16 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
             controller: 'PlacesCtrl'
         })
 
+        .state('qrcode', {
+            url: '/qrcode/:placeId',
+            templateUrl: 'templates/qrcode.html',
+            controller: 'PlacesCtrl'
+        })
+
         .state('history', {
             url: '/history',
             templateUrl: 'templates/history.html',
             controller: 'PlacesCtrl'
-        })
-
-        .state('qrcode', {
-            url: '/qrcode',
-            templateUrl: 'templates/qrcode.html',
-            controller: 'NavCtrl'
         })
 
     $urlRouterProvider.otherwise('/login');
