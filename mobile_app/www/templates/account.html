@@ -1,7 +1,7 @@
 <ion-view title="{{loggedUser.username}}">
     <ion-content padding="true">
         <div class="list list-inset">
-            <button class="button button-stable btnRounded" ng-click="logout()">
+            <button class="button button-stable btnRounded" ng-controller="AccountCtrl" ng-click="logout()">
                 Log Out
             </button>
             <h2 class="tableTitle"><i class="icon ion-settings"> Account Settings</i></h2>
@@ -14,5 +14,5 @@
                 Delete Account
             </a>
         </div>
-    </ion-content>
+    </ion-content> 
 </ion-view>
