@@ -446,6 +446,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
 .controller('ProductsCtrl', function($scope, $stateParams, Restangular, $ionicLoading) {
 
+    $scope.orderByField = 'name';
+    $scope.reverseSort = false;
+
     $ionicLoading.show({
         template: '',
         showBackdrop: false
@@ -542,6 +545,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 .controller('OrdersCtrl', function($scope, Restangular, $ionicLoading) {
+
     //$scope.orders = Orders.all();
     $ionicLoading.show({
         noBackdrop: false,
@@ -552,6 +556,21 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     //get orders from that cart (hardcoded cartid=6)
     Restangular.one('actualorders').getList(1).then(function(data){
         $scope.orders = data;
+        $ionicLoading.hide();
+    });
+})
+
+.controller('OrderCtrl', function($scope, $stateParams, Restangular, $ionicLoading, AuthService) {
+
+    //$scope.orders = Orders.all();
+    $ionicLoading.show({
+        noBackdrop: false,
+        template: 'Loading'
+    });
+
+    //console.log($stateParams.orderId);
+    Restangular.all('order').customGET($stateParams.orderId, {}, {'x-access-token': AuthService.token()}).then(function(data){
+        $scope.order = data;
         $ionicLoading.hide();
     });
 })

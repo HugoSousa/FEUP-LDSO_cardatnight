@@ -6,6 +6,11 @@
     font-family: "Helvetica";
 }
 
+ion-item > a.item-content{
+    padding-right:0px !important;
+}
+
+
 .ionSize{
     font-size: 50px;
 }
@@ -74,4 +79,16 @@ a:hover
 {
     text-decoration:none !important;
     cursor:pointer !important;
+}
+
+.red{
+    color: red;
+}
+
+.orange{
+    color: orange;
+}
+
+.green{
+    color: green;
 }

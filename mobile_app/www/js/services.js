@@ -1,6 +1,22 @@
 var app = angular.module('services', [])
 
+/*
+app.factory('SplashService', function($q, $timeout){
 
+    return{
+        done: function () {
+            var deferred = $q.defer();
+
+            $timeout(function() {
+                deferred.resolve();
+            }, 20000);
+
+            return deferred.promise;
+        }
+    }
+
+});
+*/
 app.factory('AuthService', ['$window', function($window){
 
     var loggedUser;

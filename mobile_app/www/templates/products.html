@@ -22,14 +22,19 @@
 
         <ion-list>
             <ion-item type="item-text-wrap"  style="font-weight: bold" class="item-divider">
-                Name
-                <span class="pull-right" style="margin-right: 2%">
-                  Price
+                <span ng-click="$parent.orderByField='name';$parent.reverseSort = !$parent.reverseSort">Name
+                    <span ng-show="orderByField=='name' && reverseSort == true" class="icon ion-ios7-arrow-down"></span>
+                    <span ng-show="orderByField=='name' && reverseSort == false" class="icon ion-ios7-arrow-up"></span>
+                </span>
+                <span ng-click="$parent.orderByField='price';$parent.reverseSort = !$parent.reverseSort" class="pull-right">
+                    Price
+                    <span ng-show="orderByField=='price' && reverseSort == true" class="icon ion-ios7-arrow-down"></span>
+                    <span ng-show="orderByField=='price' && reverseSort == false" class="icon ion-ios7-arrow-up"></span>
                 </span>
             </ion-item>
-            <ion-item ng-repeat="product in products | filter:{category:selectedCategory.category} | filter:{name:filterName}" type="item-text-wrap" href="#/product/{{product.productid}}" item="item">
+            <ion-item ng-repeat="product in products | orderBy:orderByField:reverseSort" type="item-text-wrap" href="#/product/{{product.productid}}" item="item">
                 {{product.name}}
-                <span class="item-note">
+                <span class="item-note" style="padding-right:20px">
                   {{product.price}}€
                 </span>
             </ion-item>

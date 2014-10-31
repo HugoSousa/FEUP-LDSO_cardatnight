@@ -3,38 +3,39 @@
         <div class="list card" style="height: 100%">
 
             <div class="item">
-                <h1 style="text-align: center">{{order.code}}</h1>
-                <h2 style="text-align: center">{{order.date}}</h2>
+                <h1 style="text-align: center; font-size: 400%">{{order.code}}</h1>
+                <h2 style="text-align: center">{{order.orderstime | date:"dd/MM @ HH:mm:ss"}}</h2>
             </div>
 
             <div class="item item-body" >
-                <div class="row">
-                    <div class="col col-75" style="text-align: left">Product</div>
-                    <div class="col col-25">Qty.</div>
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="col col-50" style="font-size: 100%">Quantity</div>
+                    <div class="col col-50" style="font-size: 100%">Product</div>
                 </div>
-                <ion-list>
-                    <ion-item ng-repeat="product in order.products" type="item-text-wrap">
-                        <div class="row">
-                            <div class="col col-90" style="text-align: left">{{product.product}}</div>
-                            <div class="col col-10">{{product.quantity}}</div>
-                        </div>
-                    </ion-item>
-                </ion-list>
+
+                <div class="row">
+                    <div class="col col-50" style="; font-size: 150%">{{order.quantity}}</div>
+                    <div class="col col-50" style="; font-size: 150%">{{order.productname}}</div>
+                </div>
+
                 <br>
+                <hr>
+
+                <div style="text-align:center">
+                <div>
+                    State
+                </div>
+                <div style="font-weight: bold; font-size: 120%" ng-class="{red: order.orderstate == 'ordered', orange: order.orderstate == 'notified', green: order.orderstate == 'delivered'}">
+                    {{order.orderstate}}
+                </div>
+                </div>
             </div>
 
+
             <div class="item item-divider">
-                <div class="row">
-                    <div class="col col-75" style="text-align: left">Credit:</div>
-                    <div class="col col-25">&nbsp;{{order.credit}}€</div>
-                </div>
-                <div class="row">
-                    <div class="col col-75" style="text-align: left">Price:</div>
-                    <div class="col col-25">-{{order.price}}€</div>
-                </div>
-                <div class="row">
-                    <div class="col col-75" style="text-align: left">After Purchase:</div>
-                    <div class="col col-25">{{order.after}}€</div>
+                <div class="row" >
+                    <div class="col col-50" style="text-align: left">Price</div>
+                    <div class="col col-50" style="text-align: right">{{order.price | currency:"€"}}</div>
                 </div>
             </div>
 

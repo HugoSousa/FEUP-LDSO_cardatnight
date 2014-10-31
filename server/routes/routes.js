@@ -166,8 +166,9 @@ module.exports = function (app, io, passport) {
       
     });
 	
-	app.post('/getcart/:estabid', function (req, res) { // requested by customer to get cart
+	app.get('/getcart/:estabid', function (req, res) { // requested by customer to get cart
 		
+
 		db.getActiveCart(req.user, function(err, cart) {
 			if (err) res.status(409).json({error: err});
 			else {
@@ -253,6 +254,13 @@ module.exports = function (app, io, passport) {
 
     app.get('/incomingorders/:estabid', function(req, res){
         db.getIncomingOrders(req.params.estabid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+    });
+
+    app.get('/order/:orderid', function(req, res){
+        db.getOrder(req.params.orderid, function(err, result){
             if (err) res.status(409).json(err);
             else res.status(200).json(result);
         });
