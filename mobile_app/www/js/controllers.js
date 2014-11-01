@@ -484,11 +484,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 	
 	$scope.orderSubmit = function(){
 
-
-
         $ionicPopup.show({
 
-            template: '<div counter value="orderData.quantity" min="1" max="5" step="1"></div>',
+            template: '<div counter  value="orderData.quantity" min="1" max="5" step="1"></div> <hr><div style="text-align:center; margin-top: 10px">Order Price</div> <div style="text-align:center; margin-top: 10px; font-weight: bold">{{orderData.quantity * product.price | currency: "€"}}</div>',
             title: 'Choose the Quantity',
             scope: $scope,
             buttons: [
