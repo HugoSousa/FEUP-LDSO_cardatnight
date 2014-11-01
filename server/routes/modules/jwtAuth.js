@@ -77,7 +77,7 @@ module.exports = function(app) {
     app.all("/testlogin_employee", permission_employee);
     app.all("/testlogin_doorman", permission_doorman);
 	app.all("/requestentry/*", permission_customer);
-	app.all("/getcart/*", permission_customer);
+	app.all("/getcart", permission_customer);
 	app.all("/gate/*", permission_doorman);
     app.all("/order/*", permission_customer);
 

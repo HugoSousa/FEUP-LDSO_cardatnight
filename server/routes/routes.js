@@ -166,7 +166,7 @@ module.exports = function (app, io, passport) {
       
     });
 	
-	app.get('/getcart/:estabid', function (req, res) { // requested by customer to get cart
+	app.get('/getcart', function (req, res) { // requested by customer to get cart
 		
 
 		db.getActiveCart(req.user, function(err, cart) {

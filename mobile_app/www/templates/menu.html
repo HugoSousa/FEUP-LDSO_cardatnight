@@ -3,19 +3,28 @@
         <h2 class="title">Discoteca X</h2>
     </div>
     <ion-content has-header="true" padding="true">
-        <div class="row" style="margin-top: 15%; margin-left: auto; margin-right: auto">
+        <div class="list list-inset" ng-if="!hasCart">
+            <button style="margin-top: 60px" class="button button-positive btnRounded" ng-click="choosePlace()">
+                <i class="icon ion-log-in"> Enter Establishment</i>
+            </button>
+        </div>
+
+        <div style="margin-top: 60px; text-align: center; text-decoration: underline;" ng-if="hasCart">Actual Spending</div>
+        <div style="text-align: center; font-weight: bold; font-size: 200%" ng-if="hasCart">{{balance | currency:"€"}}</div>
+
+        <div class="row" style="margin-left: auto; margin-right: auto; margin-top:5%">
             <div class="col">
-                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goProducts()">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-class="{disabled: !hasCart}" ng-click="goProducts()">
                     <i class="ionSize ion-ios7-paper"></i><br>Products
                 </button>
             </div>
             <div class="col">
-                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goOrders()">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-class="{disabled: !hasCart}" ng-click="goOrders()">
                     <i class="ionSize ion-ios7-pricetags"></i><br>Orders
                 </button>
             </div>
         </div>
-        <div class="row" style="margin-left: auto; margin-right: auto">
+        <div class="row" style="margin-left: auto; margin-right: auto; margin-bottom: 60px">
             <div class="col">
                 <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goHistory()">
                     <i class="ionSize ion-ios7-bookmarks"></i><br>History
@@ -28,11 +37,7 @@
             </div>
         </div>
 		
-		<div class="list list-inset" >
-            <button class="button button-positive btnRounded" ng-click="choosePlace()">
-                <i class="icon ion-log-in"> Enter Establishment</i>
-            </button>
-        </div>
+
     </ion-content>
 </ion-view>
 

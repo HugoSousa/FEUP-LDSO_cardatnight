@@ -320,9 +320,22 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService ){
+.controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService ){
     //console.log(AuthService.loggedUser());
-    
+    console.log(AuthService.token());
+    $scope.hasCart = false;
+    $ionicLoading.show({
+        template: 'Loading...'
+    });
+    Restangular.all('getcart').customGET("", {}, {'x-access-token': AuthService.token()}).then(function(data){
+        if(data.status == "valid")
+        $scope.balance = data.cart.balance;
+        $scope.hasCart = true;
+        $ionicLoading.hide();
+    });
+
+
+
 
      $ionicViewService.clearHistory();
 })
