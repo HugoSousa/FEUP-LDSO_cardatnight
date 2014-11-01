@@ -113,7 +113,7 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
         .state('order-detail', {
             url: '/order/:orderId',
             templateUrl: 'templates/order-detail.html',
-            controller: 'OrdersCtrl'
+            controller: 'OrderCtrl'
         })
 
         .state('places', {
