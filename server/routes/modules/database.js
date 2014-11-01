@@ -300,6 +300,29 @@ exports.getIncomingOrders = function (establishmentId, callback) {
     });
 }
 
+exports.getOrder = function (orderId, callback) {
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({ text: "SELECT orderstime, orderstate, quantity, code, product.name AS productname, product.price FROM orders, product WHERE orders.productid = product.productid AND orders.ordersid = $1", name: 'getorder', values: [orderId] }, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+            callback(null, result.rows[0]);
+            }
+          });
+        }
+        
+        done();
+    });
+}
+
+
 exports.getUserOrder = function (orderId, callback){
 
     pg.connect(database_url , function (err, client, done) {
@@ -395,7 +418,7 @@ exports.getActualOrders = function(cartid, callback){
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-            client.query({text: "select * from orders where cartid = $1 order by orderstime", name: 'getactualorders', values: [cartid]}, function (err, result) {
+            client.query({text: "select ordersid, orderstime, orderstate, code, product.price * orders.quantity AS price FROM product, orders where orders.productid = product.productid AND cartid = $1 GROUP BY orders.ordersid, product.price order by orderstime", name: 'getactualorders', values: [cartid]}, function (err, result) {
                 if (err) {                    
                         callback( err , null);
                 }

@@ -1,6 +1,6 @@
 <ion-view title="{{loggedUser.username}}">
     <ion-content padding="true">
-        <form class="simple-form" name="orderForm" ng-controller="ProductCtrl" novalidate on-valid-submit="orderSubmit()">
+        <form class="simple-form" name="orderForm" ng-controller="ProductCtrl" novalidate ng-submit="orderSubmit()">
             <div class="list card">
 
                 <div class="item item-avatar">
