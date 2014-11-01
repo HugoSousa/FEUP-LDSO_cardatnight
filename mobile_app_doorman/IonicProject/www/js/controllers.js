@@ -49,11 +49,11 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, $cordovaBarcodeS
 				var establishmentid = tokens[0].split(":")[1];
 				var customerid = tokens[1].split(":")[1];
 				
-				alert("Welome to establishmentid " + establishmentid + ", customerid " + customerid + "!");
+				document.getElementById("checkImage").src="ok.png";
 			}
 			else
 			{
-				alert("Wrong QR code!");
+				document.getElementById("checkImage").src="error.png";
 			}
         }, function(error) {
             
