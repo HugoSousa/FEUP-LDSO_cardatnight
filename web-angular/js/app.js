@@ -1,4 +1,4 @@
-var app = angular.module('starter', ['controllers', 'services', 'restangular','ui.router','ui.bootstrap']);
+var app = angular.module('starter', ['controllers', 'services', 'restangular','ui.router','ui.bootstrap','ui.unique']);
 
 app.run(function() {
 
