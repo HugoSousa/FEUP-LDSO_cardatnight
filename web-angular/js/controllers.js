@@ -98,6 +98,24 @@ app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular)
             console.log(resp);
 	  });
 	  }
+	  
+	  $scope.editProduct=function()
+	  {
+	   console.log($scope.product);
+	    console.log($scope.product.name);
+		 console.log($scope.product.description);
+		  console.log($scope.product.price);
+	   //var productid = {"productid": $scope.product.productid};
+	   var body= {"productid": $scope.product.productid,"categoryid":$scope.product.categoryid,
+	   "name":$scope.product.name,"price":$scope.product.price,"description":$scope.product.description};
+	   
+	    var teste =Restangular.all('edit-product').post(body).then(function (resp){
+            console.log("ok");
+            console.log(resp);
+			$state.go("products");
+	  });
+	   
+	  }
 });
 
 app.controller('CustomersCtrl', function($state, $scope, $stateParams, Restangular) {

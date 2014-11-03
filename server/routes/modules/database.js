@@ -433,3 +433,27 @@ exports.getActualOrders = function(cartid, callback){
         done();
     });
 }
+
+exports.editProduct = function (id,description,name,price,categoryid, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({ text: "UPDATE product set description=$1, name=$2, price=$3, categoryid=$4 where productid=$5",
+			values: [description,name,price,categoryid,id] }, function (err, result) {
+
+			if (err) {                    
+                        callback(err , null);
+                    }
+					else {
+						callback(null, result);
+					}
+			
+            });
+        }
+
+        done();
+    });
+
+}

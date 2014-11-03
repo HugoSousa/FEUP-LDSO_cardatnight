@@ -303,6 +303,28 @@ module.exports = function (app, io, passport) {
 
         
     });
+	
+	app.post('/edit-product', function (req, res) {
+
+        var productid = req.body.productid;
+        var categoryid = req.body.categoryid;
+        var name = req.body.name;
+		var description = req.body.description;
+		var price = req.body.price;
+
+        res.status(422);
+
+        if (!categoryid || !productid || !name|| !description || !price ) res.json( { error: 'missing parameters' });
+        else {
+            res.status(200);
+
+            db.editProduct(productid,description,name,price,categoryid, function (err, result) {
+                if (err) res.status(409).json(err);
+                else res.status(200).json(result);
+
+            });
+        }
+    });
 
     /*
     io.on('connection', function (socket) {

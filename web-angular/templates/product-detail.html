@@ -10,24 +10,28 @@
 <button class="btn" ng-click="deleteProduct()"> Delete Product </button>
 </div>
 
-<form class="simple-form" name="productForm" ng-controller="ProductCtrl" novalidate">
+<form class="simple-form" name="productForm" ng-controller="ProductCtrl" novalidate ng-submit="editProduct()">
            <br>
 			Category: 
-			<select>
-				<option value="Drinks">Drinks</option>
-				<option value="Cocktail">Cocktail</option>
+			<select ng-model="product.categoryid" selected={{product.categoryid}}>
+				<option value=1>Cocktail</option>
+				<option value=2>Shot</option>
+				<option value=3>Bebidas espirituosas</option>
+				<option value=4>Refrigerante</option>
+				<option value=5>Whiskys</option>
+				<option value=6>outros</option>
 			</select>
 			<br>
 			<br>
-			Name: <input type="text" placeholder={{product.name}} name="name">
+			Name: <input type="text" placeholder={{product.name}} ng-model="product.name" name="name">
 			<br>
 			<br>
 			Description: 
 			<br>
-			<textarea rows="4" cols="50">{{product.description}} </textarea>
+			<textarea rows="4" cols="50" name="description" ng-model="product.description">{{product.description}} </textarea>
 			<br>
 			<br>
-            Price <input type="text" placeholder={{product.price}} name="lastname">
+            Price <input type="text" placeholder={{product.price}} name="price" ng-model="product.price">
 			<br>
 			<br>
 			<button class="btn"> Edit Product </button>
