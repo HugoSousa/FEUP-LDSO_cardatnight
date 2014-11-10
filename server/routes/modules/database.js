@@ -127,6 +127,30 @@ exports.getActiveCart = function(user, callback) {
 
 }
 
+exports.addProduct = function (establishmentid,description,name,price,categoryid, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({ text: "insert into product(description,image,name,price,establishmentid,categoryid) values ($1,'',$2,$3,$4,$5)",
+			values: [description,name,price,establishmentid,categoryid] }, function (err, result) {
+
+			if (err) {                    
+                        callback(err , null);
+                    }
+					else {
+						callback(null, result);
+					}
+			
+            });
+        }
+
+        done();
+    });
+
+}
+
 exports.changePassword = function (username, newPassword, callback) {
     pg.connect(database_url , function (err, client, done) {
         if (err) {

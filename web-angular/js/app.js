@@ -48,7 +48,21 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
                 }
             }
         })
+		
+		.state('product-add', {
+            url: '/product-add',
+            views: {
+                // the main template will be placed here (relatively named)
+                '': { templateUrl: 'card@night.html' },
 
+                // the child views will be defined here (absolutely named)
+                'content@product-add': {
+                    templateUrl: 'templates/product-add.html',
+                    controller:	'ProductAdd'
+                }
+            }
+        })
+		
         .state('incoming-orders', {
             url: '/incoming-orders',
             views: {

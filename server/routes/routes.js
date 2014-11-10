@@ -98,7 +98,28 @@ module.exports = function (app, io, passport) {
 
     });
 
-    
+    app.post('/add-product', function (req, res) {
+
+        var establishmentid = req.body.establishmentid;
+        var categoryid = req.body.categoryid;
+        var name = req.body.name;
+		var description = req.body.description;
+		var price = req.body.price;
+
+        res.status(422);
+
+        if (!categoryid || !establishmentid || !name|| !description || !price ) res.json( { error: 'missing parameters' });
+        else {
+            res.status(200);
+
+            db.editProduct(establishmentid,description,name,price,categoryid, function (err, result) {
+                if (err) res.status(409).json(err);
+                else res.status(200).json(result);
+
+            });
+        }
+    });
+	
     app.post('/login', function (req, res, next) {
         passport.authenticate('local-login', function (err, user, info) {
             if (err) return next(err);

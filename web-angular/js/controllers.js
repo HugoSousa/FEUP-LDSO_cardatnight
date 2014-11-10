@@ -78,6 +78,30 @@ app.controller('ProductsCtrl', function($scope, $stateParams, Restangular) {
         $scope.products = data;
     })
 	
+	$scope.addProduct=function()
+	  {
+	   $state.go("product-add");
+	  }
+	
+});
+
+app.controller('ProductAdd', function($state, $scope, $stateParams,Restangular) {
+
+	  $scope.addProduct=function()
+	  {
+	   console.log($scope);
+	   
+	   var body= {"establishmentid": 1,"categoryid":$scope.product.categoryid,
+	   "name":$scope.product.name,"price":$scope.product.price,"description":$scope.product.description};
+	   
+	    var teste =Restangular.all('add-product').post(body).then(function (resp){
+            console.log("ok");
+            console.log(resp);
+			//$state.go("products");
+	  });
+	   
+	  }
+	
 });
 
 app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular) {
@@ -105,7 +129,6 @@ app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular)
 	    console.log($scope.product.name);
 		 console.log($scope.product.description);
 		  console.log($scope.product.price);
-	   //var productid = {"productid": $scope.product.productid};
 	   var body= {"productid": $scope.product.productid,"categoryid":$scope.product.categoryid,
 	   "name":$scope.product.name,"price":$scope.product.price,"description":$scope.product.description};
 	   
