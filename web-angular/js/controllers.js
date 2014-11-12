@@ -73,7 +73,7 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
 app.controller('ProductsCtrl', function($scope, $stateParams, Restangular) {
 
 
-    //hardcoded establishment id=4
+    //hardcoded establishment id=1
     var products = Restangular.one('products').getList(1).then(function(data){
         $scope.products = data;
     })
@@ -85,26 +85,44 @@ app.controller('ProductsCtrl', function($scope, $stateParams, Restangular) {
 	
 });
 
-app.controller('ProductAdd', function($state, $scope, $stateParams,Restangular) {
-
-	  $scope.addProduct=function()
-	  {
-	   console.log($scope);
-	   
-	   var body= {"establishmentid": 1,"categoryid":$scope.product.categoryid,
-	   "name":$scope.product.name,"price":$scope.product.price,"description":$scope.product.description};
-	   
-	    var teste =Restangular.all('add-product').post(body).then(function (resp){
-            console.log("ok");
-            console.log(resp);
-			//$state.go("products");
-	  });
-	   
-	  }
-	
+app.controller('ProductAdd', function($state, $scope, $stateParams,Restangular,$scope, $modal) {
+		
+		
+		$scope.open = function (size) {
+			$scope.modalInstance = $modal.open({
+			templateUrl: 'confirmAdd.html',
+			controller: 'ProductAddConfirm',
+			size: size,
+			scope: $scope
+			});
+		};
 });
 
-app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular) {
+
+app.controller('ProductAddConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance){
+	$scope.cancel = function () {
+			 $modalInstance.dismiss('cancel');
+		};
+		
+	$scope.addProduct=function()
+		  {
+			console.log($scope.product);
+		   
+		   var body= {"establishmentid": 1,"categoryid":$scope.product.categoryid,
+		   "name":$scope.product.name,"price":$scope.product.price,"description":$scope.product.description};
+		   
+		   console.log('teste');
+		   
+			var teste =Restangular.all('add-product').post(body).then(function (resp){
+				console.log("ok-");
+				console.log(resp);
+				$modalInstance.dismiss('cancel');
+				$state.go("products");
+		  }); 
+	  }		
+})
+
+app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular,$modal) {
 
 
     var product = Restangular.one('product', $stateParams.productId).get().then(function(data){
@@ -112,34 +130,67 @@ app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular)
 		console.log($scope.product);
       })
 	  
+	  $scope.openEdit = function (size) {
+			console.log("edit");
+			$scope.modalInstance = $modal.open({
+			templateUrl: 'confirmEdit.html',
+			controller: 'ProductEditConfirm',
+			size: size,
+			scope: $scope
+			});
+		};
+		
+		$scope.openDelete = function (size) {
+			$scope.modalInstance = $modal.open({
+			templateUrl: 'confirmDelete.html',
+			controller: 'ProductDeleteConfirm',
+			size: size,
+			scope: $scope
+			});
+		};
+
+	  
+});
+
+app.controller('ProductDeleteConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance){
+	$scope.cancel = function () {
+			 $modalInstance.dismiss('cancel');
+		};  
 	  $scope.deleteProduct=function()
 	  {
-	   console.log($scope.product.productid);
-	   var productid = {"productid": $scope.product.productid};
-	   
-	    var teste =Restangular.all('delete-product').post(productid).then(function (resp){
-            console.log("ok");
-            console.log(resp);
-	  });
+		   console.log($scope.product.productid);
+		   var productid = {"productid": $scope.product.productid};
+		   
+			var teste =Restangular.all('delete-product').post(productid).then(function (resp){
+				console.log("ok");
+				console.log(resp);
+				$modalInstance.dismiss('cancel')
+				$state.go("products");
+			});
 	  }
-	  
-	  $scope.editProduct=function()
+	  	
+})
+
+app.controller('ProductEditConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance){
+	$scope.cancel = function () {
+			 $modalInstance.dismiss('cancel');
+		};
+		
+	$scope.editProduct=function()
 	  {
-	   console.log($scope.product);
-	    console.log($scope.product.name);
-		 console.log($scope.product.description);
-		  console.log($scope.product.price);
-	   var body= {"productid": $scope.product.productid,"categoryid":$scope.product.categoryid,
-	   "name":$scope.product.name,"price":$scope.product.price,"description":$scope.product.description};
-	   
-	    var teste =Restangular.all('edit-product').post(body).then(function (resp){
-            console.log("ok");
-            console.log(resp);
-			$state.go("products");
-	  });
-	   
-	  }
-});
+		   console.log($scope.product);
+
+		   var body= {"productid": $scope.product.productid,"categoryid":$scope.product.categoryid,
+		   "name":$scope.product.name,"price":$scope.product.price,"description":$scope.product.description};
+		   
+			var teste =Restangular.all('edit-product').post(body).then(function (resp){
+				console.log("ok");
+				console.log(resp);
+				$modalInstance.dismiss('cancel')
+				$state.go("products");
+		  }); 
+	  }		
+})
 
 app.controller('CustomersCtrl', function($state, $scope, $stateParams, Restangular) {
 

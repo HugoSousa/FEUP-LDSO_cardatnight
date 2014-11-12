@@ -110,9 +110,7 @@ module.exports = function (app, io, passport) {
 
         if (!categoryid || !establishmentid || !name|| !description || !price ) res.json( { error: 'missing parameters' });
         else {
-            res.status(200);
-
-            db.editProduct(establishmentid,description,name,price,categoryid, function (err, result) {
+            db.addProduct(establishmentid,description,name,price,categoryid, function (err, result) {
                 if (err) res.status(409).json(err);
                 else res.status(200).json(result);
 
