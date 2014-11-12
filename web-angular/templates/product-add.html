@@ -2,7 +2,18 @@
 
 <br>
 
-<form class="simple-form" name="productForm" novalidate ng-submit="addProduct()">
+<script type="text/ng-template" id="confirmAdd.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Confirm</h3>
+    </div>
+    <p>Are you sure you want to add this product?</p>
+    <div class="modal-footer">
+        <button class="btn btn-success" ng-click="addProduct()">Yes</button>
+        <button class="btn btn-danger" ng-click="cancel()">No</button>
+    </div>
+</script>
+	
+<form class="simple-form" name="productForm" novalidate ng-submit="open()">
            <br>
 			Category: 
 			<select ng-model="product.categoryid">
@@ -27,5 +38,4 @@
 			<br>
 			<br>
 			<button class="btn"> Add Product </button>
-			
         </form>
