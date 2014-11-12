@@ -71,14 +71,19 @@ module.exports = function(app) {
     
     
     //mixed permission functions should be created if needed or employee/doorman modified if manager should have all permissions
-
+    // testing routes for different login types ---------------------------------
     app.all("/testlogin_customer", permission_customer);
     app.all("/testlogin_manager", permission_manager);
     app.all("/testlogin_employee", permission_employee);
     app.all("/testlogin_doorman", permission_doorman);
-	app.all("/requestentry/*", permission_customer);
+    // ---------------------------
+   
+    app.all("/checklogin", permission_customer);
+	app.all("/requestentry", permission_customer);
 	app.all("/getcart", permission_customer);
 	app.all("/gate/*", permission_doorman);
+    app.all("/gate/*/*", permission_doorman);
+
     app.all("/order/*", permission_customer);
 
     //example: app.get("/orders/*",...

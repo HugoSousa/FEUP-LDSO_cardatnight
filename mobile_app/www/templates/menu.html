@@ -3,8 +3,9 @@
         <h2 class="title">Discoteca X</h2>
     </div>
     <ion-content has-header="true" padding="true">
-        <div class="list list-inset" ng-if="hasCart == false">
-            <button style="margin-top: 60px" class="button button-positive btnRounded" ng-click="choosePlace()">
+
+        <div class="list list-inset" ng-if="!hasCart">
+            <button style="margin-top: 60px" class="button button-positive btnRounded" ng-click="qrcode()">
                 <i class="icon ion-log-in"> Enter Establishment</i>
             </button>
         </div>

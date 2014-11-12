@@ -613,12 +613,23 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     });
 })
 
-.controller('PlacesCtrl', function($scope, $stateParams, Places) {
+.controller('PlacesCtrl', function($scope, $stateParams, Places, Restangular, AuthService) {
+    $scope.loggedUser = AuthService.loggedUser();
+    
     $scope.places = Places.all();
     $scope.place = Places.get($stateParams.placeId);
 	
-	$scope.generateqrcode = function(establishmentid, customerid) {
-        new QRCode(document.getElementById("qrcode"), "{" + "establishmentid:" + establishmentid + "," + "customerid:" + customerid + "}");
+	$scope.generateqrcode = function(customerid) {
+        
+        Restangular.all('requestentry').customGET("", {}, {'x-access-token': AuthService.token()}).then(function(data){
+				console.log("ok");
+            
+                new QRCode(document.getElementById("qrcode"), data.token);
+				
+			}, function(resp) {
+				console.log("error");
+
+			});
     };
 })
 
