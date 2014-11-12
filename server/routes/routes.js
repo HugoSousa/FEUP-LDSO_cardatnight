@@ -227,6 +227,12 @@ module.exports = function (app, io, passport) {
 		res.json("TODO");
     });
     
+    app.get('/checklogin', function (req, res, next) {
+        res.status(200).json({result: "success", "username": req.user.username});
+    
+    });
+    
+    
     app.get('/testlogin_customer', function (req, res, next) {
         res.status(200).json(req.user);
     
