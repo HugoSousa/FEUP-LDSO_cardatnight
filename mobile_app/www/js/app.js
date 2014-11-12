@@ -129,7 +129,7 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
         })
 
         .state('qrcode', {
-            url: '/qrcode/:placeId',
+            url: '/qrcode',
             templateUrl: 'templates/qrcode.html',
             controller: 'PlacesCtrl'
         })

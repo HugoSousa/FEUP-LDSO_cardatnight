@@ -1,4 +1,4 @@
-var app = angular.module('starter', ['ionic', 'controllers', 'ngCordova'])
+var app = angular.module('starter', ['ionic', 'controllers', 'services', 'ngCordova', 'restangular', 'ui.unique'])
 
 .run(function($ionicPlatform)
 {
@@ -15,9 +15,20 @@ var app = angular.module('starter', ['ionic', 'controllers', 'ngCordova'])
   });
 })
 
-app.config(function($stateProvider, $urlRouterProvider) {
+app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
+
+    //RestangularProvider.setBaseUrl('http://localhost:1337');
+    RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+
+    RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 5 seconds
 
    $stateProvider
+   
+   .state('login', {
+        url: '/login',
+        templateUrl: 'templates/login.html',
+        controller: 'NavCtrl'
+    })
 
     .state('scan', {
         url: '/scan',
@@ -25,6 +36,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
         controller: 'NavCtrl'
     })
 
-    $urlRouterProvider.otherwise('/scan');
+    $urlRouterProvider.otherwise('/login');
 
 });

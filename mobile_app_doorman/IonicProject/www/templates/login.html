@@ -1,0 +1,17 @@
+<ion-view hide-back-button="true" title="card@night">
+    <ion-content padding="true">
+        <div class="list list-inset">
+                <form name="loginForm" class="simple-form valid" ng-controller="LoginCtrl" ng-submit="loginForm.$valid && loginSubmit()"  >
+                <label class="item item-input topRoundedForm" >
+                    <input type="text" placeholder="Username" name="username" ng-init="regname" ng-model="user.username"  required>
+                </label>
+                <label class="item item-input bottomRoundedForm">
+                    <input type="password" placeholder="Password" name="password" ng-model="user.password" required>
+                </label>
+                <button class="button button-positive btnRounded" ng-click="login()">
+                    Log In
+                </button>
+                </form>
+        </div>
+    </ion-content>
+</ion-view>

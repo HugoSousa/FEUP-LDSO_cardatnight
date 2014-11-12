@@ -1,10 +1,10 @@
 <ion-view title="{{loggedUser.username}}">
-    <ion-content padding="true" ng-controller="PlacesCtrl" ng-init="generateqrcode(1,1)">
+    <ion-content padding="true" ng-init="generateqrcode()">
         <br>
         <h1 class="tableTitle alignCenter">Your QR Code:</h1>
 
-        <br>{{loggedUser.username}}
-            <div id="qrcode" class="alignCenter">
+        <br>
+        <div id="qrcode" class="centerContent">
         </div>
 
         <br>
