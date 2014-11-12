@@ -171,15 +171,19 @@ module.exports = function (app, io, passport) {
     });
 	
 	
-	 app.post('/requestentry/:estabid', function (req, res) { //requested by customer to get access token
+	 app.get('/requestentry', function (req, res) { //requested by customer to get access token
 		
 		db.getActiveCart(req.user, function(err, cart) {
 			if (err) res.status(409).json({error: err});
 			else {
-			if (cart) res.status(409).json({error: "Customer already has an active card. Current cart ID [" + cart.cartid + "] of establishment nr " + cart.establishmentid});
+			if (cart) res.status(409).json({error: "Customer already has an active card. Current cart ID [" + cart.cartid + "] of establishment nr " +               cart.establishmentid});
 			else {
 				// generate entry token and return it
-				res.status(200).json({token: "testtoken"});
+                   var token = jwt.encode({
+                        id: req.user.id,
+                        exp: moment().add(10,'minutes').valueOf()
+                    }, app.get('tokenSecret'));
+				res.status(200).json({token: token});
 			}
 			}
 			});
@@ -207,16 +211,57 @@ module.exports = function (app, io, passport) {
             if (err) res.status(409).json(err);
             else res.status(200).json(result);
         })
-    })
+    });
+    
+    
+    function decode(token, callback) {
+        function onTick() {
+            var decoded = jwt.decode(token, app.get('tokenSecret'))
+            callback(decoded)
+        }
+        process.nextTick(onTick());
+    }
+
+    
 
 	app.post('/gate/entry/:token', function (req, res) {
-		//check autentication of porter,etc
-		//check token, get establishmentid, customerid
-		//compare auth of porter with estabid in token
-		//generate cart for user
-		
+        
 
-      	res.json("TODO");
+        var decoded = jwt.decode(req.params.token, app.get('tokenSecret'));
+        if (!decoded.id || !decoded.exp) 
+            res.status(409).json({error: "Invalid token, no data found" });
+        else {
+        if (decoded.exp <= Date.now()) {
+                return res.status(400).json( { error: "Entry token has expired" });
+            } else {
+                
+          var establishmentid = req.user.establishmentid;
+          var customerid = decoded.id;
+          
+                
+           
+		db.getActiveCart({id: customerid }, function(err, cart) {
+			if (err) res.status(409).json({error: err});
+			else {
+				if (cart) res.status(409).json({error: 'Card already found' });
+				else {		                
+                  db.addActiveCart(establishmentid, customerid, function(err, cart) {
+                   if (err) res.status(409).json({error: err});
+                   else {
+                    if (cart) res.status(200).json({status: 'valid' , cart: cart});
+                    else {
+                     res.status(200).json({error: 'no cart found', status: 'none'});
+                    }
+                   }
+                   }); 
+     
+				}
+			}
+			});     
+                          
+        }
+        }
+
     });
 	
 	app.post('/gate/exit/:customerid', function (req, res) {

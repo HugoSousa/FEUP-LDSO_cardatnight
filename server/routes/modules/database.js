@@ -127,6 +127,32 @@ exports.getActiveCart = function(user, callback) {
 
 }
 
+exports.addActiveCart = function(establishmentid, customerid, callback) {
+     pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+           client.query({text: "insert into cart(balance,credit,exittime,paid,establishmentid,customerid,qrcode) values (0,0,null,'false',$1,$2,'')", 
+           values: [establishmentid,customerid] }, function (err, result) {
+
+                            if (err) {
+              callback( err , null);
+             }
+             else {
+              callback( null , result);
+             }
+
+
+             });
+
+                }
+
+                done();
+            });
+
+}
+
 exports.addProduct = function (establishmentid,description,name,price,categoryid, callback) {
     pg.connect(database_url , function (err, client, done) {
         if (err) {

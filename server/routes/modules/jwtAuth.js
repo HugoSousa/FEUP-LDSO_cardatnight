@@ -79,9 +79,11 @@ module.exports = function(app) {
     // ---------------------------
    
     app.all("/checklogin", permission_customer);
-	app.all("/requestentry/*", permission_customer);
+	app.all("/requestentry", permission_customer);
 	app.all("/getcart", permission_customer);
 	app.all("/gate/*", permission_doorman);
+    app.all("/gate/*/*", permission_doorman);
+
     app.all("/order/*", permission_customer);
 
     //example: app.get("/orders/*",...
