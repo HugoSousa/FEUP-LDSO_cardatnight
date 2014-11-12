@@ -50,7 +50,7 @@ app.factory('AuthService', ['$window', function($window){
 
 }]);
 
-app.factory('Places', function(){
+app.factory('PlacesService', function(){
 
     //fake places
     var places = [
@@ -66,6 +66,21 @@ app.factory('Places', function(){
         get: function(placeId) {
             // Simple index lookup
             return places[placeId];
+        }
+    }
+})
+
+app.factory('FooterService', function(){
+
+    var showFooter = true;
+
+    return {
+
+        changeFooter: function(show) {
+            showFooter = show;
+        },
+        showFooter: function() {
+            return showFooter;
         }
     }
 })

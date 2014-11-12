@@ -1,14 +1,11 @@
 var app = angular.module('controllers', ['highcharts-ng']);
 
-app.controller('FooterCtrl', function($scope, $state) {
+app.controller('FooterCtrl', ["$scope", "FooterService", function($scope, FooterService) {
 
-    //se o state atual é o inicial, nao mostrar o footer!
-    console.log("STATE: " + $state.get());
-
-    $scope.showFooter = true;
+    $scope.showFooter = FooterService;
 
     window.addEventListener('native.keyboardshow', function() {
-        $scope.showFooter = false;
+        FooterService.changeFooter(false);
         $scope.$apply();
         /*
         $ionicPopup.alert({
@@ -19,7 +16,7 @@ app.controller('FooterCtrl', function($scope, $state) {
     });
 
     window.addEventListener('native.keyboardhide', function() {
-        $scope.showFooter = true;
+        FooterService.changeFooter(true);
         $scope.$apply();
         /*
         $ionicPopup.alert({
@@ -30,7 +27,7 @@ app.controller('FooterCtrl', function($scope, $state) {
 
     });
 
-})
+}]);
 
 app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
@@ -613,11 +610,11 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     });
 })
 
-.controller('PlacesCtrl', function($scope, $stateParams, Places, Restangular, AuthService) {
+.controller('PlacesCtrl', function($scope, $stateParams, PlacesService, Restangular, AuthService) {
     $scope.loggedUser = AuthService.loggedUser();
     
-    $scope.places = Places.all();
-    $scope.place = Places.get($stateParams.placeId);
+    $scope.places = PlacesService.all();
+    $scope.place = PlacesService.get($stateParams.placeId);
 	
 	$scope.generateqrcode = function(customerid) {
         
@@ -633,7 +630,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService) {
+.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService, FooterService) {
+
+    FooterService.changeFooter(false);
 
     setTimeout(function(){
 
@@ -655,19 +654,21 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
                 if(data.result != "success") {
                     AlertPopupService.createPopup("Error", "Your login has expired. Please login again.");
-                    //$state.go('login');
+                    $state.go('login');
                 }else{
                     AuthService.login(loggedUser, AuthService.token());
-                    //$state.go('menu');
+                    $state.go('menu');
                 }
             }, function(data){
                 AlertPopupService.createPopup("Error", "Couldn't connect to server. Please verify your connection.");
-                //$state.go('login');
+                $state.go('login');
             });
         }
         else{
-            //$state.go('login');
+            $state.go('login');
         }
+
+        FooterService.changeFooter(true);
 
     }, 1500);
 
