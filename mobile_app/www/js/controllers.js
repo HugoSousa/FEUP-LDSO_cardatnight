@@ -1,6 +1,10 @@
 var app = angular.module('controllers', ['highcharts-ng']);
 
-app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
+app.controller('FooterCtrl', function($scope, $state) {
+
+    //se o state atual é o inicial, nao mostrar o footer!
+    console.log("STATE: " + $state.get());
+
     $scope.showFooter = true;
 
     window.addEventListener('native.keyboardshow', function() {
@@ -30,6 +34,25 @@ app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
 
 app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
+    if(window.plugin && window.plugin.notification.local){
+        window.plugin.notification.local.onclick = function (id, state, json) {
+            $state.go("orders");
+            $ionicPopup.alert({
+                title: 'Notification ' + id + ' clicked',
+                template: JSON.parse(json).order + " was ordered"
+            });
+
+        };
+
+        window.plugin.notification.local.ontrigger = function (id, state, json) {
+            $state.go("orders");
+            $ionicPopup.alert({
+                title: 'Notification ' + id + ' triggered',
+                template: JSON.parse(json).order + " was ordered"
+            });
+
+        };
+    }
 
     $scope.loggedUser = AuthService.loggedUser();
 
@@ -228,18 +251,11 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup){
-    //console.log(AuthService.loggedUser());
-    if ($stateParams.username) {
-        $scope.user = {username: ''};
-        $scope.user.username = $stateParams.username;
-    }
-    
+.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService){
+    //console.log(AuthService.loggedUser())
 
-    var loggedUser = AuthService.loggedUser();
-    
-    if (loggedUser) $state.go('menu');
- 
+    $ionicViewService.clearHistory();
+
     $scope.loginSubmit = function() {
         console.log("Login");
         var bitArray = sjcl.hash.sha256.hash($scope.user.password);
@@ -255,8 +271,15 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             console.log("ok");
             console.log(resp);
 
-            //window.plugin.notification.local.add({ message: 'Teste notificação.', autoCancel: true });
+            /*
+            window.plugin.notification.local.onclick = function (id, state, json) {
+                $state.go("orders");
+                $ionicPopup.alert({
+                    title: 'Notification ' + id + ' clicked' + state,
+                    template: JSON.parse(json).order + " was ordered"
+                });
 
+            };*/
 
             var socket = io.connect('http://nightout-app.herokuapp.com:80');
 
@@ -271,19 +294,26 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                 });
 
                 socket.on('notify', function(text) {
-                    //popup notification -> bad for usability
-                    /*
-                    $ionicPopup.alert({
-                        title: 'Order Ready',
-                        template: '<p style="text-align: center">'+text+'</p>'
+                    window.plugin.notification.local.add({
+                        id: "1",
+                        message: 'Teste notificação.',
+                        badge: 1,
+                        autoCancel: true,
+                        json: JSON.stringify({ order: 123 })
                     });
+
+                    /*
+                    window.plugin.notification.local.onclick = function (id, state, json) {
+                        $state.go("orders");
+                        $ionicPopup.alert({
+                            title: 'Notification ' + id + ' clicked' + state,
+                            template: JSON.parse(json).order + " was ordered"
+                        });
+
+                    };
                     */
-
-                    window.plugin.notification.local.add({ message: 'Teste notificação.', autoCancel: true });
-
                 });
             });
-
 
             AuthService.login(resp.user, resp.access_token);
             $ionicLoading.hide();
@@ -323,19 +353,22 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 .controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService ){
     //console.log(AuthService.loggedUser());
     console.log(AuthService.token());
-    $scope.hasCart = false;
+    $scope.hasCart;
     $ionicLoading.show({
         template: 'Loading...'
     });
     Restangular.all('getcart').customGET("", {}, {'x-access-token': AuthService.token()}).then(function(data){
-        if(data.status == "valid")
-        $scope.balance = data.cart.balance;
-        $scope.hasCart = true;
         $ionicLoading.hide();
+        if(data.status == "valid"){
+            $scope.balance = data.cart.balance;
+            $scope.hasCart = true;
+        }else{
+            $scope.hasCart = false;
+        }
+    }, function(resp) {
+        $ionicLoading.hide();
+        console.log("FAIL");
     });
-
-
-
 
      $ionicViewService.clearHistory();
 })
@@ -587,4 +620,45 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 	$scope.generateqrcode = function(establishmentid, customerid) {
         new QRCode(document.getElementById("qrcode"), "{" + "establishmentid:" + establishmentid + "," + "customerid:" + customerid + "}");
     };
+})
+
+.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService) {
+
+    setTimeout(function(){
+
+        //verificar se o user ja esta logado e se token é valido
+        if ($stateParams.username) {
+            $scope.user = {username: ''};
+            $scope.user.username = $stateParams.username;
+        }
+
+        var loggedUser = AuthService.loggedUser();
+        console.log(loggedUser);
+        console.log(AuthService.token());
+
+        if (loggedUser) {
+
+            Restangular.all('checklogin').customGET( "", {}, {'x-access-token': AuthService.token()}).then(function(data){
+                //VOLTAR A CONECTAR AO SOCKET.IO
+                console.log(data);
+
+                if(data.result != "success") {
+                    AlertPopupService.createPopup("Error", "Your login has expired. Please login again.");
+                    //$state.go('login');
+                }else{
+                    AuthService.login(loggedUser, AuthService.token());
+                    //$state.go('menu');
+                }
+            }, function(data){
+                AlertPopupService.createPopup("Error", "Couldn't connect to server. Please verify your connection.");
+                //$state.go('login');
+            });
+        }
+        else{
+            //$state.go('login');
+        }
+
+    }, 1500);
+
+
 })

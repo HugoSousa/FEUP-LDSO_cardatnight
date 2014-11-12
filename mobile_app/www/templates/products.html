@@ -1,5 +1,5 @@
 <ion-view title="{{loggedUser.username}}">
-    <ion-content padding="true">
+    <ion-content padding="true" style="margin-bottom: 50px">
         <h1 class="tableTitle">Products</h1>
 
         <div style="margin-bottom: 20px; width:100%">
@@ -9,7 +9,7 @@
                         <option value="" name="All" >All</option>
                     </select>
                     <!--<span class="input-label" style="display:inline-block">{{selectedCategory.category}}</span>-->
-                    <input type="text" placeholder="Category" value="{{selectedCategory.category}}" style="display:inline-block; ">
+                    <input type="text" value="{{selectedCategory.category || 'All'}}" style="display:inline-block; ">
                     <i class="icon ion-ios7-arrow-down"></i>
                </div>
             </label>
@@ -22,15 +22,15 @@
 
         <ion-list>
             <ion-item type="item-text-wrap"  style="font-weight: bold" class="item-divider">
-                <span ng-click="$parent.orderByField='name';$parent.reverseSort = !$parent.reverseSort">Name
-                    <span ng-show="orderByField=='name' && reverseSort == true" class="icon ion-ios7-arrow-down"></span>
-                    <span ng-show="orderByField=='name' && reverseSort == false" class="icon ion-ios7-arrow-up"></span>
-                </span>
-                <span ng-click="$parent.orderByField='price';$parent.reverseSort = !$parent.reverseSort" class="pull-right">
-                    Price
-                    <span ng-show="orderByField=='price' && reverseSort == true" class="icon ion-ios7-arrow-down"></span>
-                    <span ng-show="orderByField=='price' && reverseSort == false" class="icon ion-ios7-arrow-up"></span>
-                </span>
+                    <span class="pull-left" ng-click="$parent.orderByField='name';$parent.reverseSort = !$parent.reverseSort" style="display:inline">Name
+                        <span ng-show="orderByField=='name' && reverseSort == true" class="icon ion-ios7-arrow-down" style="display:inline"></span>
+                        <span ng-show="orderByField=='name' && reverseSort == false" class="icon ion-ios7-arrow-up" style="display:inline"></span>
+                    </span>
+                    <span ng-click="$parent.orderByField='price';$parent.reverseSort = !$parent.reverseSort" class="pull-right">
+                        Price
+                        <span ng-show="orderByField=='price' && reverseSort == true" class="icon ion-ios7-arrow-down"></span>
+                        <span ng-show="orderByField=='price' && reverseSort == false" class="icon ion-ios7-arrow-up"></span>
+                    </span>
             </ion-item>
             <ion-item ng-repeat="product in products | filter:{category:selectedCategory.category} | filter:{name:filterName} | orderBy:orderByField:reverseSort" type="item-text-wrap" href="#/product/{{product.productid}}" item="item">
                 {{product.name}}

@@ -1,6 +1,6 @@
 var app = angular.module('starter', ['ionic', 'controllers', 'services', 'restangular', 'ui.unique']);
 
-app.run(function($ionicPlatform) {
+app.run(function($ionicPlatform, $ionicPopup, $state) {
 
     $ionicPlatform.ready(function() {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -14,6 +14,18 @@ app.run(function($ionicPlatform) {
             // remove the status bar on iOS or change it to use white instead of dark colors.
             StatusBar.styleDefault();
         }
+
+        if(window.plugin && window.plugin.notification.local){
+            window.plugin.notification.local.onclick = function (id, state, json) {
+                $state.go("orders");
+                $ionicPopup.alert({
+                    title: 'Notification ' + id + ' clicked',
+                    template: JSON.parse(json).order + " was ordered"
+                });
+
+            };
+        }
+
     });
 })
 
@@ -22,7 +34,7 @@ app.service('AlertPopupService', ['$ionicPopup', function ($ionicPopup) {
         this.createPopup = function (headerMessage, bodyMessage, okAction) {
             $ionicPopup.alert({
                 title: headerMessage,
-                content: bodyMessage
+                content: '<p style="text-align:center">' + bodyMessage + '</p>'
             }).then(function (res) {
                 if (okAction)
                     okAction();
@@ -55,6 +67,12 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
 
     $stateProvider
+
+        .state('initial', {
+            url: '/initial',
+            templateUrl: 'templates/initial.html',
+            controller: 'NavCtrl'
+        })
 
         .state('login', {
             url: '/login',
@@ -140,7 +158,7 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
             controller: 'PlacesCtrl'
         })
 
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/initial');
 
 });
 
