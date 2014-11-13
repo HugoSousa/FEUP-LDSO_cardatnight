@@ -3,6 +3,10 @@
 		<h1>Products</h1>
 	</div>
 	
+	<div>
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()">{{ alert.msg }}</alert>
+	</div>
+	
 	<br>
 	
 	<div class="col-md-3">

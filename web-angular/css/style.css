@@ -43,3 +43,7 @@ input[type="checkbox"] + span:before {
 input[type="checkbox"]:checked + span:before {
     content: "\e067";; /* check */
 }
+
+textarea {
+   resize: none;
+}

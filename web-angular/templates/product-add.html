@@ -16,7 +16,7 @@
 <form class="simple-form" name="productForm" novalidate ng-submit="open()">
            <br>
 			Category: 
-			<select ng-model="product.categoryid">
+			<select ng-model="product.categoryid" >
 				<option value=1>Cocktail</option>
 				<option value=2>Shot</option>
 				<option value=3>Bebidas espirituosas</option>
@@ -26,15 +26,15 @@
 			</select>
 			<br>
 			<br>
-			Name: <input type="text" ng-model="product.name" name="name">
+			Name: <input type="text" ng-model="product.name" name="name" />
 			<br>
 			<br>
 			Description: 
 			<br>
-			<textarea rows="4" cols="50" name="description" ng-model="product.description"> </textarea>
+			<textarea rows="4" cols="50" style="resize:none" name="description" ng-model="product.description"> </textarea>
 			<br>
 			<br>
-            Price <input type="text" name="price" ng-model="product.price">
+            Price <input type="text" name="price" ng-model="product.price" />
 			<br>
 			<br>
 			<button class="btn"> Add Product </button>
