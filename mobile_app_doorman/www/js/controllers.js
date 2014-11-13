@@ -64,6 +64,14 @@ app.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, 
             {
                 $state.go('scan');
             }
+            else
+            {
+                // An alert dialog
+                 var alertPopup = $ionicPopup.alert({
+                     title: 'card@night',
+                     template: 'Specified user is not a doorman!'
+                   });
+            }
         }, function(resp){
 
             var error = "";
