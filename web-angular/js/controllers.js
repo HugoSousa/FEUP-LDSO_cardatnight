@@ -1,5 +1,18 @@
 var app = angular.module('controllers', []);
 
+
+//used to control alerts
+function RootCtrl($rootScope, $location, alertService) {
+  $rootScope.changeView = function(view) {
+    $location.path(view);
+  }
+  // root binding for alertService
+  $rootScope.closeAlert = alertService.closeAlert; 
+}
+RootCtrl.$inject = ['$scope', '$location', 'alertService'];
+
+
+
 app.controller('SidebarCtrl', function($scope, $state){
 
     $scope.toggleSidebar = false;
@@ -15,11 +28,12 @@ app.controller('SidebarCtrl', function($scope, $state){
 });
 
 
-app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
+app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertService){
 
     $scope.ordered = 'ordered';
     $scope.notified = 'notified';
     $scope.orders = null;
+	alertService.clear();
 
     $scope.showOrder = function(order){
         return order.orderstate === $scope.ordered || order.orderstate === $scope.notified;
@@ -70,9 +84,10 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular){
     };
 });
 
-app.controller('ProductsCtrl', function($scope, $stateParams, Restangular) {
+app.controller('ProductsCtrl', function($scope, $stateParams, Restangular,alertService) {
 
-
+	console.log($scope.data);
+	
     //hardcoded establishment id=1
     var products = Restangular.one('products').getList(1).then(function(data){
         $scope.products = data;
@@ -81,6 +96,7 @@ app.controller('ProductsCtrl', function($scope, $stateParams, Restangular) {
 	$scope.addProduct=function()
 	  {
 	   $state.go("product-add");
+	   alertService.clear();
 	  }
 	
 });
@@ -99,7 +115,9 @@ app.controller('ProductAdd', function($state, $scope, $stateParams,Restangular,$
 });
 
 
-app.controller('ProductAddConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance){
+app.controller('ProductAddConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance,alertService){
+
+	alertService.clear();
 	$scope.cancel = function () {
 			 $modalInstance.dismiss('cancel');
 		};
@@ -117,14 +135,15 @@ app.controller('ProductAddConfirm', function($state, $scope, $stateParams,Restan
 				console.log("ok-");
 				console.log(resp);
 				$modalInstance.dismiss('cancel');
+				alertService.add('success', 'Product added successfully');
 				$state.go("products");
 		  }); 
 	  }		
 })
 
-app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular,$modal) {
-
-
+app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular,$modal,alertService) {
+  
+	alertService.clear();
     var product = Restangular.one('product', $stateParams.productId).get().then(function(data){
         $scope.product = data[0];
 		console.log($scope.product);
@@ -152,7 +171,7 @@ app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular,
 	  
 });
 
-app.controller('ProductDeleteConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance){
+app.controller('ProductDeleteConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance,alertService){
 	$scope.cancel = function () {
 			 $modalInstance.dismiss('cancel');
 		};  
@@ -164,14 +183,15 @@ app.controller('ProductDeleteConfirm', function($state, $scope, $stateParams,Res
 			var teste =Restangular.all('delete-product').post(productid).then(function (resp){
 				console.log("ok");
 				console.log(resp);
-				$modalInstance.dismiss('cancel')
+				$modalInstance.dismiss('cancel');
+				alertService.add('success', 'Product deleted successfully');
 				$state.go("products");
 			});
 	  }
 	  	
 })
 
-app.controller('ProductEditConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance){
+app.controller('ProductEditConfirm', function($state, $scope, $stateParams,Restangular, $modalInstance, alertService){
 	$scope.cancel = function () {
 			 $modalInstance.dismiss('cancel');
 		};
@@ -183,14 +203,15 @@ app.controller('ProductEditConfirm', function($state, $scope, $stateParams,Resta
 		   var body= {"productid": $scope.product.productid,"categoryid":$scope.product.categoryid,
 		   "name":$scope.product.name,"price":$scope.product.price,"description":$scope.product.description};
 		   
-			var teste =Restangular.all('edit-product').post(body).then(function (resp){
+			var test =Restangular.all('edit-product').post(body).then(function (resp){
 				console.log("ok");
 				console.log(resp);
-				$modalInstance.dismiss('cancel')
+				$modalInstance.dismiss('cancel');
+				 alertService.add('success', 'Product edited successfully');
 				$state.go("products");
 		  }); 
-	  }		
-})
+	  }
+});
 
 app.controller('CustomersCtrl', function($state, $scope, $stateParams, Restangular) {
 

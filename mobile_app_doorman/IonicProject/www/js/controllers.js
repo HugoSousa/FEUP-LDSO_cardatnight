@@ -52,21 +52,18 @@ app.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, 
             template: 'Logging in...'
         });
         //TODO: encrypt password
-        Restangular.all('login').post({username: $scope.user.username, password: digest_sha256} ).then(function (resp){
+        Restangular.all('login').post({username: $scope.user.username, password: $scope.user.password} ).then(function (resp){
             console.log("ok");
             console.log(resp);
 
             AuthService.login(resp.user, resp.access_token);
+        
             $ionicLoading.hide();
-            $state.go('scan');
-            //console.log(AuthService.loggedUser());
-
-            //console.log("SENT TOKEN: " +resp.access_token);
-            /*
-            Restangular.one('testlogin_customer').customGET("", {}, {'x-access-token': resp.access_token}).then(function(response) {
-                console.log(response);
-            });
-            */
+            
+            if(resp.user.permission == 'doorman')
+            {
+                $state.go('scan');
+            }
         }, function(resp){
 
             var error = "";
@@ -105,29 +102,21 @@ app.controller('NavCtrl', function($scope, $state, $stateParams, $ionicPopup, $c
 	{
         $cordovaBarcodeScanner.scan().then(function(imageData) {
 		
-			if(imageData.text.length > 0)
-			{
-				Restangular.all('gate/entry/' + imageData.text).customGET("", {}, {'x-access-token': AuthService.token()}).then(function(data){
+            Restangular.all('gate').all('entry').one(imageData.text).customPOST("", "", {}, {'x-access-token': AuthService.token()}).then(function(data){
                         console.log("ok");
+
+                        document.getElementById("checkImage").src="ok.png"
 
                     }, function(resp) {
                         console.log("error");
+                
+                        document.getElementById("checkImage").src="error.png";
 
                     });
-				
-				document.getElementById("checkImage").src="ok.png";
-				
-				alert("Hello!");
-			}
-			else
-			{
-				document.getElementById("checkImage").src="error.png";
-			}
-        }, function(error) {
-            
-        });
-    };
+                });
 
+    }
+    
 })
 
 .controller('AccountCtrl', function($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService) {
