@@ -52,7 +52,7 @@ app.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, 
             template: 'Logging in...'
         });
         //TODO: encrypt password
-        Restangular.all('login').post({username: $scope.user.username, password: $scope.user.password} ).then(function (resp){
+        Restangular.all('login').post({username: $scope.user.username, password: digest_sha256} ).then(function (resp){
             console.log("ok");
             console.log(resp);
 
