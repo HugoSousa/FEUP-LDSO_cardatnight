@@ -142,14 +142,16 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('AccountCtrl', function($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService) {
+.controller('AccountCtrl', function($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService, SocketService) {
 
 	var loggedUser = AuthService.loggedUser();
 	$scope.loggedUser = AuthService.loggedUser().username;
 	
         
     $scope.logout = function() {
+
         AuthService.logout();
+        SocketService.getSocket().disconnect();
         $state.go('login');
     }
     
@@ -248,9 +250,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService){
+.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService){
     //console.log(AuthService.loggedUser())
-
+    console.log("LOGIN CONTROLLER");
     $ionicViewService.clearHistory();
 
     $scope.loginSubmit = function() {
@@ -277,12 +279,13 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                 });
 
             };*/
+            console.log("CONNECT SOCKET");
+            //var socket = io.connect('http://nightout-app.herokuapp.com:80');
+            var socket = io.connect('http://localhost:1337', {'force new connection': true});
 
-            var socket = io.connect('http://nightout-app.herokuapp.com:80');
 
             socket.on('connect', function() {
                 console.log("connected");
-
 
                 socket.emit('storeClientInfo', { username: resp.user.username });
 
@@ -291,6 +294,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                 });
 
                 socket.on('notify', function(text) {
+                    console.log("NOTIFICAÇÃO");
+                    /*
                     window.plugin.notification.local.add({
                         id: "1",
                         message: 'Teste notificação.',
@@ -298,6 +303,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                         autoCancel: true,
                         json: JSON.stringify({ order: 123 })
                     });
+                    */
 
                     /*
                     window.plugin.notification.local.onclick = function (id, state, json) {
@@ -312,6 +318,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                 });
             });
 
+            SocketService.setSocket(socket);
             AuthService.login(resp.user, resp.access_token);
             $ionicLoading.hide();
             $state.go('menu');
@@ -630,7 +637,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService, FooterService) {
+.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService, FooterService, SocketService) {
 
     FooterService.changeFooter(false);
 
@@ -649,14 +656,17 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         if (loggedUser) {
 
             Restangular.all('checklogin').customGET( "", {}, {'x-access-token': AuthService.token()}).then(function(data){
-                //VOLTAR A CONECTAR AO SOCKET.IO
+
                 console.log(data);
 
                 if(data.result != "success") {
                     AlertPopupService.createPopup("Error", "Your login has expired. Please login again.");
                     $state.go('login');
                 }else{
+                    //VOLTAR A CONECTAR AO SOCKET.IO
                     AuthService.login(loggedUser, AuthService.token());
+                    var socket = io.connect('http://localhost:1337');
+                    SocketService.setSocket(socket);
                     $state.go('menu');
                 }
             }, function(data){

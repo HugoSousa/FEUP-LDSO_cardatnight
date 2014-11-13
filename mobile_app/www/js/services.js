@@ -84,3 +84,18 @@ app.factory('FooterService', function(){
         }
     }
 })
+
+app.factory('SocketService', function(){
+
+    var socket;
+
+    return {
+
+        getSocket: function() {
+            return socket;
+        },
+        setSocket: function(s) {
+            socket = s;
+        }
+    }
+})
