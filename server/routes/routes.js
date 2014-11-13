@@ -417,7 +417,7 @@ module.exports = function (app, io, passport) {
     io.on('connection', function (socket) {
 
         console.log('socket connected');
-        
+        //printClients();
 
         socket.on('storeClientInfo', function (data) {
             console.log("STORE CLIENT INFO");
@@ -427,36 +427,60 @@ module.exports = function (app, io, passport) {
             clientInfo.clientId = socket.id;
             clients.push(clientInfo);
 
-            for(var i=0; i < clients.length; i++){
-                console.log(i+1 + " - ");
-                console.log(clients[i].username);
-                console.log(clients[i].clientId);
-                console.log("");
-            }
-            
+            printClients();
             
         });
 
-        socket.on('disconnect', function (socket) {
-            //remove the client from array
+        socket.on('removeClientInfo', function(data){
+            console.log("REMOVE CLIENT INFO");
+
+            var clientSocket = data.socket;
+
             for(var a=0; a < clients.length; a++){
-                /*
-                // FIX THIS result is undefined
-                if(clients[a].username == result.username){
+                
+                if(clients[a].clientId == clientSocket.id){
                     clients.splice(a,1);
                     break;
-                }*/
+                }
             }
 
-            console.log('socket disconnected');
+            //printClients();
+        })
+
+        socket.on('disconnect', function () {
+            //remove the client from array
+            for(var a=0; a < clients.length; a++){
+                
+                // FIX THIS result is undefined
+                console.log("ID: " + clients[a].clientId);
+                if(clients[a].clientId == socket.id){
+                    console.log("REMOVE THIS FROM CLIENTS");
+                    clients.splice(a,1);
+                    break;
+                }
+            }
+
+
             console.log(socket.id);
+            console.log('socket disconnected');
+            printClients();
 
         });
+
 
         socket.emit('text', 'wow. such event. very real time.');
     });
 
+    
+    function printClients(){
+        for(var i=0; i < clients.length; i++){
+            console.log(i+1 + " - " + clients[i].username  + " -> " + clients[i].clientId);
+            console.log("");
+        }
 
+        if(clients.length == 0)
+            console.log("No clients! \n");
+    }
 
     //http.listen(3000);
 

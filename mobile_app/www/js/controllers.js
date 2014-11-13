@@ -30,6 +30,7 @@ app.controller('FooterCtrl', ["$scope", "FooterService", function($scope, Footer
 }]);
 
 app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
+    /*
 
     if(window.plugin && window.plugin.notification.local){
         window.plugin.notification.local.onclick = function (id, state, json) {
@@ -40,17 +41,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             });
 
         };
-
-        window.plugin.notification.local.ontrigger = function (id, state, json) {
-            $state.go("orders");
-            $ionicPopup.alert({
-                title: 'Notification ' + id + ' triggered',
-                template: JSON.parse(json).order + " was ordered"
-            });
-
-        };
     }
-
+*/
     $scope.loggedUser = AuthService.loggedUser();
 
 	/*
@@ -142,14 +134,16 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('AccountCtrl', function($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService) {
+.controller('AccountCtrl', function($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService, SocketService) {
 
 	var loggedUser = AuthService.loggedUser();
 	$scope.loggedUser = AuthService.loggedUser().username;
 	
         
     $scope.logout = function() {
+
         AuthService.logout();
+        SocketService.getSocket().disconnect();
         $state.go('login');
     }
     
@@ -248,9 +242,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService){
+.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService){
     //console.log(AuthService.loggedUser())
-
+    console.log("LOGIN CONTROLLER");
     $ionicViewService.clearHistory();
 
     $scope.loginSubmit = function() {
@@ -268,50 +262,20 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             console.log("ok");
             console.log(resp);
 
-            /*
-            window.plugin.notification.local.onclick = function (id, state, json) {
-                $state.go("orders");
-                $ionicPopup.alert({
-                    title: 'Notification ' + id + ' clicked' + state,
-                    template: JSON.parse(json).order + " was ordered"
-                });
-
-            };*/
-
-            var socket = io.connect('http://nightout-app.herokuapp.com:80');
-
-            socket.on('connect', function() {
-                console.log("connected");
-
-
-                socket.emit('storeClientInfo', { username: resp.user.username });
-
-                socket.on('text', function(text) {
-                    console.log(text);
-                });
-
-                socket.on('notify', function(text) {
-                    window.plugin.notification.local.add({
-                        id: "1",
-                        message: 'Teste notificação.',
-                        badge: 1,
-                        autoCancel: true,
-                        json: JSON.stringify({ order: 123 })
+            if(window.plugin && window.plugin.notification.local) {
+                window.plugin.notification.local.onclick = function (id, state, json) {
+                    $state.go("orders");
+                    $ionicPopup.alert({
+                        title: 'Notification ' + id + ' clicked' + state,
+                        template: JSON.parse(json).order + " was ordered"
                     });
 
-                    /*
-                    window.plugin.notification.local.onclick = function (id, state, json) {
-                        $state.go("orders");
-                        $ionicPopup.alert({
-                            title: 'Notification ' + id + ' clicked' + state,
-                            template: JSON.parse(json).order + " was ordered"
-                        });
+                };
+            }
 
-                    };
-                    */
-                });
-            });
+            console.log("CONNECT SOCKET");
 
+            SocketService.connectSocket(resp.user.username);
             AuthService.login(resp.user, resp.access_token);
             $ionicLoading.hide();
             $state.go('menu');
@@ -630,7 +594,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService, FooterService) {
+.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService, FooterService, SocketService) {
 
     FooterService.changeFooter(false);
 
@@ -649,7 +613,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         if (loggedUser) {
 
             Restangular.all('checklogin').customGET( "", {}, {'x-access-token': AuthService.token()}).then(function(data){
-                //VOLTAR A CONECTAR AO SOCKET.IO
+
                 console.log(data);
 
                 if(data.result != "success") {
@@ -657,6 +621,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                     $state.go('login');
                 }else{
                     AuthService.login(loggedUser, AuthService.token());
+                    //no mobile não faz o disconnect, não é preciso voltar a fazer o connect.
+                    //SocketService.connectSocket(loggedUser.username);
                     $state.go('menu');
                 }
             }, function(data){
