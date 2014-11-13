@@ -65,9 +65,3 @@ a:hover
     text-decoration:none !important;
     cursor:pointer !important;
 }
-
-img
-{
-    display: block;
-    margin: auto;
-}
