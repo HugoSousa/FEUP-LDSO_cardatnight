@@ -427,7 +427,7 @@ module.exports = function (app, io, passport) {
             clientInfo.clientId = socket.id;
             clients.push(clientInfo);
 
-            //printClients();
+            printClients();
             
         });
 

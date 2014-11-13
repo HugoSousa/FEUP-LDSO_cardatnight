@@ -94,8 +94,43 @@ app.factory('SocketService', function(){
         getSocket: function() {
             return socket;
         },
-        setSocket: function(s) {
-            socket = s;
+        connectSocket: function(user) {
+            socket = io.connect('http://nightout-app.herokuapp.com:80', {'force new connection': true});
+            //socket = io.connect('http://localhost:1337', {'force new connection': true});
+
+
+            socket.on('connect', function() {
+                console.log("connected");
+
+                socket.emit('storeClientInfo', { username: user });
+
+                socket.on('text', function(text) {
+                    console.log(text);
+                });
+
+                socket.on('notify', function(text) {
+                    console.log("NOTIFICAÇÃO");
+
+                     window.plugin.notification.local.add({
+                     id: "1",
+                     message: 'Teste notificação.',
+                     autoCancel: true,
+                     json: JSON.stringify({ order: 123 })
+                     });
+
+
+                    /*
+                     window.plugin.notification.local.onclick = function (id, state, json) {
+                     $state.go("orders");
+                     $ionicPopup.alert({
+                     title: 'Notification ' + id + ' clicked' + state,
+                     template: JSON.parse(json).order + " was ordered"
+                     });
+
+                     };
+                     */
+                });
+            });
         }
     }
 })

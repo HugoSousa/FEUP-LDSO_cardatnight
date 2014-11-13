@@ -30,6 +30,7 @@ app.controller('FooterCtrl', ["$scope", "FooterService", function($scope, Footer
 }]);
 
 app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
+    /*
 
     if(window.plugin && window.plugin.notification.local){
         window.plugin.notification.local.onclick = function (id, state, json) {
@@ -40,17 +41,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             });
 
         };
-
-        window.plugin.notification.local.ontrigger = function (id, state, json) {
-            $state.go("orders");
-            $ionicPopup.alert({
-                title: 'Notification ' + id + ' triggered',
-                template: JSON.parse(json).order + " was ordered"
-            });
-
-        };
     }
-
+*/
     $scope.loggedUser = AuthService.loggedUser();
 
 	/*
@@ -270,55 +262,20 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             console.log("ok");
             console.log(resp);
 
-            /*
-            window.plugin.notification.local.onclick = function (id, state, json) {
-                $state.go("orders");
-                $ionicPopup.alert({
-                    title: 'Notification ' + id + ' clicked' + state,
-                    template: JSON.parse(json).order + " was ordered"
-                });
-
-            };*/
-            console.log("CONNECT SOCKET");
-            //var socket = io.connect('http://nightout-app.herokuapp.com:80');
-            var socket = io.connect('http://localhost:1337', {'force new connection': true});
-
-
-            socket.on('connect', function() {
-                console.log("connected");
-
-                socket.emit('storeClientInfo', { username: resp.user.username });
-
-                socket.on('text', function(text) {
-                    console.log(text);
-                });
-
-                socket.on('notify', function(text) {
-                    console.log("NOTIFICAÇÃO");
-                    /*
-                    window.plugin.notification.local.add({
-                        id: "1",
-                        message: 'Teste notificação.',
-                        badge: 1,
-                        autoCancel: true,
-                        json: JSON.stringify({ order: 123 })
+            if(window.plugin && window.plugin.notification.local) {
+                window.plugin.notification.local.onclick = function (id, state, json) {
+                    $state.go("orders");
+                    $ionicPopup.alert({
+                        title: 'Notification ' + id + ' clicked' + state,
+                        template: JSON.parse(json).order + " was ordered"
                     });
-                    */
 
-                    /*
-                    window.plugin.notification.local.onclick = function (id, state, json) {
-                        $state.go("orders");
-                        $ionicPopup.alert({
-                            title: 'Notification ' + id + ' clicked' + state,
-                            template: JSON.parse(json).order + " was ordered"
-                        });
+                };
+            }
 
-                    };
-                    */
-                });
-            });
+            console.log("CONNECT SOCKET");
 
-            SocketService.setSocket(socket);
+            SocketService.connectSocket(resp.user.username);
             AuthService.login(resp.user, resp.access_token);
             $ionicLoading.hide();
             $state.go('menu');
@@ -663,10 +620,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                     AlertPopupService.createPopup("Error", "Your login has expired. Please login again.");
                     $state.go('login');
                 }else{
-                    //VOLTAR A CONECTAR AO SOCKET.IO
                     AuthService.login(loggedUser, AuthService.token());
-                    var socket = io.connect('http://localhost:1337');
-                    SocketService.setSocket(socket);
+                    //no mobile não faz o disconnect, não é preciso voltar a fazer o connect.
+                    //SocketService.connectSocket(loggedUser.username);
                     $state.go('menu');
                 }
             }, function(data){
