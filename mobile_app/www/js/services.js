@@ -28,7 +28,8 @@ app.factory('AuthService', ['$window', function($window){
             if (user && access_token) {
                 loggedUser = user;
                 loggedUser.access_token = access_token;
-                if (loggedUser) $window.localStorage['user'] = JSON.stringify(loggedUser);
+                if (loggedUser)
+                    $window.localStorage['user'] = JSON.stringify(loggedUser);
             }
         },
         logout: function() {
@@ -85,7 +86,7 @@ app.factory('FooterService', function(){
     }
 })
 
-app.factory('SocketService', function(){
+app.factory('SocketService', ['$window', function($window){
 
     var socket;
 
@@ -94,10 +95,14 @@ app.factory('SocketService', function(){
         getSocket: function() {
             return socket;
         },
+        setSocket: function(s){
+            socket = s;
+        },
         connectSocket: function(user) {
             socket = io.connect('http://nightout-app.herokuapp.com:80', {'force new connection': true});
             //socket = io.connect('http://localhost:1337', {'force new connection': true});
-
+            console.log(socket.json);
+            $window.localStorage['socket'] = JSON.stringify(socket);
 
             socket.on('connect', function() {
                 console.log("connected");
@@ -121,16 +126,21 @@ app.factory('SocketService', function(){
 
                     /*
                      window.plugin.notification.local.onclick = function (id, state, json) {
-                     $state.go("orders");
-                     $ionicPopup.alert({
-                     title: 'Notification ' + id + ' clicked' + state,
-                     template: JSON.parse(json).order + " was ordered"
-                     });
+                         $window.localStorage['redirect'] = "orders";
+                         $state.go("orders");
+                         $ionicPopup.alert({
+                         title: 'Notification ' + id + ' clicked' + state,
+                         template: JSON.parse(json).order + " was ordered"
+                         });
 
                      };
-                     */
+                    */
                 });
             });
+        },
+        disconnect: function(){
+            socket.disconnect();
+            $window.localStorage['socket'] = '';
         }
     }
-})
+}])

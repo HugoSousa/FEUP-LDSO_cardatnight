@@ -30,10 +30,11 @@ app.controller('FooterCtrl', ["$scope", "FooterService", function($scope, Footer
 }]);
 
 app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
-    /*
 
+/*
     if(window.plugin && window.plugin.notification.local){
         window.plugin.notification.local.onclick = function (id, state, json) {
+            $window.localStorage['redirect'] = "orders";
             $state.go("orders");
             $ionicPopup.alert({
                 title: 'Notification ' + id + ' clicked',
@@ -242,7 +243,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService){
+.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService, $window){
     //console.log(AuthService.loggedUser())
     console.log("LOGIN CONTROLLER");
     $ionicViewService.clearHistory();
@@ -257,14 +258,16 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         $ionicLoading.show({
             template: 'Logging in...'
         });
-        //TODO: encrypt password
+
         Restangular.all('login').post({username: $scope.user.username, password: digest_sha256} ).then(function (resp){
             console.log("ok");
             console.log(resp);
 
             if(window.plugin && window.plugin.notification.local) {
                 window.plugin.notification.local.onclick = function (id, state, json) {
+
                     $state.go("orders");
+                    $window.localStorage['redirect'] = "orders";
                     $ionicPopup.alert({
                         title: 'Notification ' + id + ' clicked' + state,
                         template: JSON.parse(json).order + " was ordered"
@@ -311,8 +314,14 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService ){
+.controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService, $window){
     //console.log(AuthService.loggedUser());
+    var redirect = $window.localStorage['redirect'];
+    if(redirect && redirect != '' && redirect != 'undefined' && typeof redirect != 'undefined')
+        $state.go("orders");
+
+
+
     console.log(AuthService.token());
     $scope.hasCart;
     $ionicLoading.show({
@@ -543,8 +552,41 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 	};
 })
 
-.controller('OrdersCtrl', function($scope, Restangular, $ionicLoading) {
+.controller('OrdersCtrl', function($scope, Restangular, $ionicLoading, $rootScope, AlertPopupService) {
+    /*
+    var redirect = $window.localStorage['redirect'];
+    if(redirect && redirect != '' && redirect != 'undefined' && typeof redirect != 'undefined')
+        $window.localStorage['redirect'] = '';
+    */
+/*
+        AlertPopupService.createPopup("Error", JSON.stringify($scope.$viewHistory.backView));
+    //tentar por back view fixa no menu
+    console.log("VIEWS: " + JSON.stringify($rootScope.$viewHistory.views));
 
+        var backView = $scope.$viewHistory.backView;
+        console.log(backView);
+        $scope.$viewHistory.forcedNav = {
+            viewId:     "005",
+            navAction: 'moveBack',
+            navDirection: 'back'
+        };
+        console.log("VIEWS: " + JSON.stringify($rootScope.$viewHistory.views));
+        */
+        /*
+    console.log("CURRENT VIEW: " + JSON.stringify($rootScope.$viewHistory.currentView));
+    console.log("BACKVIEW: " + JSON.stringify($rootScope.$viewHistory.backView));
+        $rootScope.$viewHistory.backView={
+            index: 0,
+            viewId:"003",
+            historyId:"root",
+            backViewId:null,
+            stateId:"menu",
+            stateName:"menu",
+            url:"/menu",
+            forwardView: $rootScope.$viewHistory.currentView.viewId
+        }
+
+        console.log("BACKVIEW: " + JSON.stringify($rootScope.$viewHistory.backView));*/
     //$scope.orders = Orders.all();
     $ionicLoading.show({
         noBackdrop: false,
@@ -560,6 +602,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 .controller('OrderCtrl', function($scope, $stateParams, Restangular, $ionicLoading, AuthService) {
+
 
     //$scope.orders = Orders.all();
     $ionicLoading.show({
@@ -594,10 +637,9 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService, FooterService, SocketService) {
+.controller('InitialCtrl', function($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService, FooterService, SocketService, $window) {
 
     FooterService.changeFooter(false);
-
     setTimeout(function(){
 
         //verificar se o user ja esta logado e se token é valido
@@ -605,6 +647,8 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             $scope.user = {username: ''};
             $scope.user.username = $stateParams.username;
         }
+
+        var socket = $window.localStorage['socket'];
 
         var loggedUser = AuthService.loggedUser();
         console.log(loggedUser);
@@ -621,9 +665,17 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                     $state.go('login');
                 }else{
                     AuthService.login(loggedUser, AuthService.token());
+                    //AlertPopupService.createPopup("Socket", SocketService.getSocket());
+
                     //no mobile não faz o disconnect, não é preciso voltar a fazer o connect.
-                    //SocketService.connectSocket(loggedUser.username);
-                    $state.go('menu');
+                    if (socket && socket != '' && socket != 'undefined' && typeof socket != 'undefined') {
+                        SocketService.setSocket(socket);
+                        console.log("SET SOCKET");
+
+                    }
+                    console.log(JSON.stringify(SocketService.getSocket()));
+
+                    $state.go("menu");
                 }
             }, function(data){
                 AlertPopupService.createPopup("Error", "Couldn't connect to server. Please verify your connection.");
