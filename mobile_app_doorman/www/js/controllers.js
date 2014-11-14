@@ -52,7 +52,7 @@ app.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, 
             template: 'Logging in...'
         });
         //TODO: encrypt password
-        Restangular.all('login').post({username: $scope.user.username, password: $scope.user.password} ).then(function (resp){
+        Restangular.all('login').post({username: $scope.user.username, password: digest_sha256} ).then(function (resp){
             console.log("ok");
             console.log(resp);
 
@@ -63,6 +63,14 @@ app.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, 
             if(resp.user.permission == 'doorman')
             {
                 $state.go('scan');
+            }
+            else
+            {
+                // An alert dialog
+                 var alertPopup = $ionicPopup.alert({
+                     title: 'card@night',
+                     template: 'Specified user is not a doorman!'
+                   });
             }
         }, function(resp){
 
@@ -123,7 +131,6 @@ app.controller('NavCtrl', function($scope, $state, $stateParams, $ionicPopup, $c
 
 	var loggedUser = AuthService.loggedUser();
 	$scope.loggedUser = AuthService.loggedUser().username;
-	
         
     $scope.logout = function() {
         AuthService.logout();
