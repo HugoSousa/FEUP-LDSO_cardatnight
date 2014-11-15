@@ -144,7 +144,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
     $scope.logout = function() {
 
         AuthService.logout();
-        SocketService.getSocket().disconnect();
+        SocketService.disconnect();
         $state.go('login');
     }
     
@@ -648,7 +648,7 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
             $scope.user.username = $stateParams.username;
         }
 
-        var socket = $window.localStorage['socket'];
+        //var socket = $window.localStorage['socket'];
 
         var loggedUser = AuthService.loggedUser();
         console.log(loggedUser);
@@ -665,15 +665,10 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
                     $state.go('login');
                 }else{
                     AuthService.login(loggedUser, AuthService.token());
-                    //AlertPopupService.createPopup("Socket", SocketService.getSocket());
 
-                    //no mobile não faz o disconnect, não é preciso voltar a fazer o connect.
-                    if (socket && socket != '' && socket != 'undefined' && typeof socket != 'undefined') {
-                        SocketService.setSocket(socket);
-                        console.log("SET SOCKET");
-
-                    }
-                    console.log(JSON.stringify(SocketService.getSocket()));
+                    //generate a new socket and remove the old one on the server
+                    SocketService.connectSocket(loggedUser.username);
+                    SocketService.removeOld($window.localStorage['socket']);
 
                     $state.go("menu");
                 }

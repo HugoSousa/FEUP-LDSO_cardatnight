@@ -101,11 +101,13 @@ app.factory('SocketService', ['$window', function($window){
         connectSocket: function(user) {
             socket = io.connect('http://nightout-app.herokuapp.com:80', {'force new connection': true});
             //socket = io.connect('http://localhost:1337', {'force new connection': true});
-            console.log(socket.json);
-            $window.localStorage['socket'] = JSON.stringify(socket);
+
+            //$window.localStorage['socket'] = JSON.stringify(socket.io.engine.id);
 
             socket.on('connect', function() {
                 console.log("connected");
+                console.log("ID: " + socket.io.engine.id);
+                $window.localStorage['socket'] = socket.io.engine.id;
 
                 socket.emit('storeClientInfo', { username: user });
 
@@ -138,9 +140,14 @@ app.factory('SocketService', ['$window', function($window){
                 });
             });
         },
+        removeOld: function(socketId){
+            console.log("REMOVE OLD: " + socketId);
+            socket.emit("removeClientInfo", {socketid: socketId});
+        },
         disconnect: function(){
             socket.disconnect();
             $window.localStorage['socket'] = '';
         }
+
     }
 }])

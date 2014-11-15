@@ -417,7 +417,20 @@ module.exports = function (app, io, passport) {
     io.on('connection', function (socket) {
 
         console.log('socket connected');
-        //printClients();
+
+        socket.on('forceDisconnect', function(data){
+            console.log("FORCE DISCONNECT: " + data.socket.id);
+            socket.disconnect();
+
+            var clientSocket = data.socket;
+            for(var a=0; a < clients.length; a++){
+                
+                if(clients[a].clientId == clientSocket.id){
+                    clients.splice(a,1);
+                    break;
+                }
+            }
+        })
 
         socket.on('storeClientInfo', function (data) {
             console.log("STORE CLIENT INFO");
@@ -431,22 +444,27 @@ module.exports = function (app, io, passport) {
             
         });
 
-        socket.on('removeClientInfo', function(data){
-            console.log("REMOVE CLIENT INFO");
+        
+        socket.on('removeClientInfo', function (data){
+            console.log("REMOVE CLIENT INFO: " + data.socketid);
 
-            var clientSocket = data.socket;
-
+            //disconnect him by id
+            if(typeof io.sockets.connected[data.socketid] !== "undefined")
+                io.sockets.connected[data.socketid].disconnect();
+            
+            /*
+            //remove from the array
             for(var a=0; a < clients.length; a++){
                 
-                if(clients[a].clientId == clientSocket.id){
+                if(clients[a].clientId == socketId){
                     clients.splice(a,1);
                     break;
                 }
             }
-
+            */
             //printClients();
         })
-
+        
         socket.on('disconnect', function () {
             //remove the client from array
             for(var a=0; a < clients.length; a++){
