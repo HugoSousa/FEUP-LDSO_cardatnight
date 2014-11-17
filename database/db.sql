@@ -5,12 +5,16 @@ drop table if exists worker;
 drop table if exists customer;
 drop table if exists person;
 drop table if exists establishment;
+drop table if exists category;
+drop table if exists ordercode;
 drop type if exists worker_permission;
 drop type if exists product_state;
 
 create table establishment(
    establishmentid serial primary key not null,
-   name text not null
+   name text not null,
+   address text,
+   entrancecost double precision check (entrancecost >= 0)
 );
 
 create table person(
@@ -70,14 +74,20 @@ create table product(
 
 create type product_state as enum ('ordered','notified', 'delivered');
 
+create table ordercode(
+   ordercodeid serial primary key not null,
+   code text not null
+);
+
 create table orders(
    ordersid serial primary key not null,
    orderstime timestamp default current_timestamp,
-   orderState product_state not null,
+   orderstate product_state not null,
    cartid int not null,
    productid int not null,
    quantity int check(quantity>0),
-   code text not null,
+   ordercodeid int not null,
    foreign key (cartid) references cart(cartid) on delete cascade,
-   foreign key (productid) references product(productid)
+   foreign key (productid) references product(productid),
+   foreign key (ordercodeid) references ordercode(ordercodeid)
 );

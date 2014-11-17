@@ -65,7 +65,6 @@ insert into customer (customerid,name,email) values (15,'George Harrison', 'ghar
 
 
 --manager
-
 insert into worker (workerid,establishmentid,permission) values (16,1,'manager');
 insert into worker (workerid,establishmentid,permission) values (17,2,'manager');
 insert into worker (workerid,establishmentid,permission) values (18,3,'manager');
@@ -74,7 +73,6 @@ insert into worker (workerid,establishmentid,permission) values (20,5,'manager')
 
 
 --employee 
-
 insert into worker (workerid,establishmentid,permission) values (21, 1,'employee');
 insert into worker (workerid,establishmentid,permission) values (22, 2,'employee');
 insert into worker (workerid,establishmentid,permission) values (23, 3,'employee');
@@ -93,7 +91,7 @@ insert into category(categoryid, name) values (1,'cocktail');
 insert into category(categoryid, name) values (2,'shot');
 insert into category(categoryid, name) values (3,'bebidas espirituosas');
 insert into category(categoryid, name) values (4,'refrigerante');
-insert into category(categoryid, name) values (5,"whisky's");
+insert into category(categoryid, name) values (5,'whisky');
 insert into category(categoryid, name) values (6,'outros');
 
 --products
@@ -117,14 +115,26 @@ insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,custo
 insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,customerId,qrcode) values (12.00,0,'2014-10-03 20:00:00',NULL,false,1,1,'');
 insert into cart(balance,credit,entranceTime,exitTime,paid,establishmentId,customerId,qrcode) values (8.0,0,'2014-10-03 20:00:00',NULL,false,4,6,'');
 
+--ordercode
+insert into ordercode(ordercodeid, code) values(1, 'alpha beta');
+insert into ordercode(ordercodeid, code) values(2,'readable code');
+insert into ordercode(ordercodeid, code) values(3, 'pink potato');
+insert into ordercode(ordercodeid, code) values(4, 'oh cat');
+insert into ordercode(ordercodeid, code) values(5, 'oh my god');
+insert into ordercode(ordercodeid, code) values(6, 'give me that');
+insert into ordercode(ordercodeid, code) values(7, 'alright sir');
+insert into ordercode(ordercodeid, code) values(8, 'thanks thanks thanks');
+insert into ordercode(ordercodeid, code) values(9, 'good taste');
+insert into ordercode(ordercodeid, code) values(10, 'red yellow green');
+
 --orders 
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-01 21:00:00','delivered',1,1,1,'AB234AR');
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-01 21:00:00','delivered',1,2,1,'B364ASD');
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-01 21:30:00','delivered',1,3,1,'9FGF41A');
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-10-03 01:00:00','delivered',2,3,2,'JGI532A');
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-10-01 04:00:00','delivered',3,4,1,'M9521AY');
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-27 02:00:00','delivered',4,4,3,'BEQ3AF2');
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-09-10 23:10:00','delivered',5,10,1,'OP004S3');
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-10-03 21:00:00','delivered',6,9,1,'YE79902S');
-insert into orders(ordersTime,orderState,cartId,productid,quantity,code) values ('2014-10-03 21:00:00','notified',7,8,1,'REQ414S');
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-09-01 21:00:00','delivered',1,1,1,1);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-09-01 21:00:00','delivered',1,2,1,2);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-09-01 21:30:00','delivered',1,3,1,3);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-10-03 01:00:00','delivered',2,3,2,4);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-10-01 04:00:00','delivered',3,4,1,5);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-09-27 02:00:00','delivered',4,4,3,6);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-09-10 23:10:00','delivered',5,10,1,2);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-10-03 21:00:00','delivered',6,9,1,5);
+insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-10-03 21:00:00','notified',7,8,1,1);
 

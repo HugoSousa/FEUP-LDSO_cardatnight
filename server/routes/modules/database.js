@@ -248,14 +248,15 @@ exports.deleteProduct = function (id, callback) {
 
 
 
-exports.addOrder = function (orderstate, cartid, productid, quantity, callback) {
+exports.addOrder = function (orderstate, cartid, productid, quantity, code, callback) {
     pg.connect(database_url , function (err, client, done) {
 	
 		if (err) {
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-            client.query({ text: "INSERT INTO orders(orderstate, cartid, productid, quantity, code) VALUES($1, $2, $3, $4, 'ABCDEF')", name: 'insert orders', values: [orderstate, cartid, productid, quantity] }, function (err, result) {
+            console.log("BEFORE QUERY -> CODE: " + code);
+            client.query({ text: "INSERT INTO orders(orderstate, cartid, productid, quantity, ordercodeid) VALUES($1, $2, $3, $4, $5)", name: 'insert orders', values: [orderstate, cartid, productid, quantity, code] }, function (err, result) {
 
             if (err) {                    
                         callback(err , null);
@@ -500,6 +501,55 @@ exports.editProduct = function (id,description,name,price,categoryid, callback) 
 						callback(null, result);
 					}
 			
+            });
+        }
+
+        done();
+    });
+
+}
+
+
+exports.getUnusedCodesByEstablishment = function (establishmentId, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({ text: "SELECT ordercodeid, code FROM ordercode EXCEPT SELECT ordercode.ordercodeid, ordercode.code FROM ordercode, orders, cart, establishment WHERE orders.ordercodeid = ordercode.ordercodeid AND orders.cartid = cart.cartid AND cart.establishmentid = establishment.establishmentid AND cart.establishmentid = $1 AND orders.orderstate != 'delivered'",
+            values: [establishmentId] }, function (err, result) {
+
+            if (err) {                    
+                        callback(err, null);
+                    }
+                    else {
+                        callback(null, result);
+                    }
+            
+            });
+        }
+
+        done();
+    });
+
+}
+
+exports.getCartEstablishment = function (cartId, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({ text: "SELECT cart.establishmentid FROM cart, establishment WHERE cart.establishmentid = establishment.establishmentid AND cart.cartid = $1",
+            values: [cartId] }, function (err, result) {
+
+            if (err) {                    
+                        callback(err, null);
+                    }
+                    else {
+                        callback(null, result);
+                    }
+            
             });
         }
 

@@ -159,12 +159,39 @@ module.exports = function (app, io, passport) {
         if (!cartid || !productid || !quantity ) res.json( { error: 'missing parameters' });
         else {
             res.status(200);
+            //buscar estabelecimento deste cart 
+            db.getCartEstablishment(cartid, function (err1, result1) {
+                if (err1) res.status(409).json(err1);
 
-            db.addOrder('ordered', cartid, productid, quantity, function (err, result) {
-                if (err) res.status(409).json(err);
-                else res.status(200).json(result);
+                else{
+                    //console.log("ESTABLISHMENT: " + result1.rows[0].establishmentid);
 
-            });
+                    //buscar passwords nao usadas no estabelecimento neste momento
+                    db.getUnusedCodesByEstablishment(result1.rows[0].establishmentid, function (err2, result2) {
+                        if (err2) res.status(409).json(err2);
+                        else {
+                            /*
+                            for(var i = 0; i < result2.rows.length; i++){
+                                console.log("AVAILABLE CODE: " + result2.rows[i].code);
+                            }
+                            */
+
+                            //selecionar password aleatoria
+                            var randomNumber = Math.floor((Math.random() * result2.rows.length));
+                            var code = result2.rows[randomNumber].ordercodeid;
+
+                            //console.log("SELECTED CODE: " + code);
+
+                            db.addOrder('ordered', cartid, productid, quantity, code.toString(), function (err3, result3) {
+                                if (err3) res.status(409).json(err3);
+                                else res.status(200).json(result3);
+                            });
+                        }
+
+                    });
+                }
+                    
+            })    
         }
     });
 	
@@ -174,7 +201,7 @@ module.exports = function (app, io, passport) {
 		db.getActiveCart(req.user, function(err, cart) {
 			if (err) res.status(409).json({error: err});
 			else {
-			if (cart) res.status(409).json({error: "Customer already has an active card. Current cart ID [" + cart.cartid + "] of establishment nr " +               cart.establishmentid});
+			if (cart) res.status(409).json({error: "Customer already has an active card. Current cart ID [" + cart.cartid + "] of establishment nr " + cart.establishmentid});
 			else {
 				// generate entry token and return it
                    var token = jwt.encode({
