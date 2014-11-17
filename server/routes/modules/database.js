@@ -336,7 +336,7 @@ exports.getIncomingOrders = function (establishmentId, callback) {
             callback({ error: 'Failed to connect do database' }, null);
         }
         else {
-            client.query({ text: "SELECT *, product.name as productname FROM orders, cart, establishment, product WHERE orders.cartid = cart.cartid AND cart.establishmentid = establishment.establishmentid AND orders.productid = product.productid AND cart.establishmentid = $1 AND orders.orderstate != 'delivered'  ORDER BY orders.orderstime", name: 'getincomingorders', values: [establishmentId] }, function (err, result) {
+            client.query({ text: "SELECT *, product.name, ordercode.code as productname FROM orders, cart, establishment, product, ordercode WHERE orders.cartid = cart.cartid AND orders.ordercodeid = ordercode.ordercodeid AND cart.establishmentid = establishment.establishmentid AND orders.productid = product.productid AND cart.establishmentid = $1 AND orders.orderstate != 'delivered'  ORDER BY orders.orderstime", name: 'getincomingorders', values: [establishmentId] }, function (err, result) {
             if (err) {
                 //any specific error?
                 callback({ error: "Error occurred" }, null);
@@ -358,7 +358,7 @@ exports.getOrder = function (orderId, callback) {
             callback({ error: 'Failed to connect do database' }, null);
         }
         else {
-            client.query({ text: "SELECT orderstime, orderstate, quantity, code, product.name AS productname, product.price * orders.quantity AS price FROM orders, product WHERE orders.productid = product.productid AND orders.ordersid = $1", name: 'getorder', values: [orderId] }, function (err, result) {
+            client.query({ text: "SELECT orderstime, orderstate, quantity, ordercode.code, product.name AS productname, product.price * orders.quantity AS price FROM orders, product, ordercode WHERE orders.productid = product.productid AND orders.ordercodeid = ordercode.ordercodeid AND orders.ordersid = $1", name: 'getorder', values: [orderId] }, function (err, result) {
             if (err) {
                 //any specific error?
                 callback({ error: "Error occurred" }, null);
@@ -469,7 +469,7 @@ exports.getActualOrders = function(cartid, callback){
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-            client.query({text: "SELECT ordersid, orderstime, orderstate, code, product.price * orders.quantity AS price FROM orders, product WHERE orders.productid = product.productid AND orders.cartid = $1 ORDER BY orders.orderstime DESC", name: 'getactualorders', values: [cartid]}, function (err, result) {
+            client.query({text: "SELECT ordersid, orderstime, orderstate, ordercode.code, product.price * orders.quantity AS price FROM orders, product, ordercode WHERE orders.productid = product.productid AND ordercode.ordercodeid = orders.ordercodeid AND orders.cartid = $1 ORDER BY orders.orderstime DESC", name: 'getactualorders', values: [cartid]}, function (err, result) {
                 if (err) {                    
                         callback( err , null);
                 }

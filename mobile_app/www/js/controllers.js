@@ -262,20 +262,20 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
         Restangular.all('login').post({username: $scope.user.username, password: digest_sha256} ).then(function (resp){
             console.log("ok");
             console.log(resp);
-
+            /*
             if(window.plugin && window.plugin.notification.local) {
                 window.plugin.notification.local.onclick = function (id, state, json) {
 
-                    $state.go("orders");
-                    $window.localStorage['redirect'] = "orders";
-                    $ionicPopup.alert({
-                        title: 'Notification ' + id + ' clicked' + state,
-                        template: JSON.parse(json).order + " was ordered"
-                    });
+                    $state.go("orders", {}, {reload: true});
+                    $state.go("order-detail", {orderId: JSON.parse(json).orderid});
+
+                    $window.localStorage['redirect'] = JSON.parse(json).orderid;
+
+
 
                 };
             }
-
+            */
             console.log("CONNECT SOCKET");
 
             SocketService.connectSocket(resp.user.username);
@@ -314,12 +314,18 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService, $window){
+.controller('MenuCtrl', function($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService, $window, AlertPopupService){
     //console.log(AuthService.loggedUser());
+    console.log("MENU CTRL");
+
     var redirect = $window.localStorage['redirect'];
+
+
+    AlertPopupService.createPopup("REDIRECT", redirect);
+    //console.log("REDIRECT: " + redirect);
+
     if(redirect && redirect != '' && redirect != 'undefined' && typeof redirect != 'undefined')
         $state.go("orders");
-
 
 
     console.log(AuthService.token());
@@ -552,57 +558,31 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 	};
 })
 
-.controller('OrdersCtrl', function($scope, Restangular, $ionicLoading, $rootScope, AlertPopupService) {
-    /*
+.controller('OrdersCtrl', function($scope, $state, Restangular, $ionicLoading, AuthService, $window) {
+
+    $scope.loggedUser = AuthService.loggedUser();
+    console.log(JSON.stringify(AuthService.loggedUser()));
+
     var redirect = $window.localStorage['redirect'];
-    if(redirect && redirect != '' && redirect != 'undefined' && typeof redirect != 'undefined')
-        $window.localStorage['redirect'] = '';
-    */
-/*
-        AlertPopupService.createPopup("Error", JSON.stringify($scope.$viewHistory.backView));
-    //tentar por back view fixa no menu
-    console.log("VIEWS: " + JSON.stringify($rootScope.$viewHistory.views));
+    if(redirect && redirect != '' && redirect != 'undefined' && typeof redirect != 'undefined'){
+        $state.go("order-detail", {orderId: redirect});
+    }
 
-        var backView = $scope.$viewHistory.backView;
-        console.log(backView);
-        $scope.$viewHistory.forcedNav = {
-            viewId:     "005",
-            navAction: 'moveBack',
-            navDirection: 'back'
-        };
-        console.log("VIEWS: " + JSON.stringify($rootScope.$viewHistory.views));
-        */
-        /*
-    console.log("CURRENT VIEW: " + JSON.stringify($rootScope.$viewHistory.currentView));
-    console.log("BACKVIEW: " + JSON.stringify($rootScope.$viewHistory.backView));
-        $rootScope.$viewHistory.backView={
-            index: 0,
-            viewId:"003",
-            historyId:"root",
-            backViewId:null,
-            stateId:"menu",
-            stateName:"menu",
-            url:"/menu",
-            forwardView: $rootScope.$viewHistory.currentView.viewId
-        }
-
-        console.log("BACKVIEW: " + JSON.stringify($rootScope.$viewHistory.backView));*/
     //$scope.orders = Orders.all();
     $ionicLoading.show({
         noBackdrop: false,
         template: 'Loading'
     });
-
-    //get active cart (could be stored in a variable instead of asking the server every time)
-    //get orders from that cart (hardcoded cartid=6)
-    Restangular.one('actualorders').getList(1).then(function(data){
+    Restangular.all('actualorders').customGET($scope.loggedUser.cartid, {}, {'x-access-token': AuthService.token()}).then(function(data){
         $scope.orders = data;
         $ionicLoading.hide();
     });
 })
 
-.controller('OrderCtrl', function($scope, $stateParams, Restangular, $ionicLoading, AuthService) {
+.controller('OrderCtrl', function($scope, $stateParams, Restangular, $ionicLoading, AuthService, AlertPopupService, $window) {
 
+
+    //AlertPopupService.createPopup("ORDER PARAMS: ", $stateParams.orderId);
 
     //$scope.orders = Orders.all();
     $ionicLoading.show({

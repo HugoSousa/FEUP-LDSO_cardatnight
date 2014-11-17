@@ -385,7 +385,8 @@ module.exports = function (app, io, passport) {
                         console.log("EMIT TO SOCKET " + clients[a].clientId);
                         var toSocket = clients[a].clientId;
 
-                        io.to(toSocket).emit('notify', 'Your order number X is ready');
+                        //send the notified orderid
+                        io.to(toSocket).emit('notify', orderid);
                     }
                 }
 

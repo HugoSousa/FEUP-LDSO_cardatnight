@@ -28,6 +28,8 @@ app.factory('AuthService', ['$window', function($window){
             if (user && access_token) {
                 loggedUser = user;
                 loggedUser.access_token = access_token;
+                //HARDCODED CART ID = 1
+                loggedUser.cartid = 1;
                 if (loggedUser)
                     $window.localStorage['user'] = JSON.stringify(loggedUser);
             }
@@ -86,7 +88,7 @@ app.factory('FooterService', function(){
     }
 })
 
-app.factory('SocketService', ['$window', function($window){
+app.factory('SocketService', ['$window', '$state', function($window, $state){
 
     var socket;
 
@@ -109,6 +111,18 @@ app.factory('SocketService', ['$window', function($window){
                 console.log("ID: " + socket.io.engine.id);
                 $window.localStorage['socket'] = socket.io.engine.id;
 
+                if(window.plugin && window.plugin.notification.local) {
+                    window.plugin.notification.local.onclick = function (id, state, json) {
+
+                        $state.go("order-detail", {orderId: JSON.parse(json).orderid}, {reload: true});
+
+                        $window.localStorage['redirect'] = JSON.parse(json).orderid;
+
+
+
+                    };
+                }
+
                 socket.emit('storeClientInfo', { username: user });
 
                 socket.on('text', function(text) {
@@ -118,12 +132,13 @@ app.factory('SocketService', ['$window', function($window){
                 socket.on('notify', function(text) {
                     console.log("NOTIFICAÇÃO");
 
-                     window.plugin.notification.local.add({
-                     id: "1",
-                     message: 'Teste notificação.',
-                     autoCancel: true,
-                     json: JSON.stringify({ order: 123 })
-                     });
+                    window.plugin.notification.local.add({
+                        id: "1",
+                        message: 'Your order just got ready. Please check your secret code and go get it.',
+                        autoCancel: true,
+                        json: JSON.stringify({ orderid: text })
+                    });
+
 
 
                     /*
