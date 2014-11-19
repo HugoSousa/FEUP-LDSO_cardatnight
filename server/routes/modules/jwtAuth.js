@@ -61,6 +61,13 @@ module.exports = function(app) {
             else return next();
         });
     }
+    function permission_employee_manager(req, res, next) {
+        jwtTokenAuthenticator(req, res, function () {
+            if (!req.user.permission) return res.status(403).json({ error: "Permission denied" });
+            else if (req.user.permission !== 'employee' && req.user.permission !== 'manager') return res.status(403).json({ error: "Permission denied" });
+            else return next();
+        });
+    }
     function permission_doorman(req, res, next) {
         jwtTokenAuthenticator(req, res, function () {
             if (!req.user.permission) return res.status(403).json({ error: "Permission denied" });
@@ -86,6 +93,7 @@ module.exports = function(app) {
 	app.all("/gate/*", permission_doorman);
 
     app.all("/order/*", permission_customer);
+  //  app.all("/edit-product",permission_employee_manager);
 
     //example: app.get("/orders/*",...
 
