@@ -109,7 +109,7 @@ exports.getActiveCart = function(user, callback) {
         }
         else {
 			var id = user.id;
-			client.query({text: "select * from cart where paid = false and customerid = $1", name: 'getactivecart', values: [id]}, function (err, result) {
+			client.query({text: "select * from cart, establishment where paid = false and customerid = $1 and cart.establishmentid = establishment.establishmentid", name: 'getactivecart', values: [id]}, function (err, result) {
                     if (err) {
 						callback( err , null);
 					}
