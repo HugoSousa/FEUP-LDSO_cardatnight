@@ -39,7 +39,7 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertS
         return order.orderstate === $scope.ordered || order.orderstate === $scope.notified;
     };
 	
-    Restangular.one('incomingorders').getList(2).then(function(data){
+    Restangular.one('incomingorders').getList(1).then(function(data){
         $scope.orders = data;
     }), function(data){
         console.log("Error");

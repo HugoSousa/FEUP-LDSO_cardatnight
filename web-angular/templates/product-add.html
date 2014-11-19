@@ -13,10 +13,11 @@
     </div>
 </script>
 	
-<form class="simple-form" name="productForm" novalidate ng-submit="open()">
+<form class="simple-form" name="productForm" ng-submit="open()" novalidate>
+			<div class="col-lg-4">
            <br>
 			Category: 
-			<select ng-model="product.categoryid" >
+			<select ng-model="product.categoryid" class="form-control" name="category" required>
 				<option value=1>Cocktail</option>
 				<option value=2>Shot</option>
 				<option value=3>Bebidas espirituosas</option>
@@ -24,18 +25,25 @@
 				<option value=5>Whiskys</option>
 				<option value=6>outros</option>
 			</select>
-			<br>
-			<br>
-			Name: <input type="text" ng-model="product.name" name="name" />
-			<br>
-			<br>
+			
+			<p class="help-block" ng-if="productForm.category.$error.required"><font color="red">The product's category is required</font></p>
+			<div class="help-block" ng-if="!productForm.category.$error.required"><br></div>
+
+			Name: <input type="text" ng-model="product.name" class="form-control" name="name" required/>
+			<p class="help-block" ng-if="productForm.name.$error.required"><font color="red">The product's name is required</font></p>
+			<div class="help-block" ng-if="!productForm.name.$error.required"><br></div>
+
 			Description: 
 			<br>
-			<textarea rows="4" cols="50" style="resize:none" name="description" ng-model="product.description"> </textarea>
+			<textarea rows="4" cols="50" style="resize:none" class="form-control" name="description" ng-model="product.description"> </textarea>
 			<br>
 			<br>
-            Price <input type="text" name="price" ng-model="product.price" />
+            Price <input type="text" name="price" ng-model="product.price" class="form-control" required ng-pattern="/^\d{0,9}(\.\d{1,9})?$/" />
 			<br>
-			<br>
-			<button class="btn"> Add Product </button>
+			<p class="help-block" ng-if="productForm.price.$error.required"><font color="red">The product's price is required</font></p>
+			<p class="help-block" ng-if="!productForm.price.$error.required && productForm.price.$error.pattern"><font color="red">Not valid price!</font></p>
+			<div class="help-block" ng-if="!productForm.price.$error.required && !productForm.price.$error.pattern"><br></div>
+
+			<button class="btn" ng-disabled="!productForm.$valid"> Add Product </button>
+			</div>
         </form>
