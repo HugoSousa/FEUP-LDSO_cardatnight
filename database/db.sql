@@ -68,6 +68,7 @@ create table product(
    price double precision check (price >= 0),
    establishmentid int not null,
    categoryid int not null,
+   deleted boolean not null default false,
    foreign key (establishmentid) references establishment(establishmentid),
    foreign key (categoryid) references category(categoryid)
 );
