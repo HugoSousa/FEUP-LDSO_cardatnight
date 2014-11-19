@@ -320,8 +320,6 @@ app.controller('NavCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
     var redirect = $window.localStorage['redirect'];
 
-
-    AlertPopupService.createPopup("REDIRECT", redirect);
     //console.log("REDIRECT: " + redirect);
 
     if(redirect && redirect != '' && redirect != 'undefined' && typeof redirect != 'undefined')

@@ -108,7 +108,7 @@ module.exports = function (app, io, passport) {
 
         res.status(422);
 
-        if (!categoryid || !establishmentid || !name|| !description || !price ) res.json( { error: 'missing parameters' });
+        if (!categoryid || !establishmentid || !name || !price ) res.json( { error: 'missing parameters' });
         else {
             db.addProduct(establishmentid,description,name,price,categoryid, function (err, result) {
                 if (err) res.status(409).json(err);
@@ -412,7 +412,7 @@ module.exports = function (app, io, passport) {
 
         res.status(422);
 
-        if (!categoryid || !productid || !name|| !description || !price ) res.json( { error: 'missing parameters' });
+        if (!categoryid || !productid || !name || !price ) res.json( { error: 'missing parameters' });
         else {
             res.status(200);
 
