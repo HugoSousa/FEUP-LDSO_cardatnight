@@ -107,6 +107,7 @@ app.controller('NavCtrl', function ($scope, $state, $stateParams, $ionicPopup, $
         $state.go('login');
     }
 
+
     $scope.scanBarcode = function () {
         $cordovaBarcodeScanner.scan().then(function (imageData) {
 
