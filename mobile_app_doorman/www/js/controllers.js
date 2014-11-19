@@ -110,18 +110,24 @@ app.controller('NavCtrl', function ($scope, $state, $stateParams, $ionicPopup, $
     $scope.scanBarcode = function () {
         $cordovaBarcodeScanner.scan().then(function (imageData) {
 
-            Restangular.all('gate').all('entry').one(imageData.text).customPOST("", "", {}, {
+            Restangular.all('gate').one(imageData.text).customPOST("", "", {}, {
                 'x-access-token': AuthService.token()
             }).then(function (data) {
-                console.log("ok");
+                
+                if(imageData.length() > 0)
+                {
+                    console.log("ok");
 
-                document.getElementById("checkImage").src = "ok.png"
+                    document.getElementById("checkImage").src = "ok.png"
+                }
 
             }, function (resp) {
-                console.log("error");
+                if(imageData.length() > 0)
+                {
+                    console.log("error");
 
-                document.getElementById("checkImage").src = "error.png";
-
+                    document.getElementById("checkImage").src = "error.png";
+                }
             });
         });
 

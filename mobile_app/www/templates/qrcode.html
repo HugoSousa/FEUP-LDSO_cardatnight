@@ -4,14 +4,19 @@
         <h1 class="tableTitle alignCenter">Your QR Code:</h1>
 
         <br>
-        <div id="qrcode" class="centerContent">
+        <div id="qrcode" class="centerContent" ng-show="count != 0">
         </div>
-
+        
         <br>
-        <div>
-            <button class="button button-stable btnRounded" ng-controller="NavCtrl" ng-click="choosePlace()">
-                Go back
-            </button>
+        <div id="countdown" class="centerContent" style="margin-bottom:10px" ng-show="count != 0">
+            <h3>{{count}} seconds remaining</h3>
+        </div>
+        
+        <br>
+        <div ng-show="count == 0">
+        <button class="button button-stable btnRounded" ng-click="generateqrcode()">
+            Reset QR Code
+        </button>
         </div>
     </ion-content>
 </ion-view>

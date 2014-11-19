@@ -1,22 +1,5 @@
 var app = angular.module('services', [])
 
-/*
-app.factory('SplashService', function($q, $timeout){
-
-    return{
-        done: function () {
-            var deferred = $q.defer();
-
-            $timeout(function() {
-                deferred.resolve();
-            }, 20000);
-
-            return deferred.promise;
-        }
-    }
-
-});
-*/
 app.factory('AuthService', ['$window', function($window){
 
     var loggedUser;
@@ -48,30 +31,13 @@ app.factory('AuthService', ['$window', function($window){
                 return loggedUser.access_token;
             else
                 return null;
-        }
+        },
+        setEstablishment: function(establishmentname){
+            loggedUser.establishmentname = establishmentname;
+        },
     }
 
 }]);
-
-app.factory('PlacesService', function(){
-
-    //fake places
-    var places = [
-        { id: 0, name: 'Discoteca X'},
-        { id: 1, name: 'Y Club'},
-        { id: 2, name: 'Bar Z'}
-    ];
-
-    return {
-        all: function() {
-            return places;
-        },
-        get: function(placeId) {
-            // Simple index lookup
-            return places[placeId];
-        }
-    }
-})
 
 app.factory('FooterService', function(){
 
