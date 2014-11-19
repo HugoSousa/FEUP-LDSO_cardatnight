@@ -1,35 +1,40 @@
 
-	<div class="page-header">
-		<h1>Products</h1>
+	<div class="page-header col-md-12">
+
+		<div class="col-md-9">
+			<h1>Products</h1>
+		</div>
+		<br>
+		<br>
+		<div class="col-md-3">
+			<button class="btn" ui-sref="product-add"> Add Product </button>
+		</div>
 	</div>
+		
 	
-	<div>
+	
+	<div class="col-md-12">
 		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()">{{ alert.msg }}</alert>
 	</div>
 	
 	<br>
-	
-	<div class="col-md-3">
-        <select ng-model="selectedCategory" class="pull-right" style=" width:100%; padding: 0; display:inline-block" ng-options="product.category for product in products | unique: 'category'">
-            <option value="" name="All" >All</option>
-        </select>
-	</div>
-	
 	<br>
-	
-	<label style="padding:0; width: 45%; display:inline-block; float:right; ">
-            <input type="search" placeholder="Search" ng-model="filterName">
-    </label>
-	<br>
-	
-	<div class="col-md-9">
-	</div>
-	
-	<div class="col-md-3">
-		<button class="btn" ui-sref="product-add"> Add Product </button>
+
+	<div style="width:90%; margin:auto">
+		<div class="col-md-3">
+			<select ng-model="selectedCategory" class="pull-right" style=" width:100%; padding: 0; display:inline-block" ng-options="product.category for product in products | unique: 'category'">
+				<option value="" name="All" >All</option>
+			</select>
+		</div>
+		<div class="col-md-3"></div>
+		<div class="col-md-3"></div>
+		<div class="col-md-1">
+			<label style="padding:0; display:inline-block;">
+				<input type="search" placeholder="Search" ng-model="filterName">
+			</label>
+		</div>
 	</div>
 		
-	<br>
 	<table class="table" style="width:90%; margin:auto">
 		<tr>
 			<th>

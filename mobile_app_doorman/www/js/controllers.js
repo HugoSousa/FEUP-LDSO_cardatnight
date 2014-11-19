@@ -1,9 +1,9 @@
 var app = angular.module('controllers', []);
 
-app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
+app.controller('FooterCtrl', function ($scope, $state, $ionicPopup) {
     $scope.showFooter = true;
 
-    window.addEventListener('native.keyboardshow', function() {
+    window.addEventListener('native.keyboardshow', function () {
         $scope.showFooter = false;
         $scope.$apply();
         /*
@@ -14,7 +14,7 @@ app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
         */
     });
 
-    window.addEventListener('native.keyboardhide', function() {
+    window.addEventListener('native.keyboardhide', function () {
         $scope.showFooter = true;
         $scope.$apply();
         /*
@@ -29,82 +29,84 @@ app.controller('FooterCtrl', function($scope, $state, $ionicPopup) {
 })
 
 
-app.controller('LoginCtrl', function($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup){
+app.controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup) {
     //console.log(AuthService.loggedUser());
     if ($stateParams.username) {
-        $scope.user = {username: ''};
+        $scope.user = {
+            username: ''
+        };
         $scope.user.username = $stateParams.username;
     }
-    
+
 
     var loggedUser = AuthService.loggedUser();
-    
+
     if (loggedUser) $state.go('scan');
- 
-    $scope.loginSubmit = function() {
+
+    $scope.loginSubmit = function () {
         console.log("Login");
         var bitArray = sjcl.hash.sha256.hash($scope.user.password);
         var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
 
-        
+
         console.log($scope.user);
         $ionicLoading.show({
             template: 'Logging in...'
         });
         //TODO: encrypt password
-        Restangular.all('login').post({username: $scope.user.username, password: digest_sha256} ).then(function (resp){
+        Restangular.all('login').post({
+            username: $scope.user.username,
+            password: digest_sha256
+        }).then(function (resp) {
             console.log("ok");
             console.log(resp);
 
             AuthService.login(resp.user, resp.access_token);
-        
+
             $ionicLoading.hide();
-            
-            if(resp.user.permission == 'doorman')
-            {
+
+            if (resp.user.permission == 'doorman') {
                 $state.go('scan');
-            }
-            else
-            {
+            } else {
                 // An alert dialog
-                 var alertPopup = $ionicPopup.alert({
-                     title: 'card@night',
-                     template: 'Specified user is not a doorman!'
-                   });
+                var alertPopup = $ionicPopup.alert({
+                    title: 'card@night',
+                    template: 'Specified user is not a doorman!'
+                });
             }
-        }, function(resp){
+        }, function (resp) {
 
             var error = "";
-            if(resp.status == 0)
+            if (resp.status == 0)
                 error = "Please check your Internet connection.";
-            else if(resp.status == 401)
+            else if (resp.status == 401)
                 error = resp.data.error;
             else
                 error = "Something went wrong.";
 
             $ionicPopup.alert({
                 title: 'Error',
-                template: '<p style="text-align: center">'+error+'</p>'
+                template: '<p style="text-align: center">' + error + '</p>'
             });
 
             console.log(resp);
-			
-			$ionicLoading.hide();
+
+            $ionicLoading.hide();
         });
     };
 
 })
 
-app.controller('NavCtrl', function($scope, $state, $stateParams, $ionicPopup, $cordovaBarcodeScanner, Restangular, AuthService)
-{
-    $scope.scan = function(){
+app.controller('NavCtrl', function ($scope, $state, $stateParams, $ionicPopup, $cordovaBarcodeScanner, Restangular, AuthService) {
+    $scope.scan = function () {
         $state.go('scan');
     }
-    
-    
-    $scope.login = function(){
+
+
+    $scope.login = function () {
         $state.go('login');
     }
+
     
     $scope.scanBarcode = function()
 	{
@@ -123,16 +125,19 @@ app.controller('NavCtrl', function($scope, $state, $stateParams, $ionicPopup, $c
                     });
                 });
 
+
+ 
+
     }
-    
+
 })
 
-.controller('AccountCtrl', function($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService) {
+.controller('AccountCtrl', function ($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService) {
 
-	var loggedUser = AuthService.loggedUser();
-	$scope.loggedUser = AuthService.loggedUser().username;
-        
-    $scope.logout = function() {
+    var loggedUser = AuthService.loggedUser();
+    $scope.loggedUser = AuthService.loggedUser().username;
+
+    $scope.logout = function () {
         AuthService.logout();
         $state.go('login');
     }

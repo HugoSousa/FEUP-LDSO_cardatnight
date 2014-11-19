@@ -136,6 +136,7 @@ exports.getPaidCart = function(user, callback) {
         else {
 			var id = user.id;
 			client.query({text: "select * from cart where paid = true and customerid = $1 and exittime is null", name: 'getpaidcart', values: [id]}, function (err, result) {
+
                     if (err) {
 						callback( err , null);
 					}
