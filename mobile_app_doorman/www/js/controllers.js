@@ -110,7 +110,7 @@ app.controller('NavCtrl', function($scope, $state, $stateParams, $ionicPopup, $c
 	{
         $cordovaBarcodeScanner.scan().then(function(imageData) {
 		
-            Restangular.all('gate').all('entry').one(imageData.text).customPOST("", "", {}, {'x-access-token': AuthService.token()}).then(function(data){
+            Restangular.all('gate').one(imageData.text).customPOST("", "", {}, {'x-access-token': AuthService.token()}).then(function(data){
                         console.log("ok");
 
                         document.getElementById("checkImage").src="ok.png"

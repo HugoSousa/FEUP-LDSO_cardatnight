@@ -109,7 +109,33 @@ exports.getActiveCart = function(user, callback) {
         }
         else {
 			var id = user.id;
-			client.query({text: "select * from cart where paid = false and customerid = $1", name: 'getactivecart', values: [id]}, function (err, result) {
+			client.query({text: "select * from cart where exittime is null and customerid = $1", name: 'getactivecart', values: [id]}, function (err, result) {
+                    if (err) {
+						callback( err , null);
+					}
+					else {
+						callback( null , result.rows[0]);
+					}
+					
+					
+					});
+
+        }
+
+        done();
+    });
+
+}
+
+
+exports.getPaidCart = function(user, callback) {
+	    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+			var id = user.id;
+			client.query({text: "select * from cart where paid = true and customerid = $1 and exittime is null", name: 'getpaidcart', values: [id]}, function (err, result) {
                     if (err) {
 						callback( err , null);
 					}
@@ -149,6 +175,30 @@ exports.addActiveCart = function(establishmentid, customerid, callback) {
                 }
 
                 done();
+            });
+
+}
+
+exports.exitCart = function(establishmentid, customerid, callback) {
+         pg.connect(database_url , function (err, client, done) {
+            if (err) {
+                callback({ error: 'Failed to connect to database' }, null);
+            }
+                else {
+                   client.query({text: "UPDATE cart SET exittime = now() WHERE establishmentid = $1 and customerid =$2 and paid=true and exittime is null", 
+                   values: [establishmentid,customerid] }, function (err, result) {
+                        if (err) {
+                          callback( err , null);
+                         }
+                         else {
+                             callback( null , "success");
+                         }
+
+                     });
+
+                    }
+
+                    done();
             });
 
 }

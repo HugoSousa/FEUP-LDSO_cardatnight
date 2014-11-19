@@ -150,7 +150,7 @@ module.exports = function (app, io, passport) {
 
     app.post('/order', function (req, res) {
 
-        var cartid = req.body.cartid;
+        var cartid = req.body.cartid;  // TODO usar getactivecart 
         var productid = req.body.productid;
         var quantity = req.body.quantity;
 
@@ -206,7 +206,8 @@ module.exports = function (app, io, passport) {
 				// generate entry token and return it
                    var token = jwt.encode({
                         id: req.user.id,
-                        exp: moment().add(10,'minutes').valueOf()
+                        exp: moment().add(5,'minutes').valueOf(),
+                        type: "entry"
                     }, app.get('tokenSecret'));
 				res.status(200).json({token: token});
 			}
@@ -215,6 +216,29 @@ module.exports = function (app, io, passport) {
 		
       
     });
+    
+    	 app.get('/requestexit', function (req, res) { //requested by customer to get exit token
+		
+		db.getPaidCart(req.user, function(err, cart) {
+			if (err) res.status(409).json({error: err});
+			else {
+                if (cart) {
+                    // generate entry token and return it
+                       var token = jwt.encode({
+                            id: req.user.id,
+                            exp: moment().add(5,'minutes').valueOf(),
+                            type: "exit"
+                        }, app.get('tokenSecret'));
+                    res.status(200).json({token: token});
+                }
+                else res.status(409).json({error: "Paid cart not found"});
+			}
+			});
+		
+      
+    });
+    
+    
 	
 	app.get('/getcart', function (req, res) { // requested by customer to get cart
 		
@@ -249,54 +273,69 @@ module.exports = function (app, io, passport) {
 
     
 
-	app.post('/gate/entry/:token', function (req, res) {
+	app.post('/gate/:token', function (req, res) {
         
 
         var decoded = jwt.decode(req.params.token, app.get('tokenSecret'));
-        if (!decoded.id || !decoded.exp) 
+        if (!decoded.id || !decoded.exp || !decoded.type) 
             res.status(409).json({error: "Invalid token, no data found" });
         else {
         if (decoded.exp <= Date.now()) {
-                return res.status(400).json( { error: "Entry token has expired" });
+                return res.status(400).json( { error: "Token has expired" });
             } else {
                 
           var establishmentid = req.user.establishmentid;
           var customerid = decoded.id;
-          
+          var type = decoded.type;
                 
+        if (type !== "entry" && type !== "exit") res.status(409).json({error: "Invalid token type" });
+        else   {     
            
-		db.getActiveCart({id: customerid }, function(err, cart) {
-			if (err) res.status(409).json({error: err});
-			else {
-				if (cart) res.status(409).json({error: 'Card already found' });
-				else {		                
-                  db.addActiveCart(establishmentid, customerid, function(err, cart) {
-                   if (err) res.status(409).json({error: err});
-                   else {
-                    if (cart) res.status(200).json({status: 'valid' , cart: cart});
-                    else {
-                     res.status(200).json({error: 'no cart found', status: 'none'});
+            db.getActiveCart({id: customerid }, function(err, cart) {
+                if (err) res.status(409).json({error: err});
+                else {
+                    if (cart) {
+                        if (type === "entry")
+                            res.status(409).json({error: 'Cart already found' });
+                        else if (type === "exit") {
+                            if (cart.paid && cart.paid == true) {
+                                db.exitCart(establishmentid, customerid, function(err,result) {
+                                    
+                                 if (err) res.status(409).json({error: err});
+                                    else res.status(200).json({result:result});
+                                });
+                                                                
+                            }
+                            else {
+                                res.status(409).json({error: "Customer has not paid yet"});
+                            }
+                        }
                     }
-                   }
-                   }); 
-     
-				}
-			}
-			});     
+                    else {
+                        if (type === "entry") {
+                          db.addActiveCart(establishmentid, customerid, function(err, cart) {
+                           if (err) res.status(409).json({error: err});
+                           else {
+                            if (cart) res.status(200).json({status: 'valid' , cart: cart});
+                            else {
+                             res.status(200).json({error: 'no cart found', status: 'none'});
+                            }
+                           }
+                           }); 
+                        }
+                        else if (type === "exit") {
+                            res.status(409).json({error: "Cart not found"});
+                        }
+                    }
+                }
+                });  
+            }
                           
         }
         }
 
     });
 	
-	app.post('/gate/exit/:customerid', function (req, res) {
-		//check estab id from auth
-		//get active cart and mark as paid
-		
-
-		res.json("TODO");
-    });
-    
     app.get('/checklogin', function (req, res, next) {
         res.status(200).json({result: "success", "username": req.user.username});
     
