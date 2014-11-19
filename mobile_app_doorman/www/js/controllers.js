@@ -114,7 +114,7 @@ app.controller('NavCtrl', function ($scope, $state, $stateParams, $ionicPopup, $
                 'x-access-token': AuthService.token()
             }).then(function (data) {
                 
-                if(imageData.length() > 0)
+                if(imageData.text.length > 0)
                 {
                     console.log("ok");
 
@@ -122,7 +122,7 @@ app.controller('NavCtrl', function ($scope, $state, $stateParams, $ionicPopup, $
                 }
 
             }, function (resp) {
-                if(imageData.length() > 0)
+                if(imageData.text.length > 0)
                 {
                     console.log("error");
 
