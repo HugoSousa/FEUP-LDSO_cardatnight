@@ -10,7 +10,7 @@
             </button>
         </div>
 
-        <div style="margin-top: 60px; text-align: center; text-decoration: underline;" ng-if="hasCart">Actual Spending</div>
+        <div style="margin-top: 60px; text-align: center; text-decoration: underline;" ng-if="hasCart">Current Spending</div>
         <div style="text-align: center; font-weight: bold; font-size: 200%" ng-if="hasCart">{{balance | currency:"€"}}</div>
 
         <div class="row" style="margin-left: auto; margin-right: auto; margin-top:5%">
@@ -37,7 +37,12 @@
                 </button>
             </div>
         </div>
-		
+        
+        <div class="list list-inset" ng-if="hasCart">
+            <button style="margin-top: 60px" class="button button-positive btnRounded" ng-click="qrcode()">
+                <i class="icon ion-log-out"> Exit Establishment</i>
+            </button>
+        </div>
 
     </ion-content>
 </ion-view>

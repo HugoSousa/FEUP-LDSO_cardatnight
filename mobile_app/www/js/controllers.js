@@ -616,33 +616,74 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
     $scope.generateqrcode = function (customerid) {
 
-        Restangular.all('requestentry').customGET("", {}, {
+        Restangular.all('getcart').customGET("", {}, {
             'x-access-token': AuthService.token()
         }).then(function (data) {
-            console.log("ok");
+            if (data.status == "valid") {
 
-            var node = document.getElementById("qrcode");
-            while (node.firstChild) {
-                node.removeChild(node.firstChild);
+                Restangular.all('requestexit').customGET("", {}, {
+                    'x-access-token': AuthService.token()
+                }).then(function (data) {
+                    console.log("ok");
+
+                    var node = document.getElementById("qrcode");
+                    while (node.firstChild) {
+                        node.removeChild(node.firstChild);
+                    }
+
+                    new QRCode(document.getElementById("qrcode"), data.token);
+
+                    $scope.count = 300;
+
+                    $scope.counter = setInterval(timer, 1000);
+
+                    function timer() {
+                        $scope.count = $scope.count - 1;
+                        $scope.$apply();
+                        if ($scope.count <= 0) {
+                            clearInterval($scope.counter);
+                            return;
+                        }
+                    }
+
+                }, function (resp) {
+                    console.log("error");
+
+                });
+
+            } else {
+
+               Restangular.all('requestentry').customGET("", {}, {
+                    'x-access-token': AuthService.token()
+                }).then(function (data) {
+                    console.log("ok");
+
+                    var node = document.getElementById("qrcode");
+                    while (node.firstChild) {
+                        node.removeChild(node.firstChild);
+                    }
+
+                    new QRCode(document.getElementById("qrcode"), data.token);
+
+                    $scope.count = 300;
+
+                    $scope.counter = setInterval(timer, 1000);
+
+                    function timer() {
+                        $scope.count = $scope.count - 1;
+                        $scope.$apply();
+                        if ($scope.count <= 0) {
+                            clearInterval($scope.counter);
+                            return;
+                        }
+                    }
+
+                }, function (resp) {
+                    console.log("error");
+
+                });
             }
-
-            new QRCode(document.getElementById("qrcode"), data.token);
-
-            $scope.count = 300;
-
-            $scope.counter = setInterval(timer, 1000);
-
-            function timer() {
-                $scope.count = $scope.count - 1;
-                $scope.$apply();
-                if ($scope.count <= 0) {
-                    clearInterval($scope.counter);
-                    return;
-                }
-            }
-
         }, function (resp) {
-            console.log("error");
 
         });
     };

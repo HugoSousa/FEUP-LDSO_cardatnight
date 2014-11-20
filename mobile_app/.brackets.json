@@ -2,6 +2,8 @@
     "jscodehints.detectedExclusions": [
         "C:/Users/João Sá/Git/LDSO_T3.1/mobile_app/platforms/android/assets/www/lib/ionic/js/angular-ui/angular-ui-router.min.js",
         "C:/Users/João Sá/Git/LDSO_T3.1/mobile_app/gulpfile.js",
-        "C:/Users/João Sá/Git/LDSO_T3.1/mobile_app/www/lib/ionic/js/ionic.min.js"
+        "C:/Users/João Sá/Git/LDSO_T3.1/mobile_app/www/lib/ionic/js/ionic.min.js",
+        "C:/Users/João Sá/Git/LDSO_T3.1/mobile_app/www/js/app.js",
+        "C:/Users/João Sá/Git/LDSO_T3.1/mobile_app/www/lib/ionic/js/ionic.js"
     ]
 }

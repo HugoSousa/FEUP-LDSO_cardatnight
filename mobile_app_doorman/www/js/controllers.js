@@ -114,20 +114,22 @@ app.controller('NavCtrl', function ($scope, $state, $stateParams, $ionicPopup, $
             Restangular.all('gate').one(imageData.text).customPOST("", "", {}, {
                 'x-access-token': AuthService.token()
             }).then(function (data) {
-                
-                if(imageData.text.length > 0)
-                {
+
+                if (imageData.text.length > 0) {
                     console.log("ok");
 
                     document.getElementById("checkImage").src = "ok.png"
                 }
 
             }, function (resp) {
-                if(imageData.text.length > 0)
-                {
-                    console.log("error");
+                if (resp.data.indexOf("Not enough or too many segments") > -1) {
+                    alert("Error reading QR Code! Please try again");
+                } else {
+                    if (imageData.text.length > 0) {
+                        console.log("error");
 
-                    document.getElementById("checkImage").src = "error.png";
+                        document.getElementById("checkImage").src = "error.png";
+                    }
                 }
             });
         });
