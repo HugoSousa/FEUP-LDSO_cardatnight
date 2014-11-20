@@ -649,11 +649,15 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 }, function (resp) {
                     console.log("error");
 
+                    if (resp.status == "409") {
+                        alert("Error! Please pay so a QR Code can be generated!");
+                    }
+
                 });
 
             } else {
 
-               Restangular.all('requestentry').customGET("", {}, {
+                Restangular.all('requestentry').customGET("", {}, {
                     'x-access-token': AuthService.token()
                 }).then(function (data) {
                     console.log("ok");
@@ -681,6 +685,9 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 }, function (resp) {
                     console.log("error");
 
+                    if (resp.status == "409") {
+                        alert("Error! You already are in an establishment!");
+                    }
                 });
             }
         }, function (resp) {
