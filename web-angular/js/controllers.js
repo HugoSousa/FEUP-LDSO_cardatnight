@@ -84,12 +84,10 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertS
     };
 });
 
-app.controller('ProductsCtrl', function($scope, $stateParams, Restangular,alertService) {
-
-	console.log($scope.data);
+app.controller('ProductsCtrl', function($scope, $stateParams, Restangular,alertService, ShareUser) {
 	
     //hardcoded establishment id=1
-    var products = Restangular.one('products').getList(1).then(function(data){
+    var products = Restangular.one('products').getList(ShareUser.getUser().establishmentid).then(function(data){
         $scope.products = data;
     })
 	
@@ -221,4 +219,73 @@ app.controller('CustomersCtrl', function($state, $scope, $stateParams, Restangul
 
 });
 
+app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, ShareUser) {
+
+	$scope.submitted= false;
+	
+	$scope.invalidInput= false;
+	
+	$scope.loginSubmit = function() {
+ 		
+		var userStructure= {"username": $scope.user.username, "password": $scope.user.password};
+		
+        Restangular.all('login').post(userStructure).then(function (resp){
+
+            AuthService.login(resp.user, resp.access_token);
+							
+			$scope.submitted= true;
+			
+			if(resp.user.permission)
+			{
+				if(resp.user.permission == "manager" || resp.user.permission  == "employee")
+				{
+					
+					ShareUser.setUser(resp.user);
+            
+					$state.go('incoming-orders');
+				}
+				else
+				{
+					$scope.invalidInput= true;			
+            
+					var error = "";
+					if(resp.status == 0)
+						error = "Please check your Internet connection.";
+					else if(resp.status == 401)
+						error = resp.data.error;
+					else
+						error = "Something went wrong.";
+				}
+			}
+			else
+			{
+				$scope.invalidInput= true;
+			
+				var error = "";
+				if(resp.status == 0)
+					error = "Please check your Internet connection.";
+				else if(resp.status == 401)
+					error = resp.data.error;
+				else
+					error = "Something went wrong.";
+			
+			}			
+			
+        }, function(resp){
+		
+			$scope.invalidInput= true;
+			
+            var error = "";
+            if(resp.status == 0)
+                error = "Please check your Internet connection.";
+            else if(resp.status == 401)
+                error = resp.data.error;
+            else
+                error = "Something went wrong.";
+        });
+	
+	
+	}
+	
+});
 
