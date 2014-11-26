@@ -96,3 +96,7 @@ a:hover
     -ms-flex-align: center;
     align-items: center;
 }
+
+.background, .background .pane, .background .item, .background .item-complex .item-content{
+    background-color: #222222;
+}
