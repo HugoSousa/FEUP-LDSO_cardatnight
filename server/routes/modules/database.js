@@ -583,6 +583,28 @@ exports.notifyOrder = function (orderId, callback){
     });
 }
 
+exports.deliverOrder = function (orderId, callback){
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({ text: "UPDATE orders SET orderstate = 'delivered' WHERE ordersid = $1", name: 'notifyorder', values: [orderId] }, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+            callback(null, {success: "Order " + orderId + " has successully been delivered"});
+            }
+          });
+        }
+        
+        done();
+    });
+}
+
 exports.getProductsEstablishment = function (establishmentId, callback) {
     pg.connect(database_url , function (err, client, done) {
         if (err) {
