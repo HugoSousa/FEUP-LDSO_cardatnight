@@ -113,7 +113,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     point: {
                         events: {
                             click: function (e) {
-                                console.log("Click");
+                                // console.log("Click");
                             }
                         }
                     },
@@ -157,7 +157,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     $scope.changePasswordSubmit = function () {
         var resource = Restangular.all('change-password');
 
-        console.log($scope.user);
+        // console.log($scope.user);
 
         if ($scope.user.newPassword != $scope.user.newPasswordRetyped) {
             var alertPopup = $ionicPopup.alert({
@@ -165,12 +165,12 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 template: 'New password and new password retyped dont match!'
             });
             alertPopup.then(function (res) {
-                console.log('New password and new password retyped dont match!');
+                // console.log('New password and new password retyped dont match!');
             });
         } else {
 
             resource.post($scope.user).then(function (resp) {
-                console.log("ok");
+                // console.log("ok");
 
                 var alertPopup = $ionicPopup.alert({
                     title: 'Change Password',
@@ -183,7 +183,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 });
 
             }, function (resp) {
-                console.log("error");
+                // console.log("error");
 
                 $scope.error = resp.data.error;
 
@@ -210,7 +210,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         });
         confirmPopup.then(function (res) {
             if (res) {
-                console.log('You are sure!');
+                // console.log('You are sure!');
 
                 var user = {
                     username: loggedUser.username
@@ -219,8 +219,8 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 var resource = Restangular.all('delete-account');
 
                 resource.post(user).then(function (resp) {
-                    console.log("ok");
-                    console.log(resp);
+                    // console.log("ok");
+                    // console.log(resp);
 
                     var alertPopup = $ionicPopup.alert({
                         title: 'Delete Account',
@@ -233,14 +233,14 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     });
 
                 }, function (resp) {
-                    console.log("error");
-                    console.log(resp);
+                    // console.log("error");
+                    // console.log(resp);
 
                     $scope.error = resp.data.error;
 
                 });
             } else {
-                console.log('You are not sure');
+                // console.log('You are not sure');
             }
         });
     };
@@ -248,16 +248,16 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
 .controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService, $window) {
     //console.log(AuthService.loggedUser())
-    console.log("LOGIN CONTROLLER");
-    $ionicViewService.clearHistory();
+    //console.log("LOGIN CONTROLLER");
+    $ioncViewService.clearHistory();
 
     $scope.loginSubmit = function () {
-        console.log("Login");
+        //console.log("Login");
         var bitArray = sjcl.hash.sha256.hash($scope.user.password);
         var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
 
 
-        console.log($scope.user);
+        //console.log($scope.user);
         $ionicLoading.show({
             template: 'Logging in...'
         });
@@ -266,8 +266,8 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
             username: $scope.user.username,
             password: digest_sha256
         }).then(function (resp) {
-            console.log("ok");
-            console.log(resp);
+            //console.log("ok");
+            //console.log(resp);
             /*
             if(window.plugin && window.plugin.notification.local) {
                 window.plugin.notification.local.onclick = function (id, state, json) {
@@ -282,7 +282,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 };
             }
             */
-            console.log("CONNECT SOCKET");
+            //console.log("CONNECT SOCKET");
 
             SocketService.connectSocket(resp.user.username);
             AuthService.login(resp.user, resp.access_token);
@@ -311,7 +311,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 template: '<p style="text-align: center">' + error + '</p>'
             });
 
-            console.log(resp);
+            //console.log(resp);
 
             $ionicLoading.hide();
         });
@@ -322,7 +322,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
 .controller('MenuCtrl', function ($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService, $window, AlertPopupService) {
     //console.log(AuthService.loggedUser());
-    console.log("MENU CTRL");
+    //console.log("MENU CTRL");
 
     var redirect = $window.localStorage['redirect'];
 
@@ -332,8 +332,9 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         $state.go("orders");
 
 
-    console.log(AuthService.token());
+    //console.log(AuthService.token());
     $scope.hasCart;
+    $scope.cartPaid;
     $ionicLoading.show({
         template: 'Loading...'
     });
@@ -344,13 +345,17 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         if (data.status == "valid") {
             $scope.balance = data.cart.balance;
             $scope.hasCart = true;
+            
+            if(data.cart.paid == true)
+                $scope.cartPaid = true;
+            
             AuthService.setEstablishment(data.cart.name);
         } else {
             $scope.hasCart = false;
         }
     }, function (resp) {
         $ionicLoading.hide();
-        console.log("FAIL");
+        //console.log("FAIL");
     });
 
     $ionicViewService.clearHistory();
@@ -390,7 +395,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         if (user) {
             if ($scope.invalid_username == user) return 'has-warning';
 
-            console.log(user.length);
             if (user.length >= 3 && user.length <= 25 && !(user.indexOf(' ') > -1))
                 return 'has-success';
             else return 'has-error';
@@ -400,7 +404,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
     $scope.validatePassword = function (password) {
         if (password) {
-            console.log(password.length);
             if (password.length >= 3 && password.length <= 50 && !(password.indexOf(' ') > -1))
                 return 'has-success';
             else return 'has-error';
@@ -441,7 +444,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
         }, function (resp) {
 
-            console.log(resp);
+            //console.log(resp);
 
             if (resp.status == 409) {
                 //name invalid
@@ -513,26 +516,26 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     text: '<b>Ok</b>',
                     type: 'button-positive',
                     onTap: function (e) {
-                        console.log($scope.orderData);
+                        //console.log($scope.orderData);
                         orderProduct();
                     }
                 }
             ]
         });
 
-        console.log($scope.orderData);
+        //console.log($scope.orderData);
 
 
         var orderProduct = function () {
 
-            console.log("ordering product");
-            console.log($scope.orderData);
+            //console.log("ordering product");
+            //console.log($scope.orderData);
 
             var resource = Restangular.all('order');
 
             resource.post($scope.orderData).then(function (resp) {
-                console.log("ok");
-                console.log(resp);
+                //console.log("ok");
+                //console.log(resp);
 
                 var alertPopup = $ionicPopup.alert({
                     title: 'Order',
@@ -545,8 +548,8 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 });
 
             }, function (resp) {
-                console.log("error");
-                console.log(resp);
+                //console.log("error");
+                //console.log(resp);
                 var error = "";
                 if (resp.status == 0)
                     error = "Service unavailable.<br>Please try again later.";
@@ -569,7 +572,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 .controller('OrdersCtrl', function ($scope, $state, Restangular, $ionicLoading, AuthService, $window) {
 
     $scope.loggedUser = AuthService.loggedUser();
-    console.log(JSON.stringify(AuthService.loggedUser()));
 
     var redirect = $window.localStorage['redirect'];
     if (redirect && redirect != '' && redirect != 'undefined' && typeof redirect != 'undefined') {
@@ -602,7 +604,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         template: 'Loading'
     });
 
-    //console.log($stateParams.orderId);
     Restangular.all('order').customGET($stateParams.orderId, {}, {
         'x-access-token': AuthService.token()
     }).then(function (data) {
@@ -624,7 +625,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 Restangular.all('requestexit').customGET("", {}, {
                     'x-access-token': AuthService.token()
                 }).then(function (data) {
-                    console.log("ok");
+                    //console.log("ok");
 
                     var node = document.getElementById("qrcode");
                     while (node.firstChild) {
@@ -660,7 +661,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 Restangular.all('requestentry').customGET("", {}, {
                     'x-access-token': AuthService.token()
                 }).then(function (data) {
-                    console.log("ok");
+                    //console.log("ok");
 
                     var node = document.getElementById("qrcode");
                     while (node.firstChild) {
@@ -683,7 +684,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     }
 
                 }, function (resp) {
-                    console.log("error");
+                    //console.log("error");
 
                     if (resp.status == "409") {
                         alert("Error! You already are in an establishment!");
@@ -712,8 +713,8 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         //var socket = $window.localStorage['socket'];
 
         var loggedUser = AuthService.loggedUser();
-        console.log(loggedUser);
-        console.log(AuthService.token());
+        //console.log(loggedUser);
+        //console.log(AuthService.token());
 
         if (loggedUser) {
 
@@ -721,7 +722,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 'x-access-token': AuthService.token()
             }).then(function (data) {
 
-                console.log(data);
+                // console.log(data);
 
                 if (data.result != "success") {
                     AlertPopupService.createPopup("Error", "Your login has expired. Please login again.");
