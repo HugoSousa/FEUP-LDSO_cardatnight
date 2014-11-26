@@ -73,8 +73,8 @@ app.factory('SocketService', ['$window', '$state', function($window, $state){
             //$window.localStorage['socket'] = JSON.stringify(socket.io.engine.id);
 
             socket.on('connect', function() {
-                console.log("connected");
-                console.log("ID: " + socket.io.engine.id);
+                //console.log("connected");
+                //console.log("ID: " + socket.io.engine.id);
                 $window.localStorage['socket'] = socket.io.engine.id;
 
                 if(window.plugin && window.plugin.notification.local) {
@@ -96,11 +96,12 @@ app.factory('SocketService', ['$window', '$state', function($window, $state){
                 });
 
                 socket.on('notify', function(text) {
-                    console.log("NOTIFICAÇÃO");
+                    //console.log("NOTIFICAÇÃO");
 
                     window.plugin.notification.local.add({
                         id: "1",
-                        message: 'Your order just got ready. Please check your secret code and go get it.',
+                        title: "card@night",
+                        message: "Your order just got ready. Please check your secret code and go get it.",
                         autoCancel: true,
                         json: JSON.stringify({ orderid: text })
                     });
@@ -122,7 +123,7 @@ app.factory('SocketService', ['$window', '$state', function($window, $state){
             });
         },
         removeOld: function(socketId){
-            console.log("REMOVE OLD: " + socketId);
+            //console.log("REMOVE OLD: " + socketId);
             socket.emit("removeClientInfo", {socketid: socketId});
         },
         disconnect: function(){
