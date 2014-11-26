@@ -1,5 +1,43 @@
 var app = angular.module('controllers', []);
 
+app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $modalInstance,Restangular) {
+
+
+  $scope.ok = function () {
+	Restangular.all('delete-customer-consumption').post({"cartId":$scope.cartId}).then(function(resp){
+            
+            console.log("Consumption deleted");
+        }, function(resp){
+            console.log("Error notifying user");
+        });
+    $modalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  
+});
+
+app.controller('CustomerMarkPaidCtrl', function ($scope, $modalInstance,Restangular) {
+
+
+  $scope.ok = function (parameter) {
+    alert("Customer="+$scope.customer.cartid);
+    Restangular.all('mark-cart-paid').post({"cartId":$scope.customer.cartid}).then(function(resp){
+            
+            $scope.customer.paid=true;
+        }, function(resp){
+            alert("Error notifying user");
+        });
+    $modalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  
+});
 
 //used to control alerts
 function RootCtrl($rootScope, $location, alertService) {
@@ -211,11 +249,88 @@ app.controller('ProductEditConfirm', function($state, $scope, $stateParams,Resta
 	  }
 });
 
-app.controller('CustomersCtrl', function($state, $scope, $stateParams, Restangular) {
+app.controller('CustomersCtrl', function($state, $scope, $stateParams, Restangular,$modal,$log) {
 
-	var customer = Restangular.one('customer').getList(2).then(function(data){
+	var customer = Restangular.one('customers').getList($stateParams.estabid).then(function(data){
+    console.log(JSON.stringify(data));
 		$scope.customers=data;
-	})
+    $scope.showAllCustomers();
+	});
+  $scope.showAll='no';	
+  $scope.showAllCustomers=function()
+  {
+    for(var i = 0;i<$scope.customers.length;i++)
+      if($scope.customers[i].paid)
+      {
+        if($scope.customers[i].shown==null)
+          $scope.customers[i].shown=false;
+        else $scope.customers[i].shown=!$scope.customers[i].shown;
+      }
+      else
+        $scope.customers[i].shown=true;
+  }
+	$scope.getTotal = function(customerId){
+		var total = 0;
+		
+		for(var i = 0; i < $scope.customers.length; i++){
+		console.log($scope.customers[i]);
+			if($scope.customers[i].customerid==customerId)
+			{
+			console.log('teste');
+			total += ($scope.customers[i].balance);
+			}
+		}
+		return total;
+	}
+	
+	$scope.open = function (size,customer) {
+	$scope.customer=customer;
+	console.log('Teste antes de open ' + $modal);
+    var modalInstance = $modal.open({
+      templateUrl: 'myModalContent.html',
+      controller: 'CustomerMarkPaidCtrl',
+      size: size,
+	  scope:$scope,
+      
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+	console.log('Teste 2');
+      $scope.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  }; 
+
+});
+
+app.controller('CustomerCtrl',function($state, $scope, $stateParams, Restangular,$modal,$log) {
+	var customer = Restangular.one('customer').getList($stateParams.cartid).then(function(data){
+    $scope.customer={};
+		$scope.customer.info=data[0];
+		if(data[1]!=0)
+		{
+			$scope.customer.cart=[];
+			for(var i = 0;i<data[1].length;i++)
+				$scope.customer.cart.push(data[1][i]);
+		}
+    else
+      $scope.customer.cart=[]; 
+		});
+	
+	$scope.open = function (size,customer) {
+
+    console.log(customer);
+	$scope.cartId=customer;
+    var modalInstance = $modal.open({
+      templateUrl: 'myModalContent.html',
+      controller: 'CustomerDeleteConsumptionCtrl',
+      size: size,
+	  scope:$scope,
+      
+    });
+	}
+	
 
 });
 

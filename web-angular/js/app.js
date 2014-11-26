@@ -80,19 +80,30 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
             }
         })
 		
-		.state('customers', {
-            url: '/customers',
-			views: {
+        .state('customers', {
+            url: '/customers/:estabid',
+            views: {
                 // the main template will be placed here (relatively named)
                 '': { templateUrl: 'card@night.html' },
 
                 // the child views will be defined here (absolutely named)
                 'content@customers': {
                     templateUrl: 'templates/customers.html',
-					controller: 'CustomersCtrl'
+                    controller: 'CustomersCtrl'
                 }
         }})
+        .state('customer', {
+            url: '/customer/:cartid',
+            views: {
+                // the main template will be placed here (relatively named)
+                '': { templateUrl: 'card@night.html' },
 
+                // the child views will be defined here (absolutely named)
+                'content@customer': {
+                    templateUrl: 'templates/customer.html',
+                    controller: 'CustomerCtrl'
+                }
+        }})
         
 
     $urlRouterProvider.otherwise('/login');

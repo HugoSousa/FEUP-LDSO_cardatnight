@@ -359,15 +359,24 @@ module.exports = function (app, io, passport) {
     
     });
 	
-	app.get('/customers/:estabid', function(req, res){
-
-        db.getCustomersEstablishment(req.params.estabid, function(err, result){
-		console.log(result);
+    app.get('/customers/:estabid', function(req, res) {
+        
+        db.getCustomersEstablishment(req.params.estabid, function(err, result) {
             if (err) res.status(409).json(err);
-            else res.status(200).json(result);
+            else {
+                res.status(200).json(result);
+
+            }
         });
 
     });
+    app.get('/customer/:cartid', function(req, res) {
+        db.getCustomerData(req.params.cartid, function(err, result) {
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+    });
+
 	
     app.get('/products/:estabid', function(req, res){
 
@@ -463,6 +472,27 @@ module.exports = function (app, io, passport) {
         }
     });
 
+    app.post('/delete-customer-consumption', function(req, res) {
+        var cartid = req.body.cartId;
+        console.log("Cart id=");
+        console.log(cartid);
+        db.deleteCustomerConsumption(cartid, function(err, result) {
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
+    });
+
+    app.post('/mark-cart-paid/', function(req, res) {
+        console.log(req.body);
+        var cartid = req.body.cartId;
+        console.log('Cart id='+cartid);
+        db.markCartPaid(cartid, function(err, result) {
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
+    });
     /*
     io.on('connection', function (socket) {
         console.log('a user connected');

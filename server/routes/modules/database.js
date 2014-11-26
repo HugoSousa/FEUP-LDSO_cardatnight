@@ -324,14 +324,14 @@ exports.addOrder = function (orderstate, cartid, productid, quantity, code, call
     
 }
 
-exports.getCustomersEstablishment=function(establishmentid) {
+exports.getCustomersEstablishment=function(establishmentid,callback) {
 
 	pg.connect(database_url , function (err, client, done) {
         if (err) {
             callback({ error: 'Failed to connect do database' }, null);
         }
         else {
-            client.query({text: "SELECT CUSTOMER.NAME AS NAME,CUSTOMER.EMAIL AS EMAIL,CART.ENTRANCETIME AS ENTRANCETIME,CART.EXITTIME AS EXITTIME,CART.BALANCE AS BALANCE FROM CUSTOMER,CART,ESTABLISHMENT WHERE CART.ESTABLISHMENTID= $1 AND CART.CUSTOMERID=CUSTOMER.CUSTOMERID",name: "get customers",values:[establishmentid]}, function (err, result) {
+            client.query({text: "SELECT DISTINCT CUSTOMER.NAME AS NAME,CUSTOMER.EMAIL AS EMAIL,CART.* FROM CUSTOMER,CART,ESTABLISHMENT WHERE CART.ESTABLISHMENTID= $1 AND CART.CUSTOMERID=CUSTOMER.CUSTOMERID",name: "get customers",values:[establishmentid]}, function (err, result) {
             if (err) {
                 //any specific error?
                 callback({ error: "Error occurred" }, null);
@@ -345,6 +345,120 @@ exports.getCustomersEstablishment=function(establishmentid) {
         done();
     });
 
+}
+
+exports.getCustomerData=function(cartId, callback) {
+    
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({text: "SELECT customer.name,cart.* FROM customer,cart WHERE cart.cartid = $1 and customer.customerid=cart.customerid",name: "get customer",values:[cartId]}, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+           var resultArray=[];
+           resultArray[0]=result.rows[0];
+           resultArray[1]=0;
+           if(!resultArray[0].paid)
+            client.query({text: "SELECT DISTINCT PRODUCT.PRODUCTID,PRODUCT.NAME,ORDERS.QUANTITY,PRODUCT.PRICE FROM PRODUCT,ORDERS WHERE ORDERS.CARTID= $1 and ORDERS.PRODUCTID=PRODUCT.PRODUCTID",name: "get cart",values:[cartId]}, function (err, result)
+           {
+            if(err)
+                callback({ error: "Error occurred" }, null);
+            else
+            {
+                resultArray[1]=result.rows;
+                callback(null, resultArray);
+            }
+    
+           });
+            else
+             callback(null, resultArray);   
+            }
+          });
+        }
+        
+        done();
+    });
+    
+}    
+
+exports.getProductsCart=function(cartId,callback)
+{
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({text: "",name: "get products cart",values:[cartId]}, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+            callback(null, result.rows);
+            }
+          });
+        }
+        
+        done();
+    });
+}
+
+exports.deleteCustomerConsumption = function(cartId,callback){
+    console.log('Final Cart id = ');
+    console.log(cartId);
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({ text: "DELETE FROM ORDERS WHERE CARTID=$1;", name: 'deleteConsumption', values: [cartId] }, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+            client.query({ text: "DELETE FROM CART WHERE CARTID=$1;", name: 'deleteConsumptionCart', values: [cartId] }, function(err,result){
+                if(err){
+                    callback({ error: "Error occurred" }, null);
+                }
+                else
+                {
+                    callback(null, {success: "Cart " + cartId + "'s consumption has successully been deleted"});
+                }
+            });
+        }
+          });
+        }
+        
+        done();
+    });
+}
+
+exports.markCartPaid = function(cartId,callback){
+    var paid=true;
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({ text: "UPDATE CART SET PAID = $1 WHERE CARTID=$2;", name: 'markCartPaid', values: [paid,cartId] }, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+            callback(null, {success: "Cart " + cartId + " has successully been paid"});
+            }
+          });
+        }
+        
+        done();
+    });
 }
 
 function getCustomerManagerData(client, id, callback) {

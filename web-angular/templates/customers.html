@@ -1,13 +1,23 @@
 <div class="page-header">
 		<h1>Customers</h1>
 </div>
+	<br>
 	
-	<div style="text-align: center;margin-bottom: 30px">
-		<label class="checkbox-inline">
-			<input type="checkbox" ng-change="changeNotify()" ng-model="notify"> <span> In establishment </span>
-		</label>
-	</div>
-	
+	<script type="text/ng-template" id="myModalContent.html">
+								<div class="modal-header">
+									<h3 class="modal-title">Confirm payment</h3>
+								</div>
+								<div class="modal-body">
+								Confirm payment of {{customer.name}}?
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-success" ng-click="ok()">Yes</button>
+									<button class="btn btn-danger" ng-click="cancel()">No</button>
+								</div>
+	</script>
+	<label class="checkbox-inline">
+                    <input type="checkbox" ng-click="showAllCustomers()"> <span> Show all customers </span>
+     </label>
 	<table class="table" style="width:90%; margin:auto">
 		<tr>
 			<th>
@@ -19,13 +29,24 @@
 				</div>
 			</th>
 		</tr>
-		<tr ng-repeat="customer in customers">
+		<tr ng-repeat="customer in customers" ng-show="customer.shown">
 			<td valign="bottom">
-				<div class="row" >
-					<div class="col-md-3">{{customer.name}}</div>
-					<div class="col-md-3">{{customer.name}}</div>
-					<div class="col-md-3">{{customer.name}}</div>
-					<div class="col-md-3">{{customer.name}}</div>
+				<div class="row">
+					
+					<div class="col-md-3"><a href="#/customer/{{customer.cartid}}">{{customer.name}}</a></div>
+					<div class="col-md-3">{{customer.balance|currency:'€'}}</div>
+					<div class="col-md-3">{{customer.entrancetime| date: 'dd-MM-yyyy @ HH:mm:ss'}}</div>
+					<div class="col-md-3">
+						
+							<button class="btn btn-default" ng-click="open('lg',customer);" ng-show="!customer.paid">					
+								<span class="glyphicon glyphicon-ok"></span> 
+									Pay
+							</button>
+					</button>
+					<span ng-show="customer.paid">
+					Already paid
+					</span>
+					</div>
 				</div>
 			</td>
 		</tr>
