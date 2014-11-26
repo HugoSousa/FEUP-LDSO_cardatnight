@@ -221,18 +221,13 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
                 var resource = Restangular.all('delete-account');
 
-<<<<<<< HEAD
                 resource.customPOST("", "", {}, {
                 'x-access-token': AuthService.token()
                     
                 }).then(function (resp) {
                     console.log(resp);
                     console.log("ok");
-=======
-                resource.post(user).then(function (resp) {
-                    // console.log("ok");
-                    // console.log(resp);
->>>>>>> c3f37ac8ad2f18dd44a6f7b851dfac27e8cd896c
+
 
                     var alertPopup = $ionicPopup.alert({
                         title: 'Delete Account',
