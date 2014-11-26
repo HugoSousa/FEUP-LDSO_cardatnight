@@ -29,7 +29,7 @@
 				</div>
 			</th>
 		</tr>
-		<tr ng-repeat="customer in customers" ng-show="customer.shown">
+		<tr ng-repeat="customer in customers | orderBy : 'entrancetime' : true" ng-show="customer.shown" >
 			<td valign="bottom">
 				<div class="row">
 					

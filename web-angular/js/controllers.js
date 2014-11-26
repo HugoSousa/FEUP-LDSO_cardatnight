@@ -66,7 +66,7 @@ app.controller('SidebarCtrl', function($scope, $state){
 });
 
 
-app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertService){
+app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertService,ShareUser){
 
     $scope.ordered = 'ordered';
     $scope.notified = 'notified';
@@ -77,7 +77,7 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertS
         return order.orderstate === $scope.ordered || order.orderstate === $scope.notified;
     };
 	
-    Restangular.one('incomingorders').getList(1).then(function(data){
+    Restangular.one('incomingorders').getList(ShareUser.getUser().establishmentid).then(function(data){
         $scope.orders = data;
     }), function(data){
         console.log("Error");
@@ -249,9 +249,10 @@ app.controller('ProductEditConfirm', function($state, $scope, $stateParams,Resta
 	  }
 });
 
-app.controller('CustomersCtrl', function($state, $scope, $stateParams, Restangular,$modal,$log) {
+app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log, ShareUser) {
 
-	var customer = Restangular.one('customers').getList($stateParams.estabid).then(function(data){
+	console.log(ShareUser.getUser().establishmentid);
+	var customer = Restangular.one('customers').getList(ShareUser.getUser().establishmentid).then(function(data){
     console.log(JSON.stringify(data));
 		$scope.customers=data;
     $scope.showAllCustomers();
