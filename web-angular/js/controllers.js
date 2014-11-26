@@ -66,7 +66,7 @@ app.controller('SidebarCtrl', function($scope, $state){
 });
 
 
-app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertService,ShareUser){
+app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertService,AuthService){
 
     $scope.ordered = 'ordered';
     $scope.notified = 'notified';
@@ -77,7 +77,7 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertS
         return order.orderstate === $scope.ordered || order.orderstate === $scope.notified;
     };
 	
-    Restangular.one('incomingorders').getList(ShareUser.getUser().establishmentid).then(function(data){
+    Restangular.one('incomingorders').getList(AuthService.loggedUser().establishmentid).then(function(data){
         $scope.orders = data;
     }), function(data){
         console.log("Error");
@@ -96,8 +96,19 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertS
 
         if(index == -1)
             console.log("Error. Order not found.");
-        else
-            $scope.orders.splice(index, 1);
+        else{
+
+        	var deliver_order = {"orderid": orderid};
+
+        	Restangular.all('deliver').post(deliver_order).then(function(resp){
+	            $scope.orders.splice(index, 1);
+	        }, function(resp){
+	            console.log("Error on delivery.");
+	        });
+
+
+           	//$scope.orders.splice(index, 1);
+        }
     }
 
 
@@ -122,10 +133,10 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertS
     };
 });
 
-app.controller('ProductsCtrl', function($scope, $stateParams, Restangular,alertService, ShareUser) {
+app.controller('ProductsCtrl', function($scope, $stateParams, Restangular,alertService, AuthService) {
 	
     //hardcoded establishment id=1
-    var products = Restangular.one('products').getList(ShareUser.getUser().establishmentid).then(function(data){
+    var products = Restangular.one('products').getList(AuthService.loggedUser().establishmentid).then(function(data){
         $scope.products = data;
     })
 	
@@ -249,10 +260,10 @@ app.controller('ProductEditConfirm', function($state, $scope, $stateParams,Resta
 	  }
 });
 
-app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log, ShareUser) {
+app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log, AuthService) {
 
-	console.log(ShareUser.getUser().establishmentid);
-	var customer = Restangular.one('customers').getList(ShareUser.getUser().establishmentid).then(function(data){
+	console.log(AuthService.loggedUser().establishmentid);
+	var customer = Restangular.one('customers').getList(AuthService.loggedUser().establishmentid).then(function(data){
     console.log(JSON.stringify(data));
 		$scope.customers=data;
     $scope.showAllCustomers();
@@ -335,7 +346,7 @@ app.controller('CustomerCtrl',function($state, $scope, $stateParams, Restangular
 
 });
 
-app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, ShareUser) {
+app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, AuthService) {
 
 	$scope.submitted= false;
 	
@@ -347,7 +358,7 @@ app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, S
 		
         Restangular.all('login').post(userStructure).then(function (resp){
 
-            AuthService.login(resp.user, resp.access_token);
+            
 							
 			$scope.submitted= true;
 			
@@ -356,7 +367,7 @@ app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, S
 				if(resp.user.permission == "manager" || resp.user.permission  == "employee")
 				{
 					
-					ShareUser.setUser(resp.user);
+					AuthService.login(resp.user, resp.access_token);
             
 					$state.go('incoming-orders');
 				}

@@ -52,18 +52,3 @@ app.factory('alertService', [
         };
       }
     ]);
-	
-app.factory('ShareUser', function(){
-
-	var user;
-
-        return {
-            getUser: function () {
-                return user;
-            },
-            setUser: function(newUser) {
-                user = newUser;
-            }
-        };
-	
-});

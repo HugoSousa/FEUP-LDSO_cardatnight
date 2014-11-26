@@ -439,6 +439,21 @@ module.exports = function (app, io, passport) {
         
     });
 	
+    app.post('/deliver', function(req, res){
+
+        var orderid = req.body.orderid;
+        res.status(422);
+
+        if (!orderid) res.json( { error: 'missing parameters' });
+        else{
+            db.deliverOrder(orderid, function(err, result){
+                if (err) res.status(409).json(err);
+                else res.status(200).json(result);
+            });
+        }   
+    });
+
+
 	app.post('/edit-product', function (req, res) {
 
         var productid = req.body.productid;
