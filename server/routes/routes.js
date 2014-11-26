@@ -54,19 +54,14 @@ module.exports = function (app, io, passport) {
 	
 	app.post('/change-password', function (req, res) {
 
-        var username = req.body.username;
-        var currentPassword = req.body.currentPassword;
         var newPassword = req.body.newPassword;
-        var newPasswordRetyped = req.body.newPasswordRetyped;
-
+        var username = req.user.username;
+        
         res.status(422);
 
-        if (!username || !newPassword) res.json( { error: 'missing parameters' });
+        if (!newPassword) res.json( { error: 'missing parameters' });
         else {
-            if (newPassword != newPasswordRetyped) {
-                res.json({ error: 'new password and new password retyped dont match!' });
-            }
-            else {
+       
                 res.status(200);
 
                 db.changePassword(username, newPassword, function (err, result) {
@@ -74,32 +69,26 @@ module.exports = function (app, io, passport) {
                     else res.status(200).json(result);
 
                 });
-            }
+            
         }
 
     });
 
     app.post('/delete-account', function (req, res) {
 
-        var username = req.body.username;
+        var username = req.user.username;
 
-        res.status(422);
+        db.deleteAccount(username, function (err, result) {
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
 
-        if (!username) res.json( { error: 'missing parameters' });
-        else {
-            res.status(200);
-
-            db.deleteAccount(username, function (err, result) {
-                if (err) res.status(409).json(err);
-                else res.status(200).json(result);
-
-            });
-        }
+        });
+        
 
     });
 
     app.post('/add-product', function (req, res) {
-
+        // TODO fix by using manager login
         var establishmentid = req.body.establishmentid;
         var categoryid = req.body.categoryid;
         var name = req.body.name;
