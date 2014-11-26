@@ -1,0 +1,296 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"email",
+				"email_from"
+			],
+			[
+				"read",
+				"readDirectorySelective"
+			],
+			[
+				"font-",
+				"font-size"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/opt/lampp/htdocs/cardNight/server/routes/routes.js",
+		"/home/joao/Documentos/LDSO/ldso_nightout/wiki/Home.md",
+		"/home/joao/Documentos/Node Js/test/public/stylesheets/style.css",
+		"/home/joao/Modelos/test.css",
+		"/run/user/1000/gvfs/sftp:host=parade.best.eu.org/home/users/ui-ref/public_html/training/callNew.jsp",
+		"/home/joao/Modelos/sendemail.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/css/bootstrap.css",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/en/contacts/contacts.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/actions/sendemail.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/js/custom.js",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/js/main.js",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/contacts/contacts.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/css/custom.css",
+		"/home/joao/Área de Trabalho/website/website/pt/contacts/contacts.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/partners/partners.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/BEST/organization.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/BEST/organization2.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/menu.php",
+		"/home/joao/Área de Trabalho/website/website/pt/BEST/organization.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/partners/CVdatabase.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/en/partners/partnershipWays.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/partners/partnershipWays.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/footer.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/en/footer.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/en/partners/partners.php",
+		"/home/joao/Área de Trabalho/website/website/pt/partners/partnershipWays.php",
+		"/home/joao/Documentos/Node Js/httpGet.js",
+		"/home/joao/Documentos/Node Js/httpCollect.js",
+		"/home/joao/Área de Trabalho/codigoGuardar.java",
+		"/home/joao/Área de Trabalho/website/website/pt/BEST/organization2.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/public_html/Development/nadais/websiteNovo/BEST.html",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/public_html/Development/shotsGame/index.php",
+		"/home/joao/Documentos/Node Js/callModuleFilteredLs.js",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/public_html/Development/nadais/website/pt/contacts/contacts.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/public_html/Development/nadais/website/actions/sendemail.php",
+		"/home/joao/Documentos/Node Js/test.js",
+		"/home/joao/Documentos/Node Js/test2.js",
+		"/home/joao/Documentos/Node Js/fs.js",
+		"/home/joao/Documentos/Node Js/asynch.js",
+		"/home/joao/Documentos/Node Js/filteredLs.js",
+		"/home/joao/Documentos/Node Js/moduleFilteredLs.js",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/public_html/Development/lbg_game/index.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/public_html/Development/lbg_game/inc/connect.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/public_html/Development/nadais/website/pt/index.php",
+		"/home/joao/Documentos/Node Js/script.js",
+		"/home/joao/Documentos/Node Js/teste3.js",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/index.php",
+		"/home/joao/Transferências/node-v0.10.31/src/v8_typed_array.cc",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/media/media.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/BEST/management.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/competitions/LEC.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/education/education.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/culture/culture.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/courses/motivationLetters.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/courses/courses.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/competitions/EBEC.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/index2.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/career/tipsCV.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/pt/career/tipsInterviews.php",
+		"/opt/lampp/htdocs/websiteNovo/Index.css",
+		"/opt/lampp/htdocs/website/pt/footer.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/website/en/menu.php",
+		"/opt/lampp/htdocs/website/pt/menu.php",
+		"/opt/lampp/htdocs/website/pt/index.php",
+		"/opt/lampp/htdocs/website/css/custom.css",
+		"/opt/lampp/htdocs/website/en/index.php",
+		"/opt/lampp/htdocs/website/en/menu.php",
+		"/opt/lampp/htdocs/websiteNovo/js/script.js",
+		"/opt/lampp/htdocs/websiteNovo/templates/footer.php",
+		"/opt/lampp/htdocs/websiteNovo/menu.php",
+		"/opt/lampp/htdocs/website/pt/contacts/contacts.php",
+		"/opt/lampp/htdocs/website/pt/competitions/EBEC.php",
+		"/opt/lampp/htdocs/website/pt/education/education.php",
+		"/opt/lampp/htdocs/website/pt/competitions/LEC.php",
+		"/opt/lampp/htdocs/website/pt/BEST/organization.php",
+		"/opt/lampp/htdocs/website/js/custom.js",
+		"/opt/lampp/htdocs/website/pt/BEST/joinUs.php",
+		"/opt/lampp/htdocs/website/js/bootstrap.min.js",
+		"/opt/lampp/htdocs/website/sendemail.php",
+		"/opt/lampp/htdocs/website/pt/culture/culturalExchange.php",
+		"/opt/lampp/htdocs/website/pt/culture/leisureEvents.php",
+		"/opt/lampp/htdocs/website/pt/education.php",
+		"/opt/lampp/htdocs/website/pt/career/tipsInterviews.php",
+		"/opt/lampp/htdocs/website/pt/career/tipsCV.php",
+		"/opt/lampp/htdocs/website/index.php",
+		"/opt/lampp/htdocs/website/pt/courses/courses.php",
+		"/opt/lampp/htdocs/website/pt/courses/motivationLetters.php",
+		"/opt/lampp/htdocs/website/pt/pages/index.php",
+		"/opt/lampp/htdocs/website/en/pages/index.php",
+		"/opt/lampp/htdocs/website/pt/pages/contacts.php",
+		"/opt/lampp/htdocs/websiteNovo/css/video.css",
+		"/opt/lampp/htdocs/website/pt/pages/career/tipsInterviews.php",
+		"/opt/lampp/htdocs/website/pt/pages/career/tipsCV.php",
+		"/opt/lampp/htdocs/website/pt/pages/courses/courses.php",
+		"/opt/lampp/htdocs/website/pt/pages/courses/motivationLetters.php",
+		"/opt/lampp/htdocs/website/init.php",
+		"/opt/lampp/htdocs/website/pt/pages/tipsCV.php",
+		"/opt/lampp/htdocs/website/pt/pages/tipsTricks.php",
+		"/opt/lampp/htdocs/template/index.html",
+		"/opt/lampp/htdocs/website/pt/pages/motivationLetters.php",
+		"/opt/lampp/htdocs/website/pt/pages/courses.php",
+		"/opt/lampp/htdocs/website/pt/pages/eudcation.php",
+		"/opt/lampp/htdocs/websiteNovo/en/index.php",
+		"/opt/lampp/htdocs/website/en/pages/contacts.php",
+		"/opt/lampp/htdocs/website/index.html",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/websiteNovo/en/index.php",
+		"/run/user/1000/gvfs/ftp:host=ftp.bestporto.org/nadais/websiteNovo/Index.css"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"overflow-y",
+			"@media scree",
+			"767px",
+			"@media (max",
+			"@media",
+			"IV LEC FCUP",
+			"img",
+			";\n",
+			">pt/",
+			"/pt/",
+			"../../",
+			"../"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"1100px",
+			"1000px",
+			">en/",
+			"/en/",
+			"<?php echo $BASE_URL ?>",
+			"../../"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "data.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/opt/lampp/htdocs/cardNight/database/data.sublime-workspace"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
