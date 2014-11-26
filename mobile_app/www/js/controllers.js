@@ -142,9 +142,11 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
 .controller('AccountCtrl', function ($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService, SocketService) {
 
-    var loggedUser = AuthService.loggedUser();
-    $scope.loggedUser = AuthService.loggedUser().username;
+    var loggedUser = AuthService.loggedUser();   
+    if (!loggedUser) $scope.logout();
 
+
+    $scope.loggedUser = AuthService.loggedUser().username;
 
     $scope.logout = function () {
 
@@ -155,6 +157,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
 
     $scope.changePasswordSubmit = function () {
+        console.log("change password");
         var resource = Restangular.all('change-password');
 
         console.log($scope.user);
@@ -169,8 +172,10 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
             });
         } else {
 
-            resource.post($scope.user).then(function (resp) {
-                console.log("ok");
+            resource.customPOST("", "", {newPassword : $scope.user.newPassword}, {
+                'x-access-token': AuthService.token()
+            }).then(function (resp) {
+                console.log(resp);
 
                 var alertPopup = $ionicPopup.alert({
                     title: 'Change Password',
@@ -212,15 +217,15 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
             if (res) {
                 console.log('You are sure!');
 
-                var user = {
-                    username: loggedUser.username
-                }
 
                 var resource = Restangular.all('delete-account');
 
-                resource.post(user).then(function (resp) {
-                    console.log("ok");
+                resource.customPOST("", "", {}, {
+                'x-access-token': AuthService.token()
+                    
+                }).then(function (resp) {
                     console.log(resp);
+                    console.log("ok");
 
                     var alertPopup = $ionicPopup.alert({
                         title: 'Delete Account',
