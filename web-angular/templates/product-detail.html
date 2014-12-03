@@ -29,14 +29,14 @@
 </div>
 	
 <div class="col-md-3">
-<button class="btn" ng-click="openDelete()"> Delete Product </button>
+<button class="btn" ng-click="openDelete()"ng-show="permission=='manager'"> Delete Product </button>
 </div>
 
 <form class="simple-form" name="productForm" ng-controller="ProductCtrl" ng-submit="openEdit()" novalidate>
            <br>
 		   <div class="col-lg-4">
 			Category: 
-			<select ng-model="product.categoryid"  name="category" class="form-control" selected={{product.categoryid}} required>
+			<select ng-model="product.categoryid"  name="category" class="form-control" ng-disabled="permission=='employee'" selected={{product.categoryid}} required>
 				<option value=1>Cocktail</option>
 				<option value=2>Shot</option>
 				<option value=3>Bebidas espirituosas</option>
@@ -48,19 +48,19 @@
 			<div class="help-block" ng-if="!productForm.category.$error.required"> <br> </div>
 			
 			
-			Name: <input type="text" class="form-control" placeholder={{product.name}} ng-model="product.name" name="name" required>
+			Name: <input type="text" class="form-control" placeholder={{product.name}} ng-model="product.name" name="name" required disabled>
 			<p class="help-block" ng-if="productForm.name.$error.required"><font color="red"><small>The product's name is required</small></font></p>
 			<div class="help-block" ng-if="!productForm.name.$error.required"><br> </div>
 			
 			Description: 
 			<br>
-			<textarea rows="4" cols="50" class="form-control" style="resize:none" name="description" placeholder={{product.description}} ng-model="product.description"></textarea>
+			<textarea rows="4" cols="50" class="form-control" style="resize:none" name="description" placeholder={{product.description}} ng-model="product.description" ng-disabled="permission=='employee'"></textarea>
 			<br>
-            Price <input type="text" class="form-control" placeholder={{product.price}} name="price" ng-model="product.price" ng-pattern="/^\d{0,9}(\.\d{1,9})?$/" required>
+            Price <input type="text" class="form-control" placeholder={{product.price}} name="price" ng-model="product.price" ng-pattern="/^\d{0,9}(\.\d{1,9})?$/" ng-disabled="permission=='employee'" required>
 			<p class="help-block" ng-if="productForm.price.$error.required"><font color="red">The product's price is required</font></p>
 			<p class="help-block" ng-if="!productForm.price.$error.required && productForm.price.$error.pattern"><font color="red">Not valid price!</font></p>
 			<div class="help-block" ng-if="!productForm.price.$error.required && !productForm.price.$error.pattern"><br></div>
 			<br>
-			<button class="btn" ng-disabled="!productForm.$valid"> Edit Product </button>
+			<button class="btn" ng-disabled="!productForm.$valid" ng-show="permission=='manager'"> Edit Product </button>
 			</div>
         </form>

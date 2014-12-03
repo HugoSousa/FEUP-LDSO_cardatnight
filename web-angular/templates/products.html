@@ -7,7 +7,7 @@
 		<br>
 		<br>
 		<div class="col-md-3">
-			<button class="btn" ui-sref="product-add"> Add Product </button>
+			<button class="btn" ui-sref="product-add" ng-show="permission=='manager'"> Add Product </button>
 		</div>
 	</div>
 		
@@ -21,18 +21,21 @@
 	<br>
 
 	<div style="width:90%; margin:auto">
-		<div class="col-md-3">
-			<select ng-model="selectedCategory" class="pull-right" style=" width:100%; padding: 0; display:inline-block" ng-options="product.category for product in products | unique: 'category'">
+		 <div class="col-md-3">
+			<select ng-model="selectedCategory" class="btn btn-default dropdown-toggle"  ng-options="product.category for product in products | unique: 'category'">
 				<option value="" name="All" >All</option>
 			</select>
-		</div>
+			
+		</div> 
+
 		<div class="col-md-3"></div>
 		<div class="col-md-3"></div>
-		<div class="col-md-1">
-			<label style="padding:0; display:inline-block;">
-				<input type="search" placeholder="Search" ng-model="filterName">
-			</label>
-		</div>
+		<div class="form-group has-feedback pull-right">
+                <label class="control-label sr-only">Product Name</label>
+                <input type="text" class="form-control" placeholder="Search" ng-model="filterName"/>
+                <i class="form-control-feedback glyphicon glyphicon-search"></i>
+        </div>
+		
 	</div>
 		
 	<table class="table" style="width:90%; margin:auto">

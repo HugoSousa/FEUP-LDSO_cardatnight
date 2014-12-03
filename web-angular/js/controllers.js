@@ -134,6 +134,7 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertS
 });
 
 app.controller('ProductsCtrl', function($scope, $stateParams, Restangular,alertService, AuthService) {
+	$scope.permission=AuthService.loggedUser().permission;
 	
     //hardcoded establishment id=1
     var products = Restangular.one('products').getList(AuthService.loggedUser().establishmentid).then(function(data){
@@ -188,9 +189,10 @@ app.controller('ProductAddConfirm', function($state, $scope, $stateParams,Restan
 	  }		
 })
 
-app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular,$modal,alertService) {
+app.controller('ProductCtrl', function($state, $scope, $stateParams,Restangular,$modal,alertService,AuthService) {
   
 	alertService.clear();
+	$scope.permission=AuthService.loggedUser().permission;
     var product = Restangular.one('product', $stateParams.productId).get().then(function(data){
         $scope.product = data[0];
 		console.log($scope.product);
