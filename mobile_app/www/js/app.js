@@ -75,43 +75,43 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
         .state('initial', {
             url: '/initial',
             templateUrl: 'templates/initial.html',
-            controller: 'NavCtrl'
+            controller: 'InitialCtrl'
         })
 
         .state('login', {
             url: '/login',
             templateUrl: 'templates/login.html',
-            controller: 'NavCtrl'
+            controller: 'LoginCtrl'
         })
 
         .state('register', {
             url: '/register',
             templateUrl: 'templates/register.html',
-            controller: 'NavCtrl'
+            controller: 'RegisterCtrl'
         })
 
         .state('account', {
             url: '/account',
             templateUrl: 'templates/account.html',
-            controller: 'NavCtrl'
+            controller: 'AccountCtrl'
         })
 
         .state('account-change-password', {
             url: '/account-change-password',
             templateUrl: 'templates/account-change-password.html',
-            controller: 'NavCtrl'
+            controller: 'AccountCtrl'
         })
 
         .state('forgot-password', {
             url: '/forgot-password',
             templateUrl: 'templates/forgot-password.html',
-            controller: 'NavCtrl'
+            controller: 'AccountCtrl'
         })
 
         .state('menu', {
             url: '/menu',
             templateUrl: 'templates/menu.html',
-            controller: 'NavCtrl'
+            controller: 'MenuCtrl'
         })
 
         .state('products', {

@@ -1,15 +1,15 @@
 <ion-view title="{{loggedUser.username}}">
     <ion-content padding="true">
         <div class="list list-inset">
-            <button class="button button-stable btnRounded" ng-controller="AccountCtrl" ng-click="logout()">
+            <button class="button button-stable btnRounded" ui-sref="login">
                 Log Out
             </button>
             <h2 class="tableTitle"><i class="icon ion-settings"> Account Settings</i></h2>
-            <a class="item item-icon-left topRoundedForm" ng-click="changePassword()">
+            <a class="item item-icon-left topRoundedForm" ui-sref="account-change-password">
                 <i class="icon ion-key"></i>
                 Change Password
             </a>
-            <a class="item item-icon-left bottomRoundedForm" ng-controller="AccountCtrl" ng-click="showConfirmDeleteAccount()">
+            <a class="item item-icon-left bottomRoundedForm" ng-click="showConfirmDeleteAccount()">
                 <i class="icon ion-person"></i>
                 Delete Account
             </a>

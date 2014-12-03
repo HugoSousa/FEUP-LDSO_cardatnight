@@ -11,8 +11,6 @@ app.factory('AuthService', ['$window', function($window){
             if (user && access_token) {
                 loggedUser = user;
                 loggedUser.access_token = access_token;
-                //HARDCODED CART ID = 1
-                loggedUser.cartid = 1;
                 if (loggedUser)
                     $window.localStorage['user'] = JSON.stringify(loggedUser);
             }
@@ -34,7 +32,7 @@ app.factory('AuthService', ['$window', function($window){
         },
         setEstablishment: function(establishmentname){
             loggedUser.establishmentname = establishmentname;
-        },
+        }
     }
 
 }]);

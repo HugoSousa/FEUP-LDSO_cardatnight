@@ -28,30 +28,13 @@ app.controller('FooterCtrl', ["$scope", "FooterService",
 
         });
 
-}]);
+}])
 
+/*
 app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
-    /*
-    if(window.plugin && window.plugin.notification.local){
-        window.plugin.notification.local.onclick = function (id, state, json) {
-            $window.localStorage['redirect'] = "orders";
-            $state.go("orders");
-            $ionicPopup.alert({
-                title: 'Notification ' + id + ' clicked',
-                template: JSON.parse(json).order + " was ordered"
-            });
 
-        };
-    }
-*/
     $scope.loggedUser = AuthService.loggedUser();
-
-    /*
-    $scope.login = function(){
-        $state.go('menu');
-    }
-	*/
 
     $scope.menu = function () {
         $state.go('menu');
@@ -138,7 +121,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         loading: false
     }
 })
-
+*/
 
 .controller('AccountCtrl', function ($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService, SocketService) {
 
@@ -253,13 +236,13 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService, $window) {
+.controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService) {
     //console.log(AuthService.loggedUser())
-    //console.log("LOGIN CONTROLLER");
-    $ioncViewService.clearHistory();
+    console.log("LOGIN CONTROLLER");
+    $ionicViewService.clearHistory();
 
     $scope.loginSubmit = function () {
-        //console.log("Login");
+        console.log("Login");
         var bitArray = sjcl.hash.sha256.hash($scope.user.password);
         var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
 
@@ -327,9 +310,10 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('MenuCtrl', function ($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService, $window, AlertPopupService) {
+.controller('MenuCtrl', function ($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService, $window) {
     //console.log(AuthService.loggedUser());
     //console.log("MENU CTRL");
+    $scope.loggedUser = AuthService.loggedUser();
 
     var redirect = $window.localStorage['redirect'];
 
@@ -477,7 +461,9 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('ProductsCtrl', function ($scope, $stateParams, Restangular, $ionicLoading) {
+.controller('ProductsCtrl', function ($scope, $stateParams, Restangular, $ionicLoading, AuthService) {
+
+    $scope.loggedUser = AuthService.loggedUser();
 
     $scope.orderByField = 'name';
     $scope.reverseSort = false;
@@ -495,7 +481,18 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     });
 })
 
-.controller('ProductCtrl', function ($state, $scope, $stateParams, $ionicPopup, Restangular, $ionicLoading) {
+.controller('ProductCtrl', function ($state, $scope, $stateParams, $ionicPopup, Restangular, $ionicLoading, AuthService) {
+
+    $scope.loggedUser = AuthService.loggedUser();
+    $scope.orderData = {};
+
+    //TODO fix cart id, change to send token and change server
+    $scope.cartid = 1;
+
+    $scope.orderData.quantity = 1;
+    $scope.orderData.productid = $stateParams.productId;
+
+    console.log($scope.orderData);
 
     $ionicLoading.show({
         showBackdrop: false
@@ -535,11 +532,12 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
         var orderProduct = function () {
 
-            //console.log("ordering product");
-            //console.log($scope.orderData);
+            console.log("ordering product");
+            console.log($scope.orderData);
 
             var resource = Restangular.all('order');
 
+            //TODO change to customPOST and send token
             resource.post($scope.orderData).then(function (resp) {
                 //console.log("ok");
                 //console.log(resp);
@@ -600,9 +598,9 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     });
 })
 
-.controller('OrderCtrl', function ($scope, $stateParams, Restangular, $ionicLoading, AuthService, AlertPopupService, $window) {
+.controller('OrderCtrl', function ($scope, $stateParams, Restangular, $ionicLoading, AuthService) {
 
-
+    $scope.loggedUser = AuthService.loggedUser();
     //AlertPopupService.createPopup("ORDER PARAMS: ", $stateParams.orderId);
 
     //$scope.orders = Orders.all();
@@ -621,6 +619,65 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
 .controller('PlacesCtrl', function ($scope, $stateParams, Restangular, AuthService) {
     $scope.loggedUser = AuthService.loggedUser();
+
+    //TODO retornar os carts de cada utilizador - data de entrada - preco total das orders
+    //TODO outro metodo retornar so os carts de determinado estabelecimento, mesmo formato
+
+    $scope.result = [];
+    $scope.result[0] = {date: "15/10/2014", price:13};
+    $scope.result[1] = {date: "16/10/2014", price:10};
+    $scope.result[2] = {date: "17/10/2014", price:5};
+
+    $scope.prices = [];
+    $scope.dates = [];
+
+    for(var i = 0; i < $scope.result.length; i++){
+        $scope.prices[i] = $scope.result[i].price;
+    }
+
+    for(var i = 0; i < $scope.result.length; i++){
+        $scope.dates[i] = $scope.result[i].price;
+    }
+
+    console.log($scope.consume);
+        console.log($scope.consume);
+
+    $scope.chartConfig = {
+        options: {
+            chart: {
+                type: 'line',
+                zoomType: 'x'
+            },
+            plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function (e) {
+                                // console.log("Click");
+                            }
+                        }
+                    },
+                    marker: {
+                        lineWidth: 1
+                    }
+                }
+            }
+
+        },
+        series: [{
+            data: $scope.consumes
+        }],
+        title: {
+            text: 'Test'
+        },
+        xAxis: {
+            currentMin: 0,
+            currentMax: $scope.consumes.length - 1,
+            minRange: 1
+        },
+        loading: false
+    }
 
     $scope.generateqrcode = function (customerid) {
 
