@@ -11,6 +11,8 @@ app.factory('AuthService', ['$window', function($window){
             if (user && access_token) {
                 loggedUser = user;
                 loggedUser.access_token = access_token;
+                //TODO remover isto - hardcoded cartid
+                loggedUser.cartid = 1;
                 if (loggedUser)
                     $window.localStorage['user'] = JSON.stringify(loggedUser);
             }

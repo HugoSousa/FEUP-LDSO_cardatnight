@@ -617,67 +617,98 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     });
 })
 
-.controller('PlacesCtrl', function ($scope, $stateParams, Restangular, AuthService) {
+.controller('PlacesCtrl', function ($scope, $stateParams, Restangular, AuthService, $ionicLoading) {
     $scope.loggedUser = AuthService.loggedUser();
-
-    //TODO retornar os carts de cada utilizador - data de entrada - preco total das orders
-    //TODO outro metodo retornar so os carts de determinado estabelecimento, mesmo formato
-
-    $scope.result = [];
-    $scope.result[0] = {date: "15/10/2014", price:13};
-    $scope.result[1] = {date: "16/10/2014", price:10};
-    $scope.result[2] = {date: "17/10/2014", price:5};
-
-    $scope.prices = [];
     $scope.dates = [];
+    $scope.prices = [];
+    $scope.places = {};
+    $scope.selectedPlace = "";
 
-    for(var i = 0; i < $scope.result.length; i++){
-        $scope.prices[i] = $scope.result[i].price;
-    }
 
-    for(var i = 0; i < $scope.result.length; i++){
-        $scope.dates[i] = $scope.result[i].price;
-    }
 
-    console.log($scope.consume);
-        console.log($scope.consume);
+    $scope.changePlace = function (place){
+        console.log("MUDEI PLACE");
+        console.log(place);
 
-    $scope.chartConfig = {
-        options: {
-            chart: {
-                type: 'line',
-                zoomType: 'x'
-            },
-            plotOptions: {
-                series: {
-                    cursor: 'pointer',
-                    point: {
-                        events: {
-                            click: function (e) {
-                                // console.log("Click");
-                            }
-                        }
-                    },
-                    marker: {
-                        lineWidth: 1
-                    }
+        $ionicLoading.show({
+            noBackdrop: false,
+            template: 'Loading'
+        });
+
+        var parameter = "";
+        if(place != null)
+            parameter = $scope.places[place];
+
+        Restangular.all('customer_history').customGET(parameter, {}, {
+            'x-access-token': AuthService.token()
+        }).then(function(data) {
+            console.log(data);
+            var totalPrice = 0;
+            for(var i = 0; i < data.rows.length; i++){
+
+
+                if($scope.places[data.rows[i].establishmentname] == undefined) {
+                    $scope.places[data.rows[i].establishmentname] = data.rows[i].establishmentid;
                 }
+
+                $scope.dates[i] = data.rows[i].date;
+                $scope.prices[i] = data.rows[i].price;
+                totalPrice += data.rows[i].price;
+
             }
 
-        },
-        series: [{
-            data: $scope.consumes
-        }],
-        title: {
-            text: 'Test'
-        },
-        xAxis: {
-            currentMin: 0,
-            currentMax: $scope.consumes.length - 1,
-            minRange: 1
-        },
-        loading: false
-    }
+            console.log($scope.places);
+
+            $scope.average = (totalPrice / $scope.dates.length).toFixed(2);
+
+            $scope.chartConfig = {
+                options: {
+                    chart: {
+                        type: 'line',
+                        zoomType: 'x'
+                    },
+                    plotOptions: {
+                        series: {
+                            cursor: 'pointer',
+                            point: {
+                                events: {
+                                    click: function (e) {
+                                        // console.log("Click");
+                                    }
+                                }
+                            },
+                            marker: {
+                                lineWidth: 1
+                            }
+                        }
+                    }
+
+                },
+                series: [{
+                    data: $scope.prices
+                }],
+                title: {
+                    text: 'Test'
+                },
+                xAxis: {
+                    type: "category",
+                    categories: $scope.dates
+                },
+                yAxis: {
+                    min: 0
+                },
+                loading: false
+            }
+
+
+
+            $ionicLoading.hide();
+        }, function(data){
+            $ionicLoading.hide();
+        });
+    };
+
+    $scope.changePlace(null);
 
     $scope.generateqrcode = function (customerid) {
 

@@ -1,15 +1,15 @@
 <ion-view title="{{loggedUser.username}}">
     <ion-content padding="true">
         <label class="item item-icon-right">
-            <select ng-model="selectedPlace" style="opacity:0; width:100%; position:absolute; z-index:100" ng-options="place.name for place in places">
+            <select ng-model="selectedPlace" style="opacity:0; width:98%; position:absolute; z-index:100" ng-options="name as name for (name,id) in places" ng-change="changePlace(selectedPlace)">
                 <option value="" name="All" >All</option>
             </select>
-            <span class="input-label">{{selectedPlace.name}}</span>
+            <span class="input-label">{{selectedPlace}}</span>
             <i class="icon ion-ios7-arrow-down"></i>
         </label>
         <br>
-        <div class="item-note alignCenter" style="width:100%; font-size: 120%">Average Spending per Entrance</div>
-        <h3 class="alignCenter" style="font-weight: bold">5.50€</h3>
+        <div class="item-note alignCenter" style="width:100%; font-size: 120%">Average Spending per Day</div>
+        <h3 class="alignCenter" style="font-weight: bold">{{average}}</h3>
 
         <div style="width: 100%">
             <highchart id="chart1" config="chartConfig"></highchart>

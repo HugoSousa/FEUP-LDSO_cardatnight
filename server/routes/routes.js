@@ -115,9 +115,9 @@ module.exports = function (app, io, passport) {
     			if (info && info.message) return res.status(401).json( { error: "Missing Credentials" });
     				else return res.status(401).json( { error: info });
     			}
-            
+
             var expires = moment().add(7,'days').valueOf();
-            var token = generateToken(user.username, expires);
+            var token = generateToken(user.id, user.username, expires);
             res.status(200).json({
                 access_token: token,
                 exp: expires,
@@ -127,8 +127,9 @@ module.exports = function (app, io, passport) {
         })(req,res);
     });
 	
-	function generateToken(username, expirationDate) {
+	function generateToken(userid, username, expirationDate) {
         var token = jwt.encode({
+            userid: userid,
             username: username,
             exp: expirationDate
         }, app.get('tokenSecret'));
@@ -398,7 +399,27 @@ module.exports = function (app, io, passport) {
             if (err) res.status(409).json(err);
             else res.status(200).json(result);
         });
-    })
+    });
+
+    app.get('/customer_history', function(req, res){
+        var customerid = req.user.id; 
+
+        db.getUserHistory(customerid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+        
+    });
+
+    app.get('/customer_history/:establishmentid', function(req, res){
+        var customerid = req.user.id; 
+
+        db.getUserHistoryByPlace(customerid, req.params.establishmentid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+        
+    });
 
     app.post('/notify', function(req, res){
 
@@ -497,21 +518,11 @@ module.exports = function (app, io, passport) {
         });
 
     });
-    /*
-    io.on('connection', function (socket) {
-        console.log('a user connected');
 
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
-        });
 
-        socket.on('chat message', function (msg) {
-            io.emit('chat message', msg);
-            console.log('message: ' + msg);
-        });
-
-    });
-    */
+    /*-----------------------------------------------------------------------------------*/
+    /*--------------------------------------SOCKETS--------------------------------------*/
+    /*-----------------------------------------------------------------------------------*/
 
     var clients = []
 

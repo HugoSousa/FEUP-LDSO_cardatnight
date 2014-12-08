@@ -80,8 +80,7 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
         .state('login', {
             url: '/login',
-            templateUrl: 'templates/login.html',
-            controller: 'LoginCtrl'
+            templateUrl: 'templates/login.html'
         })
 
         .state('register', {
