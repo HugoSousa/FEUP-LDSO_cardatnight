@@ -624,8 +624,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     $scope.places = {};
     $scope.selectedPlace = "";
 
-
-
     $scope.changePlace = function (place){
         console.log("MUDEI PLACE");
         console.log(place);
@@ -667,6 +665,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                         type: 'line',
                         zoomType: 'x'
                     },
+                    colors: ['#0080ff'],
                     plotOptions: {
                         series: {
                             cursor: 'pointer',
@@ -678,7 +677,8 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                                 }
                             },
                             marker: {
-                                lineWidth: 1
+                                lineWidth: 1,
+                                symbol: 'circle'
                             }
                         }
                     }
