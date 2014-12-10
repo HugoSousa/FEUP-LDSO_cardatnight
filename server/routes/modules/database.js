@@ -357,7 +357,6 @@ exports.getCustomerData=function(cartId, callback) {
             callback({ error: 'Failed to connect do database' }, null);
         }
         else {
-            console.log(cartId);
             client.query({text: "SELECT customer.name,cart.* FROM customer,cart WHERE cart.cartid = $1 and customer.customerid=cart.customerid",name: "get customer",values:[cartId]}, function (err, result) {
                 if (err) {
                     //any specific error?
@@ -374,11 +373,10 @@ exports.getCustomerData=function(cartId, callback) {
                                 callback({ error: "Error occurred" }, null);
                             else
                             {
-                                console.log("It's something!");
                                 resultArray[1]=result.rows;
-                                console.log(resultArray);
                                 callback(null, resultArray);
                             }
+
                         });
                     else
                         callback(null, resultArray);   

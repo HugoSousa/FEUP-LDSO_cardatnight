@@ -11,7 +11,7 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
    //RestangularProvider.setBaseUrl('http://localhost:1337');
    RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
 
-    //RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 10 seconds
+    RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 10 seconds
 
 
     $stateProvider

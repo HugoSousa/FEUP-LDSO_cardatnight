@@ -274,21 +274,15 @@ app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log
 		$scope.customers=data;
     $scope.showAllCustomers();
 	});
-	$scope.showAll="no";	
-   $scope.showAllCustomers=function()
+  $scope.showAll='no';	
+  $scope.showAllCustomers=function()
   {
-  	$scope.showAll=!$scope.showAll;
     for(var i = 0;i<$scope.customers.length;i++)
       if($scope.customers[i].paid)
       {
         if($scope.customers[i].shown==null)
           $scope.customers[i].shown=false;
-        else{
-        $scope.customers[i].shown=!$scope.customers[i].shown;
-        if($scope.showAll=="no")
-        $scope.showAll="showAll";
-        else $scope.showAll="no";	
-        } 
+        else $scope.customers[i].shown=!$scope.customers[i].shown;
       }
       else
         $scope.customers[i].shown=true;

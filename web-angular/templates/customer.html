@@ -1,6 +1,6 @@
 <div class="page-header">
 		<h2>{{customer.info.name}}</h2>
-		<button class="btn btn-danger pull-right" ng-show="customer.cart.length>0" ng-click="open('lg',customer.info.cartid)">
+		<button class="btn btn-danger pull-right" ng-show="!customer.info.paid" ng-click="open('lg',customer.info.cartid)">
 		Delete today's consumption
 		</button>
 </div>
