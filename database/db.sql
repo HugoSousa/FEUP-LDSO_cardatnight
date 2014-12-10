@@ -106,3 +106,14 @@ create table orders(
    foreign key (ordercodeid) references ordercode(ordercodeid)
 );
 
+create OR REPLACE FUNCTION update_balance() returns trigger as $update_balance$ 
+   BEGIN
+      UPDATE CART SET BALANCE = BALANCE + (NEW.QUANTITY * (SELECT PRICE FROM PRODUCT WHERE PRODUCTID=NEW.PRODUCTID)) WHERE CART.CARTID=NEW.CARTID;
+      return new;
+   END;
+   $update_balance$ LANGUAGE plpgsql;
+   
+CREATE TRIGGER UPDATE_BALANCE
+AFTER INSERT ON ORDERS
+FOR EACH ROW
+EXECUTE PROCEDURE update_balance();

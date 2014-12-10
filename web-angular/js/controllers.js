@@ -1,12 +1,15 @@
 var app = angular.module('controllers', []);
 
-app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $modalInstance,Restangular) {
+app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $state,$modalInstance,Restangular,alertService) {
 
 
   $scope.ok = function () {
+  	alertService.clear();
 	Restangular.all('delete-customer-consumption').post({"cartId":$scope.cartId}).then(function(resp){
             
-            console.log("Consumption deleted");
+            	alertService.add('success', 'Cart deleted successfully');
+				$state.go("customers");
+
         }, function(resp){
             console.log("Error notifying user");
         });
@@ -19,14 +22,15 @@ app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $modalInstance
   
 });
 
-app.controller('CustomerMarkPaidCtrl', function ($scope, $modalInstance,Restangular) {
+app.controller('CustomerMarkPaidCtrl', function ($scope, $modalInstance,Restangular,alertService) {
 
 
   $scope.ok = function (parameter) {
-    alert("Customer="+$scope.customer.cartid);
     Restangular.all('mark-cart-paid').post({"cartId":$scope.customer.cartid}).then(function(resp){
             
             $scope.customer.paid=true;
+            $scope.customer.shown=($scope.showAll=='showAll');
+            alertService.add('success', 'Customer cart paid successfully');
         }, function(resp){
             alert("Error notifying user");
         });
