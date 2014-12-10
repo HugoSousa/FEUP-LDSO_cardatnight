@@ -53,7 +53,7 @@
 			<td valign="bottom">
 				<div class="row" >
 					<div class="col-md-3"> <a href="#/product/{{product.productid}}">{{product.name}}</a></div>
-					<div class="col-md-3">{{product.description}}</div>
+					<div class="col-md-3"><p ng_show="product.description.length>45">{{product.description | limitTo: 45}}...</p><p ng_show="product.description.length<=45">{{product.description | limitTo: 45}}</p></div>
 					<div class="col-md-3">{{product.category}}</div>
 					<div class="col-md-1">{{product.price}}€</div>
 				</div>
