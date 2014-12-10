@@ -1,34 +1,34 @@
 var app = angular.module('controllers', ['highcharts-ng']);
 
 app.controller('FooterCtrl', ["$scope", "FooterService",
-    function ($scope, FooterService) {
+                              function ($scope, FooterService) {
 
-        $scope.showFooter = FooterService;
+                                  $scope.showFooter = FooterService;
 
-        window.addEventListener('native.keyboardshow', function () {
-            FooterService.changeFooter(false);
-            $scope.$apply();
-            /*
+                                  window.addEventListener('native.keyboardshow', function () {
+                                      FooterService.changeFooter(false);
+                                      $scope.$apply();
+                                      /*
         $ionicPopup.alert({
             title: 'Keyboard Show',
             template: 'Keyboard Show'
         });
         */
-        });
+                                  });
 
-        window.addEventListener('native.keyboardhide', function () {
-            FooterService.changeFooter(true);
-            $scope.$apply();
-            /*
+                                  window.addEventListener('native.keyboardhide', function () {
+                                      FooterService.changeFooter(true);
+                                      $scope.$apply();
+                                      /*
         $ionicPopup.alert({
             title: 'Keyboard Hide',
             template: 'Keyboard Hide'
         });
         */
 
-        });
+                                  });
 
-}])
+                              }])
 
 /*
 app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
@@ -208,29 +208,32 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 var resource = Restangular.all('delete-account');
 
                 resource.customPOST("", "", {}, {
-                'x-access-token': AuthService.token()
-                    
+                    'x-access-token': AuthService.token()
+
                 }).then(function (resp) {
                     console.log(resp);
                     console.log("ok");
 
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Delete Account',
+                            template: 'Account deleted successfully!'
+                        });
+                        alertPopup.then(function (res) {
 
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Delete Account',
-                        template: 'Account deleted successfully!'
-                    });
-                    alertPopup.then(function (res) {
+                            $state.go('login');
 
-                        $state.go('login');
-
-                    });
-
+                        });
+              
                 }, function (resp) {
                     // console.log("error");
                     // console.log(resp);
 
                     $scope.error = resp.data.error;
-
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Delete Account',
+                        template: 'Account deletion failed: ' + resp.error
+                    });
+                    alertPopup.then(function (res) {});
                 });
             } else {
                 // console.log('You are not sure');
@@ -339,10 +342,10 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         if (data.status == "valid") {
             $scope.balance = data.cart.balance;
             $scope.hasCart = true;
-            
+
             if(data.cart.paid == true)
                 $scope.cartPaid = true;
-            
+
             AuthService.setEstablishment(data.cart.name);
         } else {
             $scope.hasCart = false;
@@ -574,7 +577,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
             });
         }
 
-    };
+        };
 })
 
 .controller('OrdersCtrl', function ($scope, $state, Restangular, $ionicLoading, AuthService, $window) {

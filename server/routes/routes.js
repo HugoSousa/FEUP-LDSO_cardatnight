@@ -65,7 +65,7 @@ module.exports = function (app, io, passport) {
                 res.status(200);
 
                 db.changePassword(username, newPassword, function (err, result) {
-                    if (err) res.status(409).json(err);
+                    if (err) res.status(409).json({error: err});
                     else res.status(200).json({result: "success"});
 
                 });
@@ -79,8 +79,8 @@ module.exports = function (app, io, passport) {
         var username = req.user.username;
 
         db.deleteAccount(username, function (err, result) {
-            if (err) res.status(409).json(err);
-            else res.status(200).json(result);
+            if (err) res.status(409).json({error: err});
+            else res.status(200).json({result: result});
 
         });
         
