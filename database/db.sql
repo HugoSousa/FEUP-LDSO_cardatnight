@@ -9,6 +9,7 @@ drop table if exists category;
 drop table if exists ordercode;
 drop type if exists worker_permission;
 drop type if exists product_state;
+drop function if exists repeated();
 
 create table establishment(
    establishmentid serial primary key not null,
@@ -60,6 +61,10 @@ create table category(
    name text not null
 );
 
+
+
+
+	
 create table product(
    productid serial primary key not null,
    description text,
@@ -73,6 +78,14 @@ create table product(
    foreign key (categoryid) references category(categoryid)
 );
 
+CREATE FUNCTION repeated(product_name text, id_establishment integer) RETURNS bigint
+    LANGUAGE sql
+    AS $$SELECT COUNT(*) From Product, Establishment
+		WHERE Product.establishmentid = Establishment.establishmentid AND Product.establishmentid=id_establishment AND Product.name=product_name
+		;$$;
+		
+ALTER TABLE product ADD CONSTRAINT DEFERRABLE repeated_product CHECK (repeated(name, establishmentid) < 1);
+		
 create type product_state as enum ('ordered','notified', 'delivered');
 
 create table ordercode(
@@ -92,3 +105,4 @@ create table orders(
    foreign key (productid) references product(productid),
    foreign key (ordercodeid) references ordercode(ordercodeid)
 );
+
