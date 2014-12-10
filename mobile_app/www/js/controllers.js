@@ -28,30 +28,13 @@ app.controller('FooterCtrl', ["$scope", "FooterService",
 
         });
 
-}]);
+}])
 
+/*
 app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
-    /*
-    if(window.plugin && window.plugin.notification.local){
-        window.plugin.notification.local.onclick = function (id, state, json) {
-            $window.localStorage['redirect'] = "orders";
-            $state.go("orders");
-            $ionicPopup.alert({
-                title: 'Notification ' + id + ' clicked',
-                template: JSON.parse(json).order + " was ordered"
-            });
 
-        };
-    }
-*/
     $scope.loggedUser = AuthService.loggedUser();
-
-    /*
-    $scope.login = function(){
-        $state.go('menu');
-    }
-	*/
 
     $scope.menu = function () {
         $state.go('menu');
@@ -113,7 +96,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     point: {
                         events: {
                             click: function (e) {
-                                console.log("Click");
+                                // console.log("Click");
                             }
                         }
                     },
@@ -138,13 +121,15 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         loading: false
     }
 })
-
+*/
 
 .controller('AccountCtrl', function ($scope, $state, $stateParams, $ionicPopup, Restangular, AuthService, SocketService) {
 
-    var loggedUser = AuthService.loggedUser();
-    $scope.loggedUser = AuthService.loggedUser().username;
+    var loggedUser = AuthService.loggedUser();   
+    if (!loggedUser) $scope.logout();
 
+
+    $scope.loggedUser = AuthService.loggedUser().username;
 
     $scope.logout = function () {
 
@@ -155,9 +140,10 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
 
     $scope.changePasswordSubmit = function () {
+        console.log("change password");
         var resource = Restangular.all('change-password');
 
-        console.log($scope.user);
+        // console.log($scope.user);
 
         if ($scope.user.newPassword != $scope.user.newPasswordRetyped) {
             var alertPopup = $ionicPopup.alert({
@@ -165,12 +151,15 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 template: 'New password and new password retyped dont match!'
             });
             alertPopup.then(function (res) {
-                console.log('New password and new password retyped dont match!');
+                // console.log('New password and new password retyped dont match!');
             });
         } else {
 
-            resource.post($scope.user).then(function (resp) {
-                console.log("ok");
+            resource.customPOST("", "", {newPassword : $scope.user.newPassword}, {
+                'x-access-token': AuthService.token()
+            }).then(function (resp) {
+                console.log(resp);
+
 
                 var alertPopup = $ionicPopup.alert({
                     title: 'Change Password',
@@ -183,7 +172,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 });
 
             }, function (resp) {
-                console.log("error");
+                // console.log("error");
 
                 $scope.error = resp.data.error;
 
@@ -210,17 +199,18 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         });
         confirmPopup.then(function (res) {
             if (res) {
-                console.log('You are sure!');
+                // console.log('You are sure!');
 
-                var user = {
-                    username: loggedUser.username
-                }
 
                 var resource = Restangular.all('delete-account');
 
-                resource.post(user).then(function (resp) {
-                    console.log("ok");
+                resource.customPOST("", "", {}, {
+                'x-access-token': AuthService.token()
+                    
+                }).then(function (resp) {
                     console.log(resp);
+                    console.log("ok");
+
 
                     var alertPopup = $ionicPopup.alert({
                         title: 'Delete Account',
@@ -233,20 +223,20 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     });
 
                 }, function (resp) {
-                    console.log("error");
-                    console.log(resp);
+                    // console.log("error");
+                    // console.log(resp);
 
                     $scope.error = resp.data.error;
 
                 });
             } else {
-                console.log('You are not sure');
+                // console.log('You are not sure');
             }
         });
     };
 })
 
-.controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService, $window) {
+.controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService) {
     //console.log(AuthService.loggedUser())
     console.log("LOGIN CONTROLLER");
     $ionicViewService.clearHistory();
@@ -257,7 +247,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
 
 
-        console.log($scope.user);
+        //console.log($scope.user);
         $ionicLoading.show({
             template: 'Logging in...'
         });
@@ -266,8 +256,8 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
             username: $scope.user.username,
             password: digest_sha256
         }).then(function (resp) {
-            console.log("ok");
-            console.log(resp);
+            //console.log("ok");
+            //console.log(resp);
             /*
             if(window.plugin && window.plugin.notification.local) {
                 window.plugin.notification.local.onclick = function (id, state, json) {
@@ -282,7 +272,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 };
             }
             */
-            console.log("CONNECT SOCKET");
+            //console.log("CONNECT SOCKET");
 
             SocketService.connectSocket(resp.user.username);
             AuthService.login(resp.user, resp.access_token);
@@ -311,7 +301,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 template: '<p style="text-align: center">' + error + '</p>'
             });
 
-            console.log(resp);
+            //console.log(resp);
 
             $ionicLoading.hide();
         });
@@ -320,9 +310,10 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 })
 
 
-.controller('MenuCtrl', function ($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService, $window, AlertPopupService) {
+.controller('MenuCtrl', function ($scope, $state, Restangular, AuthService, $ionicLoading, $ionicViewService, $window) {
     //console.log(AuthService.loggedUser());
-    console.log("MENU CTRL");
+    //console.log("MENU CTRL");
+    $scope.loggedUser = AuthService.loggedUser();
 
     var redirect = $window.localStorage['redirect'];
 
@@ -332,8 +323,9 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         $state.go("orders");
 
 
-    console.log(AuthService.token());
+    //console.log(AuthService.token());
     $scope.hasCart;
+    $scope.cartPaid;
     $ionicLoading.show({
         template: 'Loading...'
     });
@@ -344,13 +336,17 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         if (data.status == "valid") {
             $scope.balance = data.cart.balance;
             $scope.hasCart = true;
+            
+            if(data.cart.paid == true)
+                $scope.cartPaid = true;
+            
             AuthService.setEstablishment(data.cart.name);
         } else {
             $scope.hasCart = false;
         }
     }, function (resp) {
         $ionicLoading.hide();
-        console.log("FAIL");
+        //console.log("FAIL");
     });
 
     $ionicViewService.clearHistory();
@@ -390,7 +386,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         if (user) {
             if ($scope.invalid_username == user) return 'has-warning';
 
-            console.log(user.length);
             if (user.length >= 3 && user.length <= 25 && !(user.indexOf(' ') > -1))
                 return 'has-success';
             else return 'has-error';
@@ -400,7 +395,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
     $scope.validatePassword = function (password) {
         if (password) {
-            console.log(password.length);
             if (password.length >= 3 && password.length <= 50 && !(password.indexOf(' ') > -1))
                 return 'has-success';
             else return 'has-error';
@@ -441,7 +435,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
         }, function (resp) {
 
-            console.log(resp);
+            //console.log(resp);
 
             if (resp.status == 409) {
                 //name invalid
@@ -467,7 +461,9 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     };
 })
 
-.controller('ProductsCtrl', function ($scope, $stateParams, Restangular, $ionicLoading) {
+.controller('ProductsCtrl', function ($scope, $stateParams, Restangular, $ionicLoading, AuthService) {
+
+    $scope.loggedUser = AuthService.loggedUser();
 
     $scope.orderByField = 'name';
     $scope.reverseSort = false;
@@ -485,7 +481,18 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     });
 })
 
-.controller('ProductCtrl', function ($state, $scope, $stateParams, $ionicPopup, Restangular, $ionicLoading) {
+.controller('ProductCtrl', function ($state, $scope, $stateParams, $ionicPopup, Restangular, $ionicLoading, AuthService) {
+
+    $scope.loggedUser = AuthService.loggedUser();
+    $scope.orderData = {};
+
+    //TODO fix cart id, change to send token and change server
+    $scope.cartid = 1;
+
+    $scope.orderData.quantity = 1;
+    $scope.orderData.productid = $stateParams.productId;
+
+    console.log($scope.orderData);
 
     $ionicLoading.show({
         showBackdrop: false
@@ -513,14 +520,14 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     text: '<b>Ok</b>',
                     type: 'button-positive',
                     onTap: function (e) {
-                        console.log($scope.orderData);
+                        //console.log($scope.orderData);
                         orderProduct();
                     }
                 }
             ]
         });
 
-        console.log($scope.orderData);
+        //console.log($scope.orderData);
 
 
         var orderProduct = function () {
@@ -530,9 +537,10 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
             var resource = Restangular.all('order');
 
+            //TODO change to customPOST and send token
             resource.post($scope.orderData).then(function (resp) {
-                console.log("ok");
-                console.log(resp);
+                //console.log("ok");
+                //console.log(resp);
 
                 var alertPopup = $ionicPopup.alert({
                     title: 'Order',
@@ -545,8 +553,8 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 });
 
             }, function (resp) {
-                console.log("error");
-                console.log(resp);
+                //console.log("error");
+                //console.log(resp);
                 var error = "";
                 if (resp.status == 0)
                     error = "Service unavailable.<br>Please try again later.";
@@ -569,7 +577,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 .controller('OrdersCtrl', function ($scope, $state, Restangular, $ionicLoading, AuthService, $window) {
 
     $scope.loggedUser = AuthService.loggedUser();
-    console.log(JSON.stringify(AuthService.loggedUser()));
 
     var redirect = $window.localStorage['redirect'];
     if (redirect && redirect != '' && redirect != 'undefined' && typeof redirect != 'undefined') {
@@ -591,9 +598,9 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     });
 })
 
-.controller('OrderCtrl', function ($scope, $stateParams, Restangular, $ionicLoading, AuthService, AlertPopupService, $window) {
+.controller('OrderCtrl', function ($scope, $stateParams, Restangular, $ionicLoading, AuthService) {
 
-
+    $scope.loggedUser = AuthService.loggedUser();
     //AlertPopupService.createPopup("ORDER PARAMS: ", $stateParams.orderId);
 
     //$scope.orders = Orders.all();
@@ -602,7 +609,6 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         template: 'Loading'
     });
 
-    //console.log($stateParams.orderId);
     Restangular.all('order').customGET($stateParams.orderId, {}, {
         'x-access-token': AuthService.token()
     }).then(function (data) {
@@ -611,8 +617,98 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     });
 })
 
-.controller('PlacesCtrl', function ($scope, $stateParams, Restangular, AuthService) {
+.controller('PlacesCtrl', function ($scope, $stateParams, Restangular, AuthService, $ionicLoading) {
     $scope.loggedUser = AuthService.loggedUser();
+    $scope.dates = [];
+    $scope.prices = [];
+    $scope.places = {};
+    $scope.selectedPlace = "";
+
+    $scope.changePlace = function (place){
+        console.log("MUDEI PLACE");
+        console.log(place);
+
+        $ionicLoading.show({
+            noBackdrop: false,
+            template: 'Loading'
+        });
+
+        var parameter = "";
+        if(place != null)
+            parameter = $scope.places[place];
+
+        Restangular.all('customer_history').customGET(parameter, {}, {
+            'x-access-token': AuthService.token()
+        }).then(function(data) {
+            console.log(data);
+            var totalPrice = 0;
+            for(var i = 0; i < data.rows.length; i++){
+
+
+                if($scope.places[data.rows[i].establishmentname] == undefined) {
+                    $scope.places[data.rows[i].establishmentname] = data.rows[i].establishmentid;
+                }
+
+                $scope.dates[i] = data.rows[i].date;
+                $scope.prices[i] = data.rows[i].price;
+                totalPrice += data.rows[i].price;
+
+            }
+
+            console.log($scope.places);
+
+            $scope.average = (totalPrice / $scope.dates.length).toFixed(2);
+
+            $scope.chartConfig = {
+                options: {
+                    chart: {
+                        type: 'line',
+                        zoomType: 'x'
+                    },
+                    colors: ['#0080ff'],
+                    plotOptions: {
+                        series: {
+                            cursor: 'pointer',
+                            point: {
+                                events: {
+                                    click: function (e) {
+                                        // console.log("Click");
+                                    }
+                                }
+                            },
+                            marker: {
+                                lineWidth: 1,
+                                symbol: 'circle'
+                            }
+                        }
+                    }
+
+                },
+                series: [{
+                    data: $scope.prices
+                }],
+                title: {
+                    text: 'Test'
+                },
+                xAxis: {
+                    type: "category",
+                    categories: $scope.dates
+                },
+                yAxis: {
+                    min: 0
+                },
+                loading: false
+            }
+
+
+
+            $ionicLoading.hide();
+        }, function(data){
+            $ionicLoading.hide();
+        });
+    };
+
+    $scope.changePlace(null);
 
     $scope.generateqrcode = function (customerid) {
 
@@ -624,7 +720,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 Restangular.all('requestexit').customGET("", {}, {
                     'x-access-token': AuthService.token()
                 }).then(function (data) {
-                    console.log("ok");
+                    //console.log("ok");
 
                     var node = document.getElementById("qrcode");
                     while (node.firstChild) {
@@ -660,7 +756,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 Restangular.all('requestentry').customGET("", {}, {
                     'x-access-token': AuthService.token()
                 }).then(function (data) {
-                    console.log("ok");
+                    //console.log("ok");
 
                     var node = document.getElementById("qrcode");
                     while (node.firstChild) {
@@ -683,7 +779,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     }
 
                 }, function (resp) {
-                    console.log("error");
+                    //console.log("error");
 
                     if (resp.status == "409") {
                         alert("Error! You already are in an establishment!");
@@ -712,8 +808,8 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         //var socket = $window.localStorage['socket'];
 
         var loggedUser = AuthService.loggedUser();
-        console.log(loggedUser);
-        console.log(AuthService.token());
+        //console.log(loggedUser);
+        //console.log(AuthService.token());
 
         if (loggedUser) {
 
@@ -721,7 +817,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 'x-access-token': AuthService.token()
             }).then(function (data) {
 
-                console.log(data);
+                // console.log(data);
 
                 if (data.result != "success") {
                     AlertPopupService.createPopup("Error", "Your login has expired. Please login again.");

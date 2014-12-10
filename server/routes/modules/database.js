@@ -585,6 +585,28 @@ exports.notifyOrder = function (orderId, callback){
     });
 }
 
+exports.deliverOrder = function (orderId, callback){
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+            client.query({ text: "UPDATE orders SET orderstate = 'delivered' WHERE ordersid = $1", name: 'notifyorder', values: [orderId] }, function (err, result) {
+            if (err) {
+                //any specific error?
+                callback({ error: "Error occurred" }, null);
+            }
+          else {
+            callback(null, {success: "Order " + orderId + " has successully been delivered"});
+            }
+          });
+        }
+        
+        done();
+    });
+}
+
 exports.getProductsEstablishment = function (establishmentId, callback) {
     pg.connect(database_url , function (err, client, done) {
         if (err) {
@@ -723,4 +745,52 @@ exports.getCartEstablishment = function (cartId, callback) {
         done();
     });
 
+}
+
+
+exports.getUserHistory = function (customerid, callback){
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({ text: "SELECT to_char(date_trunc('day',cart.entrancetime), 'DD/MM/YYYY') AS date, SUM(cart.balance) AS price, establishment.establishmentid, establishment.name AS establishmentname FROM cart, customer, establishment WHERE cart.establishmentid = establishment.establishmentid AND cart.customerid = customer.customerid AND customer.customerid = $1 GROUP BY date_trunc('day',cart.entrancetime), establishment.establishmentid ORDER BY date_trunc('day',cart.entrancetime);",
+            values: [customerid] }, function (err, result) {
+
+            if (err) {                    
+                callback(err, null);
+            }
+            else {
+                callback(null, result);
+            }
+            
+            });
+        }
+
+        done();
+    });
+}
+
+exports.getUserHistoryByPlace = function (customerid, establishmentid, callback){
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({ text: "SELECT to_char(date_trunc('day',cart.entrancetime), 'DD/MM/YYYY') AS date, SUM(cart.balance) AS price, establishment.establishmentid, establishment.name AS establishmentname FROM cart, customer, establishment WHERE cart.establishmentid = establishment.establishmentid AND cart.customerid = customer.customerid AND customer.customerid = $1 AND establishment.establishmentid = $2 GROUP BY date_trunc('day',cart.entrancetime), establishment.establishmentid ORDER BY date_trunc('day',cart.entrancetime);",
+            values: [customerid, establishmentid] }, function (err, result) {
+
+            if (err) {                    
+                callback(err, null);
+            }
+            else {
+                callback(null, result);
+            }
+            
+            });
+        }
+        done();
+    });
 }

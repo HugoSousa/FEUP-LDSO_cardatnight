@@ -5,7 +5,7 @@
     <ion-content has-header="true" padding="true">
 
         <div class="list list-inset" ng-if="!hasCart">
-            <button style="margin-top: 60px" class="button button-positive btnRounded" ng-click="qrcode()">
+            <button style="margin-top: 60px" class="button button-positive btnRounded" ui-sref="qrcode">
                 <i class="icon ion-log-in"> Enter Establishment</i>
             </button>
         </div>
@@ -15,31 +15,31 @@
 
         <div class="row" style="margin-left: auto; margin-right: auto; margin-top:5%">
             <div class="col">
-                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-class="{disabled: !hasCart}" ng-click="goProducts()">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-class="{disabled: !hasCart}" ui-sref="products">
                     <i class="ionSize ion-ios7-paper"></i><br>Products
                 </button>
             </div>
             <div class="col">
-                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-class="{disabled: !hasCart}" ng-click="goOrders()">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-class="{disabled: !hasCart}" ui-sref="orders">
                     <i class="ionSize ion-ios7-pricetags"></i><br>Orders
                 </button>
             </div>
         </div>
         <div class="row" style="margin-left: auto; margin-right: auto; margin-bottom: 60px">
             <div class="col">
-                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goHistory()">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ui-sref="history">
                     <i class="ionSize ion-ios7-bookmarks"></i><br>History
                 </button>
             </div>
             <div class="col">
-                <button class="button button-positive icon-left ion btnBlockHome button-stable" ng-click="goAccount()">
+                <button class="button button-positive icon-left ion btnBlockHome button-stable" ui-sref="account">
                     <i class="ionSize ion-ios7-person"></i><br>Account
                 </button>
             </div>
         </div>
         
-        <div class="list list-inset" ng-if="hasCart">
-            <button style="margin-top: 60px" class="button button-positive btnRounded" ng-click="qrcode()">
+        <div class="list list-inset" ng-if="hasCart && cartPaid" style="margin-left: auto; margin-right: auto; margin-bottom: 60px">
+            <button style="margin-top: 60px" class="button button-positive btnRounded" ui-sref="qrcode">
                 <i class="icon ion-log-out"> Exit Establishment</i>
             </button>
         </div>

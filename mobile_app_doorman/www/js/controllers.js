@@ -44,12 +44,11 @@ app.controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular,
     if (loggedUser) $state.go('scan');
 
     $scope.loginSubmit = function () {
-        console.log("Login");
+        // console.log("Login");
         var bitArray = sjcl.hash.sha256.hash($scope.user.password);
         var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
 
 
-        console.log($scope.user);
         $ionicLoading.show({
             template: 'Logging in...'
         });
@@ -58,8 +57,8 @@ app.controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular,
             username: $scope.user.username,
             password: digest_sha256
         }).then(function (resp) {
-            console.log("ok");
-            console.log(resp);
+            // console.log("ok");
+            // console.log(resp);
 
             AuthService.login(resp.user, resp.access_token);
 
@@ -89,7 +88,7 @@ app.controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular,
                 template: '<p style="text-align: center">' + error + '</p>'
             });
 
-            console.log(resp);
+            // console.log(resp);
 
             $ionicLoading.hide();
         });
@@ -116,7 +115,7 @@ app.controller('NavCtrl', function ($scope, $state, $stateParams, $ionicPopup, $
             }).then(function (data) {
 
                 if (imageData.text.length > 0) {
-                    console.log("ok");
+                    // console.log("ok");
 
                     document.getElementById("checkImage").src = "ok.png"
                 }
@@ -126,7 +125,7 @@ app.controller('NavCtrl', function ($scope, $state, $stateParams, $ionicPopup, $
                     alert("Error reading QR Code! Please try again");
                 } else {
                     if (imageData.text.length > 0) {
-                        console.log("error");
+                        // console.log("error");
 
                         document.getElementById("checkImage").src = "error.png";
                     }

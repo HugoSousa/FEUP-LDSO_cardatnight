@@ -8,14 +8,14 @@
                 <label class="item item-input bottomRoundedForm">
                     <input type="password" placeholder="Password" name="password" ng-model="user.password" required>
                 </label>
-                <button class="button button-positive btnRounded" ng-click="login()">
+                <button class="button button-positive btnRounded">
                     Log In
                 </button>
                 </form>
-                <button class="button button-stable btnRounded" ng-click="register()">
+                <button class="button button-stable btnRounded" ui-sref="register">
                     Register
                 </button>
-            <p class="alignRight" ng-click="forgotPassword()">Forgot Password?</p>
+            <p class="alignRight" ui-sref="forgot-password">Forgot Password?</p>
         </div>
     </ion-content>
 </ion-view>

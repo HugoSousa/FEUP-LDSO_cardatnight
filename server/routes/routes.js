@@ -54,19 +54,14 @@ module.exports = function (app, io, passport) {
 	
 	app.post('/change-password', function (req, res) {
 
-        var username = req.body.username;
-        var currentPassword = req.body.currentPassword;
         var newPassword = req.body.newPassword;
-        var newPasswordRetyped = req.body.newPasswordRetyped;
-
+        var username = req.user.username;
+        
         res.status(422);
 
-        if (!username || !newPassword) res.json( { error: 'missing parameters' });
+        if (!newPassword) res.json( { error: 'missing parameters' });
         else {
-            if (newPassword != newPasswordRetyped) {
-                res.json({ error: 'new password and new password retyped dont match!' });
-            }
-            else {
+       
                 res.status(200);
 
                 db.changePassword(username, newPassword, function (err, result) {
@@ -74,32 +69,26 @@ module.exports = function (app, io, passport) {
                     else res.status(200).json(result);
 
                 });
-            }
+            
         }
 
     });
 
     app.post('/delete-account', function (req, res) {
 
-        var username = req.body.username;
+        var username = req.user.username;
 
-        res.status(422);
+        db.deleteAccount(username, function (err, result) {
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
 
-        if (!username) res.json( { error: 'missing parameters' });
-        else {
-            res.status(200);
-
-            db.deleteAccount(username, function (err, result) {
-                if (err) res.status(409).json(err);
-                else res.status(200).json(result);
-
-            });
-        }
+        });
+        
 
     });
 
     app.post('/add-product', function (req, res) {
-
+        // TODO fix by using manager login
         var establishmentid = req.body.establishmentid;
         var categoryid = req.body.categoryid;
         var name = req.body.name;
@@ -126,9 +115,9 @@ module.exports = function (app, io, passport) {
     			if (info && info.message) return res.status(401).json( { error: "Missing Credentials" });
     				else return res.status(401).json( { error: info });
     			}
-            
+
             var expires = moment().add(7,'days').valueOf();
-            var token = generateToken(user.username, expires);
+            var token = generateToken(user.id, user.username, expires);
             res.status(200).json({
                 access_token: token,
                 exp: expires,
@@ -138,8 +127,9 @@ module.exports = function (app, io, passport) {
         })(req,res);
     });
 	
-	function generateToken(username, expirationDate) {
+	function generateToken(userid, username, expirationDate) {
         var token = jwt.encode({
+            userid: userid,
             username: username,
             exp: expirationDate
         }, app.get('tokenSecret'));
@@ -409,7 +399,27 @@ module.exports = function (app, io, passport) {
             if (err) res.status(409).json(err);
             else res.status(200).json(result);
         });
-    })
+    });
+
+    app.get('/customer_history', function(req, res){
+        var customerid = req.user.id; 
+
+        db.getUserHistory(customerid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+        
+    });
+
+    app.get('/customer_history/:establishmentid', function(req, res){
+        var customerid = req.user.id; 
+
+        db.getUserHistoryByPlace(customerid, req.params.establishmentid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+        
+    });
 
     app.post('/notify', function(req, res){
 
@@ -450,6 +460,21 @@ module.exports = function (app, io, passport) {
         
     });
 	
+    app.post('/deliver', function(req, res){
+
+        var orderid = req.body.orderid;
+        res.status(422);
+
+        if (!orderid) res.json( { error: 'missing parameters' });
+        else{
+            db.deliverOrder(orderid, function(err, result){
+                if (err) res.status(409).json(err);
+                else res.status(200).json(result);
+            });
+        }   
+    });
+
+
 	app.post('/edit-product', function (req, res) {
 
         var productid = req.body.productid;
@@ -493,21 +518,11 @@ module.exports = function (app, io, passport) {
         });
 
     });
-    /*
-    io.on('connection', function (socket) {
-        console.log('a user connected');
 
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
-        });
 
-        socket.on('chat message', function (msg) {
-            io.emit('chat message', msg);
-            console.log('message: ' + msg);
-        });
-
-    });
-    */
+    /*-----------------------------------------------------------------------------------*/
+    /*--------------------------------------SOCKETS--------------------------------------*/
+    /*-----------------------------------------------------------------------------------*/
 
     var clients = []
 
