@@ -1,12 +1,15 @@
 var app = angular.module('controllers', []);
 
-app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $modalInstance,Restangular) {
+app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $state,$modalInstance,Restangular,alertService) {
 
 
   $scope.ok = function () {
+  	alertService.clear();
 	Restangular.all('delete-customer-consumption').post({"cartId":$scope.cartId}).then(function(resp){
             
-            console.log("Consumption deleted");
+            	alertService.add('success', 'Cart deleted successfully');
+				$state.go("customers");
+
         }, function(resp){
             console.log("Error notifying user");
         });
@@ -19,14 +22,15 @@ app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $modalInstance
   
 });
 
-app.controller('CustomerMarkPaidCtrl', function ($scope, $modalInstance,Restangular) {
+app.controller('CustomerMarkPaidCtrl', function ($scope, $modalInstance,Restangular,alertService) {
 
 
   $scope.ok = function (parameter) {
-    alert("Customer="+$scope.customer.cartid);
     Restangular.all('mark-cart-paid').post({"cartId":$scope.customer.cartid}).then(function(resp){
             
             $scope.customer.paid=true;
+            $scope.customer.shown=($scope.showAll=='showAll');
+            alertService.add('success', 'Customer cart paid successfully');
         }, function(resp){
             alert("Error notifying user");
         });
@@ -257,15 +261,21 @@ app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log
 		$scope.customers=data;
     $scope.showAllCustomers();
 	});
-  $scope.showAll='no';	
-  $scope.showAllCustomers=function()
+	$scope.showAll="no";	
+   $scope.showAllCustomers=function()
   {
+  	$scope.showAll=!$scope.showAll;
     for(var i = 0;i<$scope.customers.length;i++)
       if($scope.customers[i].paid)
       {
         if($scope.customers[i].shown==null)
           $scope.customers[i].shown=false;
-        else $scope.customers[i].shown=!$scope.customers[i].shown;
+        else{
+        $scope.customers[i].shown=!$scope.customers[i].shown;
+        if($scope.showAll=="no")
+        $scope.showAll="showAll";
+        else $scope.showAll="no";	
+        } 
       }
       else
         $scope.customers[i].shown=true;
