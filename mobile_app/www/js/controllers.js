@@ -493,7 +493,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     $scope.orderData = {};
 
     //TODO fix cart id, change to send token and change server
-    $scope.cartid = 1;
+    $scope.orderData.cartid = 1;
 
     $scope.orderData.quantity = 1;
     $scope.orderData.productid = $stateParams.productId;
@@ -544,7 +544,9 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
             var resource = Restangular.all('order');
 
             //TODO change to customPOST and send token
-            resource.post($scope.orderData).then(function (resp) {
+             resource.customPOST($scope.orderData,"" ,"" , {
+                'x-access-token': AuthService.token()
+            }).then(function (resp) {
                 //console.log("ok");
                 //console.log(resp);
 
