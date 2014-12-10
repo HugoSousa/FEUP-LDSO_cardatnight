@@ -15,9 +15,15 @@
 									<button class="btn btn-danger" ng-click="cancel()">No</button>
 								</div>
 	</script>
+	<div class="col-md-12">
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()">{{ alert.msg }}</alert>
+	</div>
 	<label class="checkbox-inline">
-                    <input type="checkbox" ng-click="showAllCustomers()"> <span> Show all customers </span>
+                    <input type="checkbox" ng-true-value="showAll" ng-false-value="no" ng-model="showAll"ng-click="showAllCustomers()"> <span> Show all customers </span>
      </label>
+     <label class="pull-right" style="display:inline-block;">
+				<input type="search" placeholder="Search" ng-model="filterName">
+	</label>
 	<table class="table" style="width:90%; margin:auto">
 		<tr>
 			<th>
@@ -29,7 +35,7 @@
 				</div>
 			</th>
 		</tr>
-		<tr ng-repeat="customer in customers | orderBy : 'entrancetime' : true" ng-show="customer.shown" >
+		<tr ng-repeat="customer in customers | orderBy : 'entrancetime' : true|filter:{name: filterName}" ng-show="customer.shown" >
 			<td valign="bottom">
 				<div class="row">
 					
