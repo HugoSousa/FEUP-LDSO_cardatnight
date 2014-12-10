@@ -1,7 +1,7 @@
 var app = angular.module('services', [])
 
 
-app.factory('AuthService', function(){
+app.factory('AuthService',['$window', function($window){
 
     var loggedUser;
 
@@ -10,10 +10,17 @@ app.factory('AuthService', function(){
             if (user && access_token) {
                 loggedUser = user;
                 loggedUser.access_token = access_token;
+				
+				if (loggedUser)
+                    $window.localStorage['user'] = JSON.stringify(loggedUser);
             }
         },
         loggedUser: function(){
-            return loggedUser;
+            return JSON.parse($window.localStorage['user']);
+        },
+		 logout: function() {
+            loggedUser = '';
+            $window.localStorage['user'] = '';
         },
         token: function(){
             //console.log("return token");
@@ -24,7 +31,7 @@ app.factory('AuthService', function(){
         }
     }
 
-});
+}]);
 
 app.factory('alertService', [
       '$rootScope', function($rootScope) {
