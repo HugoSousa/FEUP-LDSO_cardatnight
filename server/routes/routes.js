@@ -59,14 +59,14 @@ module.exports = function (app, io, passport) {
         
         res.status(422);
 
-        if (!newPassword) res.json( { error: 'missing parameters' });
+        if (!newPassword) res.json( { error: 'missing new password' });
         else {
        
                 res.status(200);
 
                 db.changePassword(username, newPassword, function (err, result) {
                     if (err) res.status(409).json(err);
-                    else res.status(200).json(result);
+                    else res.status(200).json({result: "success"});
 
                 });
             

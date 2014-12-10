@@ -154,8 +154,11 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                 // console.log('New password and new password retyped dont match!');
             });
         } else {
+            var bitArray = sjcl.hash.sha256.hash($scope.user.newPassword);
+            var digest_sha256 = sjcl.codec.hex.fromBits(bitArray);
 
-            resource.customPOST("", "", {newPassword : $scope.user.newPassword}, {
+
+            resource.customPOST({newPassword : digest_sha256},"" ,"" , {
                 'x-access-token': AuthService.token()
             }).then(function (resp) {
                 console.log(resp);
