@@ -1,0 +1,50 @@
+
+	<div class="page-header">
+		<h1>Incoming Orders</h1>
+	</div>
+
+        <form role="form" class="form-inline" style="margin-bottom: 30px; width:90%; margin-right:auto; margin-left: auto">
+            <div class="form-group">
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="ordered" ng-true-value='ordered' ng-false-value=''> <span> To be Notified </span>
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" ng-model="notified" ng-true-value='notified' ng-false-value=''> <span> To be Delivered </span>
+                </label>
+            </div>
+
+
+            <div class="form-group has-feedback pull-right">
+                <label class="control-label sr-only">Order Code</label>
+                <input type="text" class="form-control" placeholder="Order Code" ng-model="filterCode"/>
+                <i class="form-control-feedback glyphicon glyphicon-search"></i>
+            </div>
+        </form>
+
+	<table class="table" style="width:90%; margin:auto">
+		<tr>
+			<th>
+				<div class="row">
+					<div class="col-md-3">Time</div>
+					<div class="col-md-3">Code</div>
+					<div class="col-md-3">Product</div>
+					<div class="col-md-1">Qty.</div>
+					<div class="col-md-1"></div>
+					<div class="col-md-1"></div>
+				</div>
+			</th>
+		</tr>
+		<tr ng-repeat="order in orders | filter:showOrder | filter:{code:filterCode}">
+			<td valign="bottom">
+				<div class="row" >
+					<div class="col-md-3">{{order.orderstime}}</div>
+					<div class="col-md-3">{{order.code}}</div>
+					<div class="col-md-3">{{order.productname}}</div>
+					<div class="col-md-1">{{order.quantity}}</div>
+					<div class="col-md-1"><span ng-class="{'disabled': order.orderstate == 'notified'}" tooltip="mark order as ready" style="color:steelblue; font-size: 150%; text-align: center" class="glyphicon glyphicon-bullhorn incoming-order-span" ng-click="order.orderstate == 'ordered' && notifyOrder(order.ordersid)"></span></div>
+					<div class="col-md-1"><span ng-class="{'disabled': order.orderstate == 'ordered'}" tooltip="mark order as received" style="color:red; font-size: 150%; text-align: center" class="glyphicon glyphicon-remove-circle incoming-order-span" ng-click="order.orderstate == 'notified' && removeOrder(order.ordersid)"></span></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+	</div>

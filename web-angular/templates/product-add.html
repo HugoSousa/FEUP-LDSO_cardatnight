@@ -1,0 +1,49 @@
+<h1>Add product</h1>
+
+<br>
+
+<script type="text/ng-template" id="confirmAdd.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Confirm</h3>
+    </div>
+    <p>Are you sure you want to add this product?</p>
+    <div class="modal-footer">
+        <button class="btn btn-success" ng-click="addProduct()">Yes</button>
+        <button class="btn btn-danger" ng-click="cancel()">No</button>
+    </div>
+</script>
+	
+<form class="simple-form" name="productForm" ng-submit="open()" novalidate>
+			<div class="col-lg-4">
+           <br>
+			Category: 
+			<select ng-model="product.categoryid" class="form-control" name="category" required>
+				<option value=1>Cocktail</option>
+				<option value=2>Shot</option>
+				<option value=3>Bebidas espirituosas</option>
+				<option value=4>Refrigerante</option>
+				<option value=5>Whiskys</option>
+				<option value=6>outros</option>
+			</select>
+			
+			<p class="help-block" ng-if="productForm.category.$error.required"><font color="red">The product's category is required</font></p>
+			<div class="help-block" ng-if="!productForm.category.$error.required"><br></div>
+
+			Name: <input type="text" ng-model="product.name" class="form-control" name="name" required/>
+			<p class="help-block" ng-if="productForm.name.$error.required"><font color="red">The product's name is required</font></p>
+			<div class="help-block" ng-if="!productForm.name.$error.required"><br></div>
+
+			Description: 
+			<br>
+			<textarea rows="4" cols="50" style="resize:none" class="form-control" name="description" ng-model="product.description"> </textarea>
+			<br>
+			<br>
+            Price <input type="text" name="price" ng-model="product.price" class="form-control" required ng-pattern="/^\d{0,9}(\.\d{1,9})?$/" />
+			<br>
+			<p class="help-block" ng-if="productForm.price.$error.required"><font color="red">The product's price is required</font></p>
+			<p class="help-block" ng-if="!productForm.price.$error.required && productForm.price.$error.pattern"><font color="red">Not valid price!</font></p>
+			<div class="help-block" ng-if="!productForm.price.$error.required && !productForm.price.$error.pattern"><br></div>
+
+			<button class="btn" ng-disabled="!productForm.$valid"> Add Product </button>
+			</div>
+        </form>
