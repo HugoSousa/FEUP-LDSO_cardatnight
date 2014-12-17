@@ -398,6 +398,15 @@ module.exports = function (app, io, passport) {
         });
 
     });    
+	
+	app.get('/producthistory/:productid', function(req, res){
+
+	db.getProductHistory(req.params.productid, req.params.establishmentid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
+    });  
 
     app.get('/incomingorders/:estabid', function(req, res){
         db.getIncomingOrders(req.params.estabid, function(err, result){

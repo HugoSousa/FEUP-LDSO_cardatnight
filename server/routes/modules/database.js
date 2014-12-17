@@ -655,6 +655,29 @@ exports.getProduct = function (productId, callback) {
 
 }
 
+exports.getProductHistory = function (productId, establishmentId, callback) {
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect do database' }, null);
+        }
+        else {
+
+            client.query({ text: "SELECT i AS salesdate, COALESCE(count, 0) AS sales FROM generate_series(current_date - 90, current_date, '1 day'::interval) i LEFT JOIN (SELECT date_trunc('day',orders.orderstime) AS date, product.productid, COUNT(*) FROM orders, product, establishment WHERE product.establishmentid = establishment.establishmentid AND orders.orderstime::date > current_date - interval '90' day AND orders.productid = product.productid AND product.productid = $1 AND establishment.establishmentid = $2 AND deleted = false GROUP BY orders.orderstime, product.productid ORDER BY orders.orderstime) a ON i = a.date", name: 'get product history', values: [productId, establishmentId] }, function (err, result) {
+                if (err) {
+                    //any specific error?
+                    callback({ error: "Error occurred" }, null);
+                }
+                else {
+                    callback(null, result.rows);
+                }
+            });
+        }
+
+        done();
+    });
+
+}
+
 exports.getActualOrders = function(cartid, callback){
 
     pg.connect(database_url , function (err, client, done) {
