@@ -1,4 +1,4 @@
-﻿--data
+--data
 
 
 --establishment
@@ -126,6 +126,22 @@ insert into ordercode(ordercodeid, code) values(7, 'alright sir');
 insert into ordercode(ordercodeid, code) values(8, 'thanks thanks thanks');
 insert into ordercode(ordercodeid, code) values(9, 'good taste');
 insert into ordercode(ordercodeid, code) values(10, 'red yellow green');
+insert into ordercode(ordercodeid, code) values(11, 'hot sauce');
+insert into ordercode(ordercodeid, code) values(12, 'known dude');
+insert into ordercode(ordercodeid, code) values(13, 'free bit');
+insert into ordercode(ordercodeid, code) values(14, 'open mind');
+insert into ordercode(ordercodeid, code) values(15, 'perfect code');
+insert into ordercode(ordercodeid, code) values(16, 'puzzling pajama');
+insert into ordercode(ordercodeid, code) values(17, 'chubby potion');
+insert into ordercode(ordercodeid, code) values(18, 'learned swallow');
+insert into ordercode(ordercodeid, code) values(19, 'hearty dumbo');
+insert into ordercode(ordercodeid, code) values(20, 'other joker');
+insert into ordercode(ordercodeid, code) values(21, 'greedy orange');
+insert into ordercode(ordercodeid, code) values(22, 'flamable burritos');
+insert into ordercode(ordercodeid, code) values(23, 'dearest cake');
+insert into ordercode(ordercodeid, code) values(24, 'mean rice');
+insert into ordercode(ordercodeid, code) values(25, 'fuzzy icecream');
+
 
 --orders 
 insert into orders(ordersTime,orderState,cartId,productid,quantity,ordercodeid) values ('2014-09-01 21:00:00','delivered',1,1,1,1);
