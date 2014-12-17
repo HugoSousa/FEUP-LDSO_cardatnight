@@ -38,6 +38,7 @@ app.service('AlertPopupService', ['$ionicPopup', function ($ionicPopup) {
         this.createPopup = function (headerMessage, bodyMessage, okAction) {
             $ionicPopup.alert({
                 title: headerMessage,
+                buttons:[{},{type: 'button-stable'}],
                 content: '<p style="text-align:center">' + bodyMessage + '</p>'
             }).then(function (res) {
                 if (okAction)
@@ -64,8 +65,8 @@ app.service('StateManager', ['$state', '$stateParams', '$rootScope', function($s
 
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    //RestangularProvider.setBaseUrl('http://localhost:1337');
-    RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+    RestangularProvider.setBaseUrl('http://localhost:1337');
+    //RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
 
     RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 5 seconds
 
@@ -173,7 +174,7 @@ app.directive("counter", function() {
         scope: {
             value: "=value"
         },
-        template: "<div class=\"input-group\"><span class=\"input-group-btn\" ng-click=\"minus()\"><button class=\"btn btn-default\"><span class=\"glyphicon glyphicon-minus\"></span></button></span><input type=\"text\" class=\"form-control text-center\" ng-value=\"scope\" ng-model=\"value\" ng-change=\"changed()\" disabled><span class=\"input-group-btn\" ng-click=\"plus()\"><button class=\"btn btn-default\"><span class=\"glyphicon glyphicon-plus\"></span></button></span></div>",
+        template: "<div class=\"input-group\"><span class=\"input-group-btn\" ng-click=\"minus()\"><button class=\"button button-default\"><span class=\"glyphicon glyphicon-minus\"></span></button></span><input style=\"height:50px\"type=\"text\" class=\"form-control text-center\" ng-value=\"scope\" ng-model=\"value\" ng-change=\"changed()\" disabled><span class=\"input-group-btn\" ng-click=\"plus()\"><button class=\"button button-default\"><span class=\"glyphicon glyphicon-plus\"></span></button></span></div>",
         link: function(scope, element, attributes) {
             var max, min, setValue, step;
             max = void 0;
