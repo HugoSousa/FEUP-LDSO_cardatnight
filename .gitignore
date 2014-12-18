@@ -26,3 +26,5 @@ server/routes/routes.js.rej
 src/server/Server.sln
 mobile_app/projectFilesBackup/.idea/workspace.xml
 .brackets.json
+web-angular/.idea/jsLibraryMappings.xml
+web-angular/projectFilesBackup/.idea/workspace.xml

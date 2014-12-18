@@ -139,7 +139,6 @@ module.exports = function (app, io, passport) {
 
 
     app.post('/order', function (req, res) {
-        console.log(req.user);
         db.getActiveCart(req.user,  function (err, cart) {
             if (err || !cart) 
                 res.status(409).json({error: 'No cart found'});
@@ -167,21 +166,30 @@ module.exports = function (app, io, passport) {
                                 db.getUnusedCodesByEstablishment(result1.rows[0].establishmentid, function (err2, result2) {
                                     if (err2) res.status(409).json(err2);
                                     else {
-                                        /*
-                            for(var i = 0; i < result2.rows.length; i++){
-                                console.log("AVAILABLE CODE: " + result2.rows[i].code);
-                            }
-                            */
 
                                         //selecionar password aleatoria
                                         var randomNumber = Math.floor((Math.random() * result2.rows.length));
                                         var code = result2.rows[randomNumber].ordercodeid;
 
-                                        //console.log("SELECTED CODE: " + code);
+                                        db.getProduct(productid, function(err3, result3){
+                                            if (err) res.status(409).json(err3);
+                                            else{
+                                                //enviar para todos deste estabelecimento
+                                                for(var i=0; i < managers_employees.length; i++){
+                                                    if(managers_employees[i].establishmentid == result1.rows[0].establishmentid){
+                                                        console.log("emiting to employee/manager");
+                                                        var toSocket = managers_employees[i].clientId;
+                                                        var product = {date: new Date().toJSON(), code: result2.rows[randomNumber].code, product: result3[0].name, quantity: quantity};
+                                                        //enviar objeto com os dados da order
+                                                        io.to(toSocket).emit('new_order', JSON.stringify(product));
+                                                    }
+                                                }
 
-                                        db.addOrder('ordered', cartid, productid, quantity, code.toString(), function (err3, result3) {
-                                            if (err3) res.status(409).json(err3);
-                                            else res.status(200).json(result3);
+                                                db.addOrder('ordered', cartid, productid, quantity, code.toString(), function (err4, result4) {
+                                                    if (err4) res.status(409).json(err4);
+                                                    else res.status(200).json(result4);
+                                                });
+                                            }
                                         });
                                     }
 
@@ -536,7 +544,8 @@ module.exports = function (app, io, passport) {
     /*--------------------------------------SOCKETS--------------------------------------*/
     /*-----------------------------------------------------------------------------------*/
 
-    var clients = []
+    var clients = [];
+    var managers_employees = [];
 
     io.on('connection', function (socket) {
 
@@ -568,6 +577,18 @@ module.exports = function (app, io, passport) {
 
         });
 
+        socket.on('storeManagerEmployeeInfo', function (data) {
+            console.log("STORE MANAGER/EMPLOYEE INFO");
+
+            var info = new Object();
+            info.establishmentid = data.establishmentid;
+            info.clientId = socket.id;
+            managers_employees.push(info);
+
+            printEmps();
+
+        });
+
 
         socket.on('removeClientInfo', function (data){
             console.log("REMOVE CLIENT INFO: " + data.socketid);
@@ -590,6 +611,8 @@ module.exports = function (app, io, passport) {
         })
 
         socket.on('disconnect', function () {
+
+            var removed = false;
             //remove the client from array
             for(var a=0; a < clients.length; a++){
 
@@ -598,15 +621,28 @@ module.exports = function (app, io, passport) {
                 if(clients[a].clientId == socket.id){
                     console.log("REMOVE THIS FROM CLIENTS");
                     clients.splice(a,1);
+                    removed = true;
                     break;
                 }
             }
 
+            if(! removed){
+                for(var a=0; a < managers_employees.length; a++){
+
+                    console.log("ID: " + managers_employees[a].clientId);
+                    if(managers_employees[a].clientId == socket.id){
+                        console.log("REMOVE THIS FROM MANAGERS_EMPLOYEES");
+                        managers_employees.splice(a,1);
+                        removed = true;
+                        break;
+                    }
+                }
+            }
 
             console.log(socket.id);
             console.log('socket disconnected');
             printClients();
-
+            printEmps();
         });
 
 
@@ -624,6 +660,13 @@ module.exports = function (app, io, passport) {
             console.log("No clients! \n");
     }
 
-    //http.listen(3000);
+    function printEmps(){
+        for(var i=0; i < managers_employees.length; i++){
+            console.log(i+1 + " - " + managers_employees[i].establishmentid  + " -> " + managers_employees[i].clientId);
+            console.log("");
+        }
 
+        if(managers_employees.length == 0)
+            console.log("No managers_employees! \n");
+    }
 }

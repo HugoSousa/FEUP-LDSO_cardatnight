@@ -70,12 +70,25 @@ app.controller('SidebarCtrl', function($scope, $state){
 });
 
 
-app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular,alertService,AuthService){
+app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular, alertService, AuthService, SocketService){
 
-    $scope.ordered = 'ordered';
+	if(! SocketService.getSocket())
+		SocketService.connectSocket(AuthService.loggedUser().establishmentid);
+
+	$scope.ordered = 'ordered';
     $scope.notified = 'notified';
     $scope.orders = null;
 	alertService.clear();
+
+
+	SocketService.getSocket().on('new_order', function(data) {
+		//console.log("NEW ORDER");
+		//console.log(data);
+		var parsed_data = JSON.parse(data);
+		$scope.orders.push({orderstime: parsed_data.date, code: parsed_data.code, name: parsed_data.product, quantity: parsed_data.quantity, orderstate: "ordered"});
+		$scope.$apply();
+	});
+
 
     $scope.showOrder = function(order){
         return order.orderstate === $scope.ordered || order.orderstate === $scope.notified;
@@ -154,16 +167,15 @@ app.controller('ProductsCtrl', function($scope, $stateParams, Restangular,alertS
 });
 
 app.controller('ProductAdd', function($state, $scope, $stateParams,Restangular,$scope, $modal) {
-		
-		
-		$scope.open = function (size) {
-			$scope.modalInstance = $modal.open({
-			templateUrl: 'confirmAdd.html',
-			controller: 'ProductAddConfirm',
-			size: size,
-			scope: $scope
-			});
-		};
+
+	$scope.open = function (size) {
+		$scope.modalInstance = $modal.open({
+		templateUrl: 'confirmAdd.html',
+		controller: 'ProductAddConfirm',
+		size: size,
+		scope: $scope
+		});
+	};
 });
 
 
@@ -268,10 +280,10 @@ app.controller('ProductEditConfirm', function($state, $scope, $stateParams,Resta
 
 app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log, AuthService) {
 
-	console.log(AuthService.loggedUser().establishmentid);
+	//console.log(AuthService.loggedUser().establishmentid);
 	var customer = Restangular.one('customers').getList(AuthService.loggedUser().establishmentid).then(function(data){
-    console.log(JSON.stringify(data));
-		$scope.customers=data;
+    //console.log(JSON.stringify(data));
+	$scope.customers=data;
     $scope.showAllCustomers();
 	});
   $scope.showAll='no';	
@@ -344,18 +356,16 @@ app.controller('CustomerCtrl',function($state, $scope, $stateParams, Restangular
       templateUrl: 'myModalContent.html',
       controller: 'CustomerDeleteConsumptionCtrl',
       size: size,
-	  scope:$scope,
-      
+	  scope:$scope
     });
 	}
 	
 
 });
 
-app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, AuthService) {
+app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, SocketService) {
 
 	$scope.submitted= false;
-	
 	$scope.invalidInput= false;
 	
 	$scope.loginSubmit = function() {
@@ -372,7 +382,8 @@ app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, A
 			{
 				if(resp.user.permission == "manager" || resp.user.permission  == "employee")
 				{
-					
+					//console.log("CONNECT SOCKET");
+					//SocketService.connectSocket(resp.user.establishmentid);
 					AuthService.login(resp.user, resp.access_token);
             
 					$state.go('incoming-orders');
@@ -419,6 +430,4 @@ app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService, A
 	
 	
 	}
-	
 });
-

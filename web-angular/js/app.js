@@ -8,8 +8,8 @@ app.run(function() {
 
 app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-   //RestangularProvider.setBaseUrl('http://localhost:1337');
-   RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
+   RestangularProvider.setBaseUrl('http://localhost:1337');
+   //RestangularProvider.setBaseUrl('https://nightout-app.herokuapp.com');
 
     RestangularProvider.setDefaultHttpFields({timeout: 10000}); // set timeout of 10 seconds
 
@@ -104,7 +104,16 @@ app.config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
                     controller: 'CustomerCtrl'
                 }
         }})
-        
+
+        .state('logout', {
+            onEnter: function(SocketService, $window) {
+                console.log("disconnect");
+                SocketService.disconnect();
+            },
+            controller: function($state) {
+                $state.go('login');
+            }
+        })
 
     $urlRouterProvider.otherwise('/login');
 
