@@ -35,7 +35,7 @@ module.exports = function (app, io, passport) {
     });
 
     app.post('/delete-product', function (req, res) {
-
+        // TODO autenticacao funcionario
         var id = req.body.productid;
 
         res.status(422);
@@ -264,12 +264,24 @@ module.exports = function (app, io, passport) {
         });
     });
 
-    app.get('/actualorders/:cartid', function (req, res) {
+    app.get('/actualorders', function (req, res) {
 
-        db.getActualOrders(req.params.cartid, function(err, result){
-            if (err) res.status(409).json(err);
-            else res.status(200).json(result);
-        })
+        db.getActiveCart(req.user, function(err, cart) {
+            if (err) res.status(409).json({error: err});
+            else {
+                if (cart) {
+                    db.getActualOrders(cart.cartid, function(err, result){
+                        if (err) res.status(409).json(err);
+                        else res.status(200).json(result);
+                    })
+
+                }
+                else {
+                    res.status(200).json({error: 'no cart found', status: 'none'});
+                }
+            }
+        });
+
     });
 
 
@@ -406,6 +418,15 @@ module.exports = function (app, io, passport) {
         });
 
     });    
+	
+	app.get('/producthistory/:productid', function(req, res){
+
+	db.getProductHistory(req.params.productid, req.params.establishmentid, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
+    });  
 
     app.get('/incomingorders/:estabid', function(req, res){
         db.getIncomingOrders(req.params.estabid, function(err, result){

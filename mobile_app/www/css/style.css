@@ -2,7 +2,6 @@
 .btnBlockHome{
     height: 25vh;
     width: 100%;
-    border-radius: 5px;
     font-family: "Helvetica";
 }
 
@@ -28,6 +27,13 @@ ion-item > a.item-content{
     width: 100%;
     margin-top: 10px;
 }
+
+
+.btnSquare{
+    width: 100%;
+    margin-top: 10px;
+}
+
 
 .formRounded{
     border-radius: 5px !important;
@@ -127,3 +133,22 @@ i.initial-icon.ion-loading-c {
     -ms-flex-align: center;
     align-items: center;
 }
+
+h1.title.ng-binding {
+    color: white;
+    
+}
+
+.button.button-stable {
+    background-color: #F7F7F7;
+    
+}
+
+.button.button-positive {
+ color: #ffffff;
+background-color: #008cba;
+border-color: #0079a1;   
+    
+}
+
+

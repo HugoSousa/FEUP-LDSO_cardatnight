@@ -598,7 +598,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         noBackdrop: false,
         template: 'Loading'
     });
-    Restangular.all('actualorders').customGET($scope.loggedUser.cartid, {}, {
+    Restangular.all('actualorders').customGET("", {}, {
         'x-access-token': AuthService.token()
     }).then(function (data) {
         $scope.orders = data;

@@ -94,6 +94,7 @@ module.exports = function(app) {
     //customer app routes
     app.all("/checklogin", permission_customer);
 	app.all("/getcart", permission_customer);
+    app.all("/actualorders", permission_customer);
     app.all("/order", permission_customer);
     app.all("/change-password",permission_customer);
     app.all("/delete-account",permission_customer);

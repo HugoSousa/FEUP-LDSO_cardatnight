@@ -53,7 +53,7 @@
 
 .btn:focus, .btn:active, .btn:hover {
     outline: 0px !important;
-    background-color: #fff !important;
+    background-color: #ff0000 !important;
 }
 
 a {
@@ -62,8 +62,8 @@ a {
 
 a:hover
 {
-    text-decoration:none !important;
-    cursor:pointer !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
 }
 
 .centerContent{
@@ -98,5 +98,5 @@ a:hover
 }
 
 .background, .background .pane, .background .item, .background .item-complex .item-content{
-    background-color: #222222;
+    background-color: #808080;
 }
