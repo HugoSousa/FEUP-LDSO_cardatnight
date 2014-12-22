@@ -1,4 +1,4 @@
-var app = angular.module('controllers', ['highcharts-ng']);
+var app = angular.module('controllers', ['highcharts-ng', 'vr.directives.slider']);
 
 app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $state, $modalInstance, Restangular, alertService) {
 
@@ -218,11 +218,14 @@ app.controller('ProductAddConfirm', function ($state, $scope, $stateParams, Rest
 
 app.controller('ProductCtrl', function ($state, $scope, $stateParams, Restangular, $modal, alertService, AuthService) {
 
+    $scope.days = 90;
+
     alertService.clear();
     $scope.permission = AuthService.loggedUser().permission;
     var product = Restangular.one('product', $stateParams.productId).get().then(function (data) {
         $scope.product = data[0];
         console.log($scope.product);
+        $scope.updateChart();
     })
 
     $scope.openEdit = function (size) {
@@ -244,75 +247,78 @@ app.controller('ProductCtrl', function ($state, $scope, $stateParams, Restangula
         });
     };
 
-    var xdata = [];
-    var ydata = [];
 
-    Restangular.all('producthistory').customGET($stateParams.productId, {}, {
-        'x-access-token': AuthService.token()
-    }).then(function (data) {
+    $scope.updateChart = function() {
+        var xdata = [];
+        var ydata = [];
 
-        for (var i = 0; i < data.length; i++) {
+        Restangular.all('producthistory').customGET($stateParams.productId + "/" + $scope.days, {}, {
+            'x-access-token': AuthService.token()
+        }).then(function (data) {
 
-            var obj = data[i];
+            for (var i = 0; i < data.length; i++) {
 
-            for (var key in obj) {
-                if (key == "salesdate") {
-                    xdata.push(obj[key]);
-                } else {
-                    if (key == "sales") {
-                        ydata.push(parseInt(obj[key]));
-                    }
-                }
-            }
-        }
-        
-        ydata.push(1);
+                var obj = data[i];
 
-        console.log(JSON.stringify(ydata));
-
-        $scope.chartConfig = {
-            options: {
-                chart: {
-                    type: 'line',
-                    zoomType: 'x'
-                },
-                colors: ['#0080ff'],
-                plotOptions: {
-                    series: {
-                        cursor: 'pointer',
-                        point: {
-                            events: {
-                                click: function (e) {
-                                    // console.log("Click");
-                                }
-                            }
-                        },
-                        marker: {
-                            lineWidth: 1,
-                            symbol: 'circle'
+                for (var key in obj) {
+                    if (key == "salesdate") {
+                        xdata.push(obj[key]);
+                    } else {
+                        if (key == "sales") {
+                            ydata.push(parseInt(obj[key]));
                         }
                     }
                 }
+            }
 
-            },
-            series: [{
-                data: ydata
+            //ydata.push(1);
+
+            console.log(JSON.stringify(ydata));
+
+            $scope.chartConfig = {
+                options: {
+                    chart: {
+                        type: 'line',
+                        zoomType: 'x'
+                    },
+                    colors: ['#0080ff'],
+                    plotOptions: {
+                        series: {
+                            cursor: 'pointer',
+                            point: {
+                                events: {
+                                    click: function (e) {
+                                        // console.log("Click");
+                                    }
+                                }
+                            },
+                            marker: {
+                                lineWidth: 1,
+                                symbol: 'circle'
+                            }
+                        }
+                    }
+
+                },
+                series: [{
+                    data: ydata
                 }],
-            title: {
-                text: 'Sales'
-            },
-            xAxis: {
-                type: "category",
-                labels: {
-                    enabled: false
-                }
-            },
-            yAxis: {
-                min: 0
-            },
-            loading: false
-        }
-    });
+                title: {
+                    text: 'Sales of last ' + $scope.days + ' days'
+                },
+                xAxis: {
+                    type: "category",
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    min: 0
+                },
+                loading: false
+            }
+        });
+    }
 });
 
 app.controller('ProductDeleteConfirm', function ($state, $scope, $stateParams, Restangular, $modalInstance, alertService) {

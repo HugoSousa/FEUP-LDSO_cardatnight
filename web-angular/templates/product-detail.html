@@ -1,3 +1,4 @@
+<div ng-controller="ProductCtrl">
 <h3>Product</h3>
 
 <script type="text/ng-template" id="confirmEdit.html">
@@ -32,7 +33,7 @@
 </div>
 
 <div class="col-lg-4">
-    <form class="simple-form" name="productForm" ng-controller="ProductCtrl" ng-submit="openEdit()" novalidate>
+    <form class="simple-form" name="productForm" ng-submit="openEdit()" novalidate>
         <br>Category:
         <select ng-model="product.categoryid" name="category" class="form-control" ng-disabled="permission=='employee'" selected={{product.categoryid}} required>
             <option value=1>Cocktail</option>
@@ -77,5 +78,16 @@
 
 
 <div class="col-lg-8">
-    <highchart id="chart1" config="chartConfig"></highchart>
+    <div style="text-align:center"><label>Days</label></div>
+    <div style="margin-left: 5%">
+        <slider style="width:80%"
+                ng-model="days"
+                floor="1"
+                ceiling="365"
+                step="1">
+        </slider>
+        <button  style="margin-left: 15px"class="btn" ng-click="updateChart()">Update Chart</button>
+    </div>
+    <highchart id="chart1" config="chartConfig" ></highchart>
+</div>
 </div>

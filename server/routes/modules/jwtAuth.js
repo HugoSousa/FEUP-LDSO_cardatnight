@@ -100,6 +100,7 @@ module.exports = function(app) {
     app.all("/delete-account",permission_customer);
     app.all("/customer_history",permission_customer);
     app.all("/customer_history/*",permission_customer);
+    app.all("/products",permission_customer);
 
     //manager/employee routes
     app.all("/delete-product",permission_manager);

@@ -479,8 +479,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
         showBackdrop: false
     });
 
-    //hardcoded establishment id=4
-    var products = Restangular.one('products').getList(4).then(function (data) {
+    var products = Restangular.one('products').customGET("", {}, {'x-access-token': AuthService.token()}).then(function (data) {
         $scope.products = data;
 
         $ionicLoading.hide();
@@ -803,53 +802,49 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 .controller('InitialCtrl', function ($scope, $stateParams, AuthService, $state, Restangular, AlertPopupService, FooterService, SocketService, $window) {
 
     FooterService.changeFooter(false);
-    setTimeout(function () {
 
-        //verificar se o user ja esta logado e se token é valido
-        if ($stateParams.username) {
-            $scope.user = {
-                username: ''
-            };
-            $scope.user.username = $stateParams.username;
-        }
+    //verificar se o user ja esta logado e se token é valido
+    if ($stateParams.username) {
+        $scope.user = {
+            username: ''
+        };
+        $scope.user.username = $stateParams.username;
+    }
 
-        //var socket = $window.localStorage['socket'];
+    //var socket = $window.localStorage['socket'];
 
-        var loggedUser = AuthService.loggedUser();
-        //console.log(loggedUser);
-        //console.log(AuthService.token());
+    var loggedUser = AuthService.loggedUser();
+    //console.log(loggedUser);
+    //console.log(AuthService.token());
 
-        if (loggedUser) {
+    if (loggedUser) {
 
-            Restangular.all('checklogin').customGET("", {}, {
-                'x-access-token': AuthService.token()
-            }).then(function (data) {
+        Restangular.all('checklogin').customGET("", {}, {
+            'x-access-token': AuthService.token()
+        }).then(function (data) {
 
-                // console.log(data);
+            // console.log(data);
 
-                if (data.result != "success") {
-                    AlertPopupService.createPopup("Error", "Your login has expired. Please login again.");
-                    $state.go('login');
-                } else {
-                    AuthService.login(loggedUser, AuthService.token());
-
-                    //generate a new socket and remove the old one on the server
-                    SocketService.connectSocket(loggedUser.username);
-                    SocketService.removeOld($window.localStorage['socket']);
-
-                    $state.go("menu");
-                }
-            }, function (data) {
-                AlertPopupService.createPopup("Error", "Couldn't connect to server. Please verify your connection.");
+            if (data.result != "success") {
+                AlertPopupService.createPopup("Error", "Your login has expired. Please login again.");
                 $state.go('login');
-            });
-        } else {
+            } else {
+                AuthService.login(loggedUser, AuthService.token());
+
+                //generate a new socket and remove the old one on the server
+                SocketService.connectSocket(loggedUser.username);
+                SocketService.removeOld($window.localStorage['socket']);
+
+                $state.go("menu");
+            }
+        }, function (data) {
+            AlertPopupService.createPopup("Error", "Couldn't connect to server. Please verify your connection.");
             $state.go('login');
-        }
+        });
+    } else {
+        $state.go('login');
+    }
 
-        FooterService.changeFooter(true);
-
-    }, 1500);
-
+    FooterService.changeFooter(true);
 
 })

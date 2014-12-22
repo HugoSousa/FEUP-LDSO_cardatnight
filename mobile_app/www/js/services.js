@@ -12,7 +12,7 @@ app.factory('AuthService', ['$window', function($window){
                 loggedUser = user;
                 loggedUser.access_token = access_token;
                 //TODO remover isto - hardcoded cartid
-                loggedUser.cartid = 1;
+                //loggedUser.cartid = 1;
                 if (loggedUser)
                     $window.localStorage['user'] = JSON.stringify(loggedUser);
             }
@@ -34,6 +34,9 @@ app.factory('AuthService', ['$window', function($window){
         },
         setEstablishment: function(establishmentname){
             loggedUser.establishmentname = establishmentname;
+        },
+        leaveEstablishment: function(){
+            loggedUser.establishmentname = "";
         }
     }
 

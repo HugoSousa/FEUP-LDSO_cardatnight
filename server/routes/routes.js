@@ -392,6 +392,7 @@ module.exports = function (app, io, passport) {
         });
 
     });
+
     app.get('/customer/:cartid', function(req, res) {
         db.getCustomerData(req.params.cartid, function(err, result) {
             if (err) res.status(409).json(err);
@@ -400,13 +401,24 @@ module.exports = function (app, io, passport) {
     });
 
 
-    app.get('/products/:estabid', function(req, res){
+    app.get('/products', function(req, res){
+        db.getActiveCart(req.user, function(err, cart){
+            if (err) res.status(409).json(err);
+            else {
+                db.getProductsEstablishment(cart.establishmentid, function(err, result){
+                    if (err) res.status(409).json(err);
+                    else res.status(200).json(result);
+                });
+            }
+        });
+    });
 
-        db.getProductsEstablishment(req.params.estabid, function(err, result){
+    app.get('/products/:establishmentid', function(req, res){
+
+        db.getProductsEstablishment(req.params.establishmentid, function(err, result){
             if (err) res.status(409).json(err);
             else res.status(200).json(result);
         });
-
     });
 
 
@@ -419,9 +431,9 @@ module.exports = function (app, io, passport) {
 
     });    
 	
-	app.get('/producthistory/:productid', function(req, res){
+	app.get('/producthistory/:productid/:days', function(req, res){
 
-	db.getProductHistory(req.params.productid, req.params.establishmentid, function(err, result){
+	db.getProductHistory(req.params.productid, req.params.establishmentid, req.params.days, function(err, result){
             if (err) res.status(409).json(err);
             else res.status(200).json(result);
         });
