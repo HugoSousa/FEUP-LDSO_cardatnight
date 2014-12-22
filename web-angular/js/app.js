@@ -34,11 +34,10 @@ app.config(function ($stateProvider, $urlRouterProvider, RestangularProvider) {
 
             // the child views will be defined here (absolutely named)
             'content@products': {
-                templateUrl: 'templates/products.html'
+                templateUrl: 'templates/products.html',
+                controller: 'ProductsCtrl'
             }
-        },
-
-        controller: 'ProductsCtrl'
+        }
     })
 
     .state('product-detail', {
@@ -53,9 +52,7 @@ app.config(function ($stateProvider, $urlRouterProvider, RestangularProvider) {
             'content@product-detail': {
                 templateUrl: 'templates/product-detail.html'
             }
-        },
-
-        controller: 'ProductCtrl'
+        }
     })
 
     .state('product-add', {
@@ -68,11 +65,10 @@ app.config(function ($stateProvider, $urlRouterProvider, RestangularProvider) {
 
             // the child views will be defined here (absolutely named)
             'content@product-add': {
-                templateUrl: 'templates/product-add.html'
+                templateUrl: 'templates/product-add.html',
+                controller: 'ProductAdd'
             }
-        },
-
-        controller: 'ProductAdd'
+        }
     })
 
     .state('incoming-orders', {
@@ -86,11 +82,10 @@ app.config(function ($stateProvider, $urlRouterProvider, RestangularProvider) {
 
             // the child views will be defined here (absolutely named)
             'content@incoming-orders': {
-                templateUrl: 'templates/incoming-orders.html'
+                templateUrl: 'templates/incoming-orders.html',
+                controller: 'IncomingOrdersCtrl'
             }
-        },
-
-        controller: 'IncomingOrdersCtrl'
+        }
     })
 
     .state('customers', {
@@ -103,11 +98,10 @@ app.config(function ($stateProvider, $urlRouterProvider, RestangularProvider) {
 
             // the child views will be defined here (absolutely named)
             'content@customers': {
-                templateUrl: 'templates/customers.html'
+                templateUrl: 'templates/customers.html',
+                controller: 'CustomersCtrl'
             }
-        },
-
-        controller: 'CustomersCtrl'
+        }
     })
 
     .state('customer', {
@@ -120,10 +114,10 @@ app.config(function ($stateProvider, $urlRouterProvider, RestangularProvider) {
 
             // the child views will be defined here (absolutely named)
             'content@customer': {
-                templateUrl: 'templates/customer.html'
+                templateUrl: 'templates/customer.html',
+                controller: 'CustomerCtrl'
             }
-        },
-        controller: 'CustomerCtrl'
+        }
     })
 
     .state('logout', {
