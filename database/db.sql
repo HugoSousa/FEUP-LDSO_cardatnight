@@ -81,11 +81,11 @@ create table product(
 CREATE FUNCTION repeated(product_name text, id_establishment integer) RETURNS bigint
     LANGUAGE sql
     AS $$SELECT COUNT(*) From Product, Establishment
-		WHERE Product.establishmentid = Establishment.establishmentid AND Product.establishmentid=id_establishment AND Product.name=product_name
+		WHERE Product.establishmentid = Establishment.establishmentid AND Product.establishmentid=id_establishment AND Product.name=product_name and Product.deleted=FALSE
 		;$$;
 		
-ALTER TABLE product ADD CONSTRAINT DEFERRABLE repeated_product CHECK (repeated(name, establishmentid) < 1);
-		
+	
+	
 create type product_state as enum ('ordered','notified', 'delivered');
 
 create table ordercode(
@@ -117,3 +117,7 @@ CREATE TRIGGER UPDATE_BALANCE
 AFTER INSERT ON ORDERS
 FOR EACH ROW
 EXECUTE PROCEDURE update_balance();
+
+CREATE TRIGGER repeated_product
+	BEFORE INSERT ON PRODUCT
+	FOR EACH ROW EXECUTE PROCEDURE repeated_product();

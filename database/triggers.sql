@@ -8,3 +8,20 @@ $BODY$
 	$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
+  
+ CREATE OR REPLACE FUNCTION repeated_product()
+  RETURNS trigger AS
+$BODY$ 
+	BEGIN
+		IF(repeated (NEW.name,NEW.establishmentid)>0)THEN
+		 RAISE EXCEPTION 'products cant be repeated';
+	END IF;
+	return new;
+	END;
+	$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+  
+		
+	
+	

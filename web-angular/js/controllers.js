@@ -207,12 +207,14 @@ app.controller('ProductAddConfirm', function ($state, $scope, $stateParams, Rest
         console.log('teste');
 
         var teste = Restangular.all('add-product').post(body).then(function (resp) {
-            console.log("ok-");
-            console.log(resp);
             $modalInstance.dismiss('cancel');
             alertService.add('success', 'Product added successfully');
             $state.go("products");
-        });
+        },function() {
+			$modalInstance.dismiss('cancel');
+            alertService.add('danger', 'Product already exists');
+            $state.go("products");
+		});
     }
 })
 
