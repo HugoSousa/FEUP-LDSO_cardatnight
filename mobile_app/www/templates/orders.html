@@ -7,23 +7,32 @@
                     <div class="col col-25" style="text-align: left">Time</div>
                     <div class="col col-25" style="text-align: center">Code</div>
                     <div class="col col-25" style="text-align: center">Price</div>
-                    <div class="col col-25" style="text-align: right">State</div>
+                    <div class="col col-25" style="text-align: center">State</div>
                 </div>
             </ion-item>
-            <ion-item ng-repeat="order in orders" type="item-text-wrap" href="#/order/{{order.ordersid}}">
-                <div class="row" style="margin-top:10px; margin-right:0; padding:0;">
-                    <div class="col col-25" style="text-align: left">{{order.orderstime | date:'HH:mm:ss'}}</div>
-                    <div class="col col-25" style="text-align: center">{{order.code}}</div>
-                    <div class="col col-25" style="text-align: center">{{order.price | currency:"€"}}</div>
+             <ion-item ng-repeat="order in orders" type="item-text-wrap" style="padding-bottom: 2px; padding-top: 2px" href="#/order/{{order.ordersid}}"> 
+                <div class="row" style="margin-top:0px; margin:0px; padding:0px;">
+                    <div class="col col-25" style="text-align: left; padding-top:20px">{{order.orderstime | date:'HH:mm:ss'}}</div>
+                    <div class="col col-25" style="text-align: center; padding-top:20px">{{order.code}}</div>
+                    <div class="col col-25" style="text-align: cente; padding-top:20px">{{order.price | currency:"€"}}</div>
 
-                    <div ng-if="order.orderstate == 'ordered'" class="col col-25" style="text-align: right; padding-right:15px">
-                        <i style="font-size: 150%" class="ion-ios7-reload assertive"></i>
+                    <div ng-if="order.orderstate == 'ordered'" class="col col-25" style="text-align: right; padding:0px">
+                        <div  style="width: 50%; margin: 0 auto; padding:0px">
+                            <div class="row" style=" margin: 0 auto; padding:0px"><i style="font-size: 150%;  margin: 0 auto;" class="ion-clock energized "></i></div>
+                            <div class="energized row" style="margin: 0 auto;"><span  style="margin: 0 auto;">Preparing </span></div>
+                        </div>
                     </div>
-                    <div ng-if="order.orderstate == 'notified'" class="col col-25" style="text-align: right; padding-right:15px">
-                        <i style="font-size: 150%" class="ion-ios7-upload-outline energized"></i>
+                    <div ng-if="order.orderstate == 'notified'" class="col col-25" style="text-align: right; padding:0px">
+                        <div  style="width: 50%; margin: 0 auto; padding:0px">
+                            <div class="row" style=" margin: 0 auto; padding:0px"><i style="font-size: 150%;  margin: 0 auto;" class="ion-beer balanced "></i></div>
+                            <div class="balanced row" style="margin: 0 auto;"><span  style="margin: 0 auto;">Ready </span></div>
+                        </div>
                     </div>
-                    <div ng-if="order.orderstate == 'delivered'" class="col col-25" style="text-align: right; padding-right:15px">
-                        <i style="font-size: 150%" class="ion-ios7-checkmark-outline balanced"></i>
+                    <div ng-if="order.orderstate == 'delivered'" class="col col-25" style="text-align: right; padding:0px">
+                        <div  style="width: 50%; margin: 0 auto; padding:0px">
+                            <div class="row" style=" margin: 0 auto; padding:0px"><i style="font-size: 150%;  margin: 0 auto;" class="ion-checkmark positive "></i></div>
+                            <div class="positive row" style="margin: 0 auto;"><span  style="margin: 0 auto;">Delivered </span></div>
+                        </div>
                     </div>
 
                 </div>

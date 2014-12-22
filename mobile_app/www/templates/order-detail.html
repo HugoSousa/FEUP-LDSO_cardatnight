@@ -3,7 +3,7 @@
         <div class="list card" style="height: 100%">
 
             <div class="item">
-                <h1 style="text-align: center; font-size: 300%">{{order.code}}</h1>
+                <h1 style="text-align: center; font-size: 300%; padding-bottom:5px">{{order.code}}</h1>
                 <h2 style="text-align: center">{{order.orderstime | date:"dd/MM @ HH:mm:ss"}}</h2>
             </div>
 
@@ -27,12 +27,28 @@
                 <hr>
 
                 <div style="text-align:center">
-                <div>
-                    State
-                </div>
-                <div style="font-weight: bold; font-size: 120%" ng-class="{red: order.orderstate == 'ordered', orange: order.orderstate == 'notified', green: order.orderstate == 'delivered'}">
-                    {{order.orderstate}}
-                </div>
+
+                    <div style="font-weight: bold; font-size: 120%" ng-class="{red: order.orderstate == 'ordered', orange: order.orderstate == 'notified', green: order.orderstate == 'delivered'}">
+                        <div ng-if="order.orderstate == 'ordered'" class="col col-25" style="text-align: right; padding:0px; margin: 0 auto">
+                            <div  style="width: 50%; margin: 0 auto; padding:0px">
+                                <div class="row" style=" margin: 0 auto; padding:0px"><i style="font-size: 150%;  margin: 0 auto;" class="ion-clock energized "></i></div>
+                                <div class="energized row" style="margin: 0 auto;"><span  style="margin: 0 auto;">Preparing </span></div>
+                            </div>
+                        </div>
+                        <div ng-if="order.orderstate == 'notified'" class="col col-25" style="text-align: right; padding:0px; margin: 0 auto">
+                            <div  style="width: 50%; margin: 0 auto; padding:0px">
+                                <div class="row" style=" margin: 0 auto; padding:0px"><i style="font-size: 150%;  margin: 0 auto;" class="ion-beer balanced "></i></div>
+                                <div class="balanced row" style="margin: 0 auto;"><span  style="margin: 0 auto;">Ready </span></div>
+                            </div>
+                        </div>
+                        <div ng-if="order.orderstate == 'delivered'" class="col col-25" style="text-align: right; padding:0px; margin: 0 auto">
+                            <div  style="width: 50%; margin: 0 auto; padding:0px">
+                                <div class="row" style=" margin: 0 auto; padding:0px"><i style="font-size: 150%;  margin: 0 auto;" class="ion-checkmark positive "></i></div>
+                                <div class="positive row" style="margin: 0 auto;"><span  style="margin: 0 auto;">Delivered </span></div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 

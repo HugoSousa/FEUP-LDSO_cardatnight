@@ -38,7 +38,6 @@ app.service('AlertPopupService', ['$ionicPopup', function ($ionicPopup) {
         this.createPopup = function (headerMessage, bodyMessage, okAction) {
             $ionicPopup.alert({
                 title: headerMessage,
-                buttons:[{},{type: 'button-stable'}],
                 content: '<p style="text-align:center">' + bodyMessage + '</p>'
             }).then(function (res) {
                 if (okAction)
