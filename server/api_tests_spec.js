@@ -6,22 +6,6 @@ var TEST = LOCALHOST_URL;
 var TESTING_ESTABLISHMENT_ID = 6;
 var db = require('./routes/modules/database.js');
 
-
-
-frisby.create('set up')
-.get(TEST)
-.after(function(err, res, body) {
-
-    db.addDoorman("testacc_porter","testacc_porter",TESTING_ESTABLISHMENT_ID, function (err, result) {
-        if (err) console.log(err);
-        else console.log('setup complete');
-    });
-
-
-})
-
-
-
 //------------------------------------------------------- FAIL REGISTER
 frisby.create('POST register account - fail test')
 .post(TEST + '/register',
@@ -113,16 +97,6 @@ frisby.create('POST login details')
         username: 'testacc',
     })
     .toss();
-
-
-
-
-
-
-
-
-
-
 
 
 
