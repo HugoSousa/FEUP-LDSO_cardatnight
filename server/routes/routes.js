@@ -359,7 +359,7 @@ module.exports = function (app, io, passport) {
     });
 
     app.get('/checklogin', function (req, res, next) {
-        res.status(200).json({result: "success", "username": req.user.username});
+        res.status(200).json({result: "success", "user": req.user});
 
     });
 
