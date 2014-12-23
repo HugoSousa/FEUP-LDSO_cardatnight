@@ -104,8 +104,23 @@ app.config(function ($stateProvider, $urlRouterProvider, RestangularProvider) {
         }
     })
 
+    .state('cart', {
+        url: '/cart/:cartid',
+        views: {
+            // the main template will be placed here (relatively named)
+            '': {
+                templateUrl: 'card@night.html'
+            },
+
+            // the child views will be defined here (absolutely named)
+            'content@cart': {
+                templateUrl: 'templates/cart.html',
+                controller: 'CartCtrl'
+            }
+        }
+    })
     .state('customer', {
-        url: '/customer/:cartid',
+        url: '/customer/:customerid',
         views: {
             // the main template will be placed here (relatively named)
             '': {
