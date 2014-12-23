@@ -581,65 +581,62 @@ app.controller('CartCtrl',function($state, $scope, $stateParams, Restangular,Aut
 
 
 
-app.controller('LoginCtrl', function ($scope, $state, Restangular, AuthService, AuthService) {
+app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService) {
 
-    $scope.submitted = false;
-
-    $scope.invalidInput = false;
-
-    $scope.loginSubmit = function () {
-
-        var userStructure = {
-            "username": $scope.user.username,
-            "password": $scope.user.password
-        };
-
-        Restangular.all('login').post(userStructure).then(function (resp) {
-
-
-
-            $scope.submitted = true;
-
-            if (resp.user.permission) {
-                if (resp.user.permission == "manager" || resp.user.permission == "employee") {
-
-                    AuthService.login(resp.user, resp.access_token);
-
-                    $state.go('incoming-orders');
-                } else {
-                    $scope.invalidInput = true;
-
-                    var error = "";
-                    if (resp.status == 0)
-                        error = "Please check your Internet connection.";
-                    else if (resp.status == 401)
-                        error = resp.data.error;
-                    else
-                        error = "Something went wrong.";
-                }
-            } else {
-                $scope.invalidInput = true;
-
-                var error = "";
-                if (resp.status == 0)
-                    error = "Please check your Internet connection.";
-                else if (resp.status == 401)
-                    error = resp.data.error;
-                else
-                    error = "Something went wrong.";
-
-            }
-
-        }, function (resp) {
-
-            $scope.invalidInput = true;
-            var error = "";
-            if (resp.status == 0)
-                error = "Please check your Internet connection.";
-            else if (resp.status == 401)
-                error = resp.data.error;
+	$scope.submitted= false;
+	
+	$scope.errorMessage= "";
+	
+	$scope.invalidInput= false;
+	
+	$scope.loginSubmit = function() {
+ 		
+		var bitArray = sjcl.hash.sha256.hash($scope.user.password);
+        var password = sjcl.codec.hex.fromBits(bitArray);
+		
+		var userStructure= {"username": $scope.user.username, "password": $scope.user.password};		
+		
+        Restangular.all('login').post(userStructure).then(function (resp){
+						
+			$scope.submitted= true;
+			
+						
+			if(resp.user.permission == 'manager' || resp.user.permission == 'employee')
+			{			
+				$scope.invalidInput= false;
+				
+				AuthService.login(resp.user, resp.access_token);
+            
+				$state.go('incoming-orders');
+			
+			}
+			else
+			{
+				
+				$scope.invalidInput= true;
+				
+				$scope.errorMessage= "Access Denied. You don't have permission to access this site.";
+		
+			}			
+			
+        }, function(resp){
+				
+			$scope.submitted= true;
+			
+			$scope.invalidInput= true;
+						
+            if(resp.status == 0)
+                $scope.errorMessage = "Please check your Internet connection.";
+            else if(resp.status == 401)
+                $scope.errorMessage = resp.data.error;
             else
-                error = "Something went wrong.";
+                $scope.errorMessage = "Something went wrong.";
+				
+				
         });
-    }
+		
+	
+	
+	}
+	
 });
