@@ -211,14 +211,14 @@ exports.addProduct = function (establishmentid,description,name,price,categoryid
             callback({ error: 'Failed to connect to database' }, null);
         }
         else {
-            client.query({ text: "insert into product(description,image,name,price,establishmentid,categoryid) values ($1,'',$2,$3,$4,$5)",
+            client.query({ text: "insert into product(productid, description,image,name,price,establishmentid,categoryid) values (DEFAULT, $1,'',$2,$3,$4,$5) RETURNING productid",
                           values: [description,name,price,establishmentid,categoryid] }, function (err, result) {
 
                 if (err) {                    
                     callback(err , null);
                 }
                 else {
-                    callback(null, result);
+                    callback(null, result.rows[0]);
                 }
 
             });
@@ -806,6 +806,29 @@ exports.getUserHistoryByPlace = function (customerid, establishmentid, callback)
         else {
             client.query({ text: "SELECT to_char(date_trunc('day',cart.entrancetime), 'DD/MM/YYYY') AS date, SUM(cart.balance) AS price, establishment.establishmentid, establishment.name AS establishmentname FROM cart, customer, establishment WHERE cart.establishmentid = establishment.establishmentid AND cart.customerid = customer.customerid AND customer.customerid = $1 AND establishment.establishmentid = $2 GROUP BY date_trunc('day',cart.entrancetime), establishment.establishmentid ORDER BY date_trunc('day',cart.entrancetime);",
                           values: [customerid, establishmentid] }, function (err, result) {
+
+                if (err) {                    
+                    callback(err, null);
+                }
+                else {
+                    callback(null, result);
+                }
+
+            });
+        }
+        done();
+    });
+}
+
+exports.permanentDeleteProduct = function (productId, callback){
+
+    pg.connect(database_url , function (err, client, done) {
+        if (err) {
+            callback({ error: 'Failed to connect to database' }, null);
+        }
+        else {
+            client.query({ text: "DELETE FROM product WHERE productid = $1",
+                          values: [productId] }, function (err, result) {
 
                 if (err) {                    
                     callback(err, null);

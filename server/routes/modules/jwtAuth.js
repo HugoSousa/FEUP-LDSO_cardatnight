@@ -103,7 +103,7 @@ module.exports = function(app) {
     app.all("/products",permission_customer);
 
     //manager/employee routes
-    app.all("/delete-product",permission_manager);
+    //app.all("/delete-product",permission_manager);
     //  app.all("/add-product",permission_employee_manager);
     //  app.all("/edit-product",permission_employee_manager);
 
