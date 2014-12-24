@@ -229,6 +229,7 @@ app.controller('ProductCtrl', function ($state, $scope, $stateParams, Restangula
     var product = Restangular.one('product', $stateParams.productId).get().then(function (data) {
         $scope.product = data[0];
         console.log($scope.product);
+        console.log("A");
         $scope.updateChart();
     })
 
