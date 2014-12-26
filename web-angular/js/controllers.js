@@ -47,6 +47,8 @@ app.controller('CustomerMarkPaidCtrl', function ($scope, $modalInstance, Restang
 
 });
 
+
+
 //used to control alerts
 function RootCtrl($rootScope, $location, alertService) {
     $rootScope.changeView = function (view) {
@@ -227,6 +229,7 @@ app.controller('ProductCtrl', function ($state, $scope, $stateParams, Restangula
     var product = Restangular.one('product', $stateParams.productId).get().then(function (data) {
         $scope.product = data[0];
         console.log($scope.product);
+        console.log("A");
         $scope.updateChart();
     })
 
@@ -369,25 +372,132 @@ app.controller('ProductEditConfirm', function ($state, $scope, $stateParams, Res
         });
     }
 });
+app.controller('CustomerCtrl',function($state,$scope,$stateParams,Restangular,$modal,$log,AuthService)
+               {
+    var customer = Restangular.one('customer').getList($stateParams.customerid).then(function (data) {
+		$scope.customer = data[0];
+        $scope.updateChart();
+	});
+    $scope.updateChart = function() {
+        var xdata = [];
+        var ydata = [];
+        Restangular.all('customer_managerHistory').customGET($scope.customer.customerid + "/" + AuthService.loggedUser().establishmentid, {}, {
+            'x-access-token': AuthService.token()
+        }).then(function (data) {
 
-app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log, AuthService) {
+            for (var i = 0; i < data.length; i++) {
+                        xdata.push(data[i].entrancetime);
+                        ydata.push(parseFloat(data[i].balance));
+                        }
+                    });
+        
+            $scope.chartConfig = {
+                options: {
+                    chart: {
+                        type: 'line',
+                        zoomType: 'x'
+                    },
+                    colors: ['#0080ff'],
+                    plotOptions: {
+                        series: {
+                            cursor: 'pointer',
+                            point: {
+                                events: {
+                                    click: function (e) {
+                                        // console.log("Click");
+                                    }
+                                }
+                            },
+                            marker: {
+                                lineWidth: 1,
+                                symbol: 'circle'
+                            }
+                        }
+                    }
+
+                },
+                series: [{
+                    data: ydata
+                }],
+                title: {
+                    text: 'Customer history'
+                },
+                xAxis: {
+                    labels: {
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    min: 0
+                },
+                loading: false
+            }
+        };
+});
+app.controller('CustomersCtrl', function($state, $scope, $stateParams,Restangular,$modal,$log, AuthService) {
 
 	//console.log(AuthService.loggedUser().establishmentid);
 	var customer = Restangular.one('customers').getList(AuthService.loggedUser().establishmentid).then(function (data) {
 		//console.log(JSON.stringify(data));
 		$scope.customers = data;
+        $scope.checkCartsSameName();
 		$scope.showAllCustomers();
 	});
+    $scope.checkCartsSameName=function()
+    {
+        var customers={};
+        for(var i = 0;i<$scope.customers.length;i++)
+        {
+            if(customers[$scope.customers[i].name]==undefined)
+            {
+                customers[$scope.customers[i].name]=$scope.customers[i];
+                customers[$scope.customers[i].name].cart=new Array();
+                var cart={};
+                cart.exittime=$scope.customers[i].exittime;
+                if(cart.exittime==null)
+                {
+                    customers[$scope.customers[i].name].paid=false;
+                }
+                cart.entrancetime=$scope.customers[i].entrancetime;
+                cart.balance=$scope.customers[i].balance;
+                cart.cartid=$scope.customers[i].cartid;
+                customers[$scope.customers[i].name].cart.push(cart);
+            }
+            else
+            {
+                 var cart={};
+                cart.exittime=$scope.customers[i].exittime;
+                if(cart.exittime==null)
+                {
+                    customers[$scope.customers[i].name].paid=false;
+                }
+                cart.entrancetime=$scope.customers[i].entrancetime;
+                cart.balance=$scope.customers[i].balance;
+                cart.cartid=$scope.customers[i].cartid;
+                customers[$scope.customers[i].name].cart.push(cart);
+            }
+            
+            
+        }
+        $scope.customers=customers;
+        
+    }
 	$scope.showAll = 'no';
 	$scope.showAllCustomers = function () {
-		for (var i = 0; i < $scope.customers.length; i++)
-			if ($scope.customers[i].paid) {
-				if ($scope.customers[i].shown == null)
-					$scope.customers[i].shown = false;
-				else $scope.customers[i].shown = !$scope.customers[i].shown;
+		for (var customer in $scope.customers)
+        {
+            if($scope.customers.hasOwnProperty(customer))
+               {
+               if ($scope.customers[customer].paid) {
+				if ($scope.customers[customer].shown == null)
+					$scope.customers[customer].shown = false;
+				else $scope.customers[customer].shown = !$scope.customers[customer].shown;
 			}
 			else
-				$scope.customers[i].shown = true;
+				$scope.customers[customer].shown = true;
+               }
+            console.log($scope.customers[customer]);
+        }
 	}
 	$scope.getTotal = function (customerId) {
 		var total = 0;
@@ -402,8 +512,22 @@ app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log
 		return total;
 	}
 
-	$scope.open = function (size, customer) {
+	$scope.openCartPaid = function (size, customer) {
 		$scope.customer = customer;
+        $scope.title="Confirm payment";
+        $scope.body="Confirm payment of "+customer.name+"?";
+        $scope.isPayCart=true;
+		var modalInstance = $modal.open({
+			templateUrl: 'myModalContent.html',
+			controller: 'CustomerMarkPaidCtrl',
+			size: size,
+			scope: $scope
+		});
+	};
+    $scope.openCartsAvailable = function (size, customer) {
+		$scope.customer = customer;
+        $scope.title="Check carts";
+        $scope.isPayCart=false;
 		console.log('Teste antes de open ' + $modal);
 		var modalInstance = $modal.open({
 			templateUrl: 'myModalContent.html',
@@ -411,60 +535,13 @@ app.controller('CustomersCtrl', function($state, $scope, Restangular,$modal,$log
 			size: size,
 			scope: $scope
 		});
-
-
-		console.log(AuthService.loggedUser().establishmentid);
-		var customer = Restangular.one('customers').getList(AuthService.loggedUser().establishmentid).then(function (data) {
-			console.log(JSON.stringify(data));
-			$scope.customers = data;
-			$scope.showAllCustomers();
-		});
-		$scope.showAll = 'no';
-		$scope.showAllCustomers = function () {
-			for (var i = 0; i < $scope.customers.length; i++)
-				if ($scope.customers[i].paid) {
-					if ($scope.customers[i].shown == null)
-						$scope.customers[i].shown = false;
-					else $scope.customers[i].shown = !$scope.customers[i].shown;
-				} else
-					$scope.customers[i].shown = true;
-		}
-		$scope.getTotal = function (customerId) {
-			var total = 0;
-
-			for (var i = 0; i < $scope.customers.length; i++) {
-				console.log($scope.customers[i]);
-				if ($scope.customers[i].customerid == customerId) {
-					console.log('teste');
-					total += ($scope.customers[i].balance);
-				}
-			}
-			return total;
-		}
-
-		$scope.open = function (size, customer) {
-			$scope.customer = customer;
-			console.log('Teste antes de open ' + $modal);
-			var modalInstance = $modal.open({
-				templateUrl: 'myModalContent.html',
-				controller: 'CustomerMarkPaidCtrl',
-				size: size,
-				scope: $scope
-			});
-
-			modalInstance.result.then(function (selectedItem) {
-				console.log('Teste 2');
-				$scope.selected = selectedItem;
-			}, function () {
-				$log.info('Modal dismissed at: ' + new Date());
-			});
-		};
-
 	};
 });
 
-app.controller('CustomerCtrl',function($state, $scope, $stateParams, Restangular,$modal,$log) {
-	var customer = Restangular.one('customer').getList($stateParams.cartid).then(function (data) {
+app.controller('CartCtrl',function($state, $scope, $stateParams, Restangular,AuthService,$modal,$modalStack,$log) {
+    $modalStack.dismissAll();
+    console.log($stateParams.cartid);
+	var customer = Restangular.one('cart').getList($stateParams.cartid).then(function (data) {
 		$scope.customer = {};
 		$scope.customer.info = data[0];
 		if (data[1] != 0) {
@@ -474,6 +551,7 @@ app.controller('CustomerCtrl',function($state, $scope, $stateParams, Restangular
 		}
 		else
 			$scope.customer.cart = [];
+        $scope.updateChart();
 	});
 
 	$scope.open = function (size, customer) {
@@ -491,7 +569,7 @@ app.controller('CustomerCtrl',function($state, $scope, $stateParams, Restangular
 
 			console.log(customer);
 			$scope.cartId = customer;
-			var modalInstance = $modal.open({
+			var modalInstance = $modalInstance.open({
 				templateUrl: 'myModalContent.html',
 				controller: 'CustomerDeleteConsumptionCtrl',
 				size: size,
@@ -499,7 +577,9 @@ app.controller('CustomerCtrl',function($state, $scope, $stateParams, Restangular
 			});
 		}
 	}
-});
+    });
+
+
 
 
 app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService) {
@@ -517,12 +597,11 @@ app.controller('LoginCtrl', function($scope, $state, Restangular, AuthService) {
 		
 		var userStructure= {"username": $scope.user.username, "password": $scope.user.password};		
 		
-		//var userStructure= {"username": $scope.user.username, "password": password};
-		
         Restangular.all('login').post(userStructure).then(function (resp){
 						
 			$scope.submitted= true;
 			
+						
 			if(resp.user.permission == 'manager' || resp.user.permission == 'employee')
 			{			
 				$scope.invalidInput= false;

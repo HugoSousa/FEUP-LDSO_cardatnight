@@ -1,0 +1,54 @@
+<div class="page-header">
+		<h2>{{customer.info.name}} - {{customer.info.entrancetime| date:'dd-MM-yyyy HH:mm:ss'}}</h2>
+		<button class="btn btn-danger pull-right" ng-show="!customer.info.paid" ng-click="open('lg',customer.info.cartid)">
+		Delete today's consumption
+		</button>
+</div>
+	<br>
+	<h3 ng-show="customer.cart.length==0" style="text-align:center">Cart empty</h2>
+
+	<div ng-show="customer.cart.length>0">
+	<nav>
+		<span class="navbar-text" style="font-size:20px">Total consumption: {{customer.info.balance | currency: '€'}}</span>
+		<form class="navbar-form navbar-right" role="search">
+  <div class="form-group">
+    <input type="text" class="form-control" placeholder="Search" ng-model="searchText">
+  </div>
+</form>
+</nav>
+<br>
+	<table class="table" style="width:90%; margin:auto" >
+		<tr>
+			<th>
+				<div class="row">
+					<div class="col-md-4">Product</div>
+					<div class="col-md-4">Quantity</div>
+					<div class="col-md-4">Price</div>
+				</div>
+			</th>
+		</tr>
+		<tr ng-repeat="carts in customer.cart|filter:searchText">
+			<td valign="bottom" >
+				<div class="row">
+					
+					<div class="col-md-4"><a href="#/product/{{carts.productid}}">{{carts.name}}</a></div>
+					<div class="col-md-4">{{carts.quantity}}</div>
+					<div class="col-md-4">{{carts.price | currency: "€"}}</div>
+					
+				</div>
+			</td>
+		</tr>
+	</table>
+	</div>
+<script type="text/ng-template" id="myModalContent.html">
+								<div class="modal-header">
+									<h3 class="modal-title">Delete consumption?</h3>
+								</div>
+								<div class="modal-body">
+								Delete {{customer.info.name}}'s consumption?
+								</div>
+								<div class="modal-footer">
+									<button class="btn btn-success" ng-click="ok()">Yes</button>
+									<button class="btn btn-danger" ng-click="cancel()">No</button>
+								</div>
+</script>

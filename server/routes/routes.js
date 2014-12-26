@@ -392,12 +392,29 @@ module.exports = function (app, io, passport) {
         });
 
     });
-
-    app.get('/customer/:cartid', function(req, res) {
-        db.getCustomerData(req.params.cartid, function(err, result) {
+    
+    app.get('/cart/:cartid', function(req, res) {
+        db.getCartData(req.params.cartid, function(err, result) {
             if (err) res.status(409).json(err);
             else res.status(200).json(result);
         });
+    });
+    
+    app.get('/customer/:customerid', function(req, res) {
+        db.getCustomerData(req.params.customerid, function(err, result) {
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+    });
+    
+    app.get('/customer_managerHistory/:customerid/:establishmentId', function(req, res){
+        var customerid = req.params.customerid; 
+
+        db.getCustomerHistory(customerid,req.params.establishmentId, function(err, result){
+            if (err) res.status(409).json(err);
+            else res.status(200).json(result);
+        });
+
     });
 
 

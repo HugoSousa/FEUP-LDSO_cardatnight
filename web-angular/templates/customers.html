@@ -1,68 +1,134 @@
 <div class="page-header">
-		<h1>Customers</h1>
+  <h1>
+    Customers
+  </h1>
 </div>
-	<br>
-	
-	<script type="text/ng-template" id="myModalContent.html">
-								<div class="modal-header">
-									<h3 class="modal-title">Confirm payment</h3>
-								</div>
-								<div class="modal-body">
-								Confirm payment of {{customer.name}}?
-								</div>
-								<div class="modal-footer">
-									<button class="btn btn-success" ng-click="ok()">Yes</button>
-									<button class="btn btn-danger" ng-click="cancel()">No</button>
-								</div>
-	</script>
-	<div class="col-md-12">
-		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()">{{ alert.msg }}</alert>
-	</div>
+<br>
 
-	<form role="form" class="form-inline" style="margin-bottom: 30px; width:90%; margin-right:auto; margin-left: auto">
-		<div class="form-group">
-			<label class="checkbox-inline">
-				<input type="checkbox" ng-true-value="showAll" ng-false-value="no" ng-model="showAll"ng-click="showAllCustomers()"> <span> Show all customers </span>
-			</label>
-		</div>
+<script type="text/ng-template"  id="myModalContent.html">
+    <div class="modal-header">
+        <h3 class="modal-title">
+            {{title}}
+        </h3>
+    </div>
+    <div class="modal-body" ng-show="isPayCart">
+      {{body}}
+    </div>
+    <div class="modal-body" ng-show="!isPayCart">
+        <table class="table" style="width:90%; margin:auto">
+            <tr>
+                <th>Entrance time</th>
+                <th>Exit time</th>
+                <th>Balance</th>
+                <th>Check cart</th>
+            </tr>
+            <tr ng-repeat="cart in customer.cart | orderBy : 'exittime' : false" >
+                <td>
+                    {{cart.entrancetime | date:'dd-MM-yyyy HH:mm:ss'}}
+                </td>
+                <td ng-show="cart.exittime==undefined">
+                    Still in establishment
+                </td>
+                <td ng-show="cart.exittime!=undefined">
+                    {{cart.exittime | date:'dd-MM-yyyy HH:mm:ss'}}
+                </td>
+                <td>
+                    {{cart.balance|currency : '€'}}
+                </td>
+                <td>
+                    <a href="#/cart/{{cart.cartid}}" class="btn btn-default">
+                        Check cart
+                    </a>
+                </td>
+            </tr>
+        </table>    
+    </div>
+              <div class="modal-footer" ng-show="hasTwoButtons">
+                <button class="btn btn-success" ng-click="ok()">Yes</button>
+                  <button class="btn btn-danger" ng-click="cancel()">No</button>
+</div>
+                    <div class="modal-footer" ng-show="!hasTwoButtons">
+                      <button class="btn btn-default" ng-click="cancel()">Back</button>
+</div>
+</script>
+<div class="col-md-12">
+  <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()">
+    {{ alert.msg }}
+  </alert>
+</div>
 
-		<div class="form-group has-feedback pull-right">
-			<label class="control-label sr-only">Search</label>
-			<input type="text" class="form-control" placeholder="Search Name" ng-model="filterName"/>
-			<i class="form-control-feedback glyphicon glyphicon-search"></i>
-		</div>
-	</form>
+<form role="form" class="form-inline" style="margin-bottom: 30px; width:90%; margin-right:auto; margin-left: auto">
+  <div class="form-group">
+    <label class="checkbox-inline">
+      <input type="checkbox" ng-true-value="showAll" ng-false-value="no" ng-model="showAll"ng-click="showAllCustomers()">
+      
+      <span>
+        Show all customers 
+      </span>
+    </label>
+  </div>
+  
+  <div class="form-group has-feedback pull-right">
+    <label class="control-label sr-only">
+      Search
+    </label>
+    <input type="text" class="form-control" placeholder="Search Name" ng-model="filterName"/>
+    <i class="form-control-feedback glyphicon glyphicon-search">
+    </i>
+  </div>
+</form>
 
-	<table class="table" style="width:90%; margin:auto">
-		<tr>
-			<th>
-				<div class="row">
-					<div class="col-md-3">Name</div>
-					<div class="col-md-3">Amount Spent</div>
-					<div class="col-md-3">Entry Time</div>
-					<div class="col-md-1">Mark as paid</div>
-				</div>
-			</th>
-		</tr>
-		<tr ng-repeat="customer in customers | orderBy : 'entrancetime' : true|filter:{name: filterName}" ng-show="customer.shown" >
-			<td valign="bottom">
-				<div class="row">
-					
-					<div class="col-md-3"><a href="#/customer/{{customer.cartid}}">{{customer.name}}</a></div>
-					<div class="col-md-3">{{customer.balance|currency:'€'}}</div>
-					<div class="col-md-3">{{customer.entrancetime| date: 'dd-MM-yyyy @ HH:mm:ss'}}</div>
-					<div class="col-md-3">
-						
-							<button class="btn btn-default" ng-click="open('lg',customer);" ng-show="!customer.paid">					
-								<span class="glyphicon glyphicon-ok"></span> 
-									Pay
-							</button>
-					</button>
-					<span ng-show="customer.paid">
-					Already paid
-					</span>
-					</div>
-				</div>
-			</td>
-		</tr>
-	</table>
+<table class="table" style="width:90%; margin:auto">
+  <tr>
+    <th>
+      Name
+    </th>
+    <th>
+      In establishment
+    </th>
+    <th>
+      Number of times in establishment
+    </th>
+    <th>
+      Check cart
+    </th>
+    <th>
+      Pay cart
+    </th>
+  </tr>
+  <tr ng-repeat="customer in customers | orderBy : 'entrancetime' : true|filter:{name: filterName}" ng-show="customer.shown" >
+    <td>
+        <a href="#/customer/{{customer.customerid}}">
+                  {{customer.name}}
+            </a>
+    </td>
+    <td ng-show="!customer.paid">
+      Yes
+    </td>
+    <td ng-show="customer.paid">
+      No
+    </td>
+    <td>
+      {{customer.cart.length}}
+    </td>
+    <td ng-show="customer.cart.length>
+1">
+  <button class="btn btn-default" ng-click="openCartsAvailable('lg',customer)">
+    See carts available
+  </button>
+          </td>
+          <td ng-show="customer.cart.length==1">
+            <a href="#/cart/{{customer.cartid}}" class="btn btn-default">
+              Check cart
+            </a>
+          </td>
+          <td>
+            <button class="btn btn-default" ng-click="openCartPaid('lg',customer)" ng-show="!customer.paid">
+              Mark as paid
+            </button>
+            <span ng-show="customer.paid">
+              Already paid
+            </span>
+          </td>
+      </tr>
+</table>
