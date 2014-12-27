@@ -245,8 +245,13 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 .controller('LoginCtrl', function ($scope, $state, $stateParams, Restangular, AuthService, $ionicLoading, $ionicPopup, $ionicViewService, SocketService) {
     //console.log(AuthService.loggedUser())
     console.log("LOGIN CONTROLLER");
+
     $ionicViewService.clearHistory();
 
+    $scope.regname = "";
+    if ($stateParams.username) $scope.regname = $stateParams.username;
+    
+    
     $scope.loginSubmit = function () {
         console.log("Login");
         var bitArray = sjcl.hash.sha256.hash($scope.user.password);
