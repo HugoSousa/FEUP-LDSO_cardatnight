@@ -94,17 +94,13 @@ app.factory('SocketService', ['$window', '$state', function($window, $state){
 
                 socket.emit('storeClientInfo', { username: user });
 
-                socket.on('text', function(text) {
-                    console.log(text);
-                });
-
                 socket.on('notify', function(text) {
                     //console.log("NOTIFICAÇÃO");
 
                     window.plugin.notification.local.add({
                         id: "1",
                         title: "card@night",
-                        message: "Your order just got ready. Please check your secret code and go get it.",
+                        message: "Your order just got ready. The secret code is '" + text + "'",
                         autoCancel: true,
                         json: JSON.stringify({ orderid: text })
                     });

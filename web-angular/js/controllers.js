@@ -91,6 +91,7 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular, alert
 		//console.log("NEW ORDER");
 		//console.log(data);
 		var parsed_data = JSON.parse(data);
+        parsed_data.orderstime = parsed_data.orderstime.replace(/(Z|T|.000)/g,' ');
 		$scope.orders.push({orderstime: parsed_data.date, code: parsed_data.code, name: parsed_data.product, quantity: parsed_data.quantity, orderstate: "ordered"});
 		$scope.$apply();
 	});
@@ -102,6 +103,12 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular, alert
 
     Restangular.one('incomingorders').getList(AuthService.loggedUser().establishmentid).then(function (data) {
         $scope.orders = data;
+        console.log($scope.orders);
+        
+        for(var i=0; i < $scope.orders.length; i++){
+            $scope.orders[i].orderstime = $scope.orders[i].orderstime.replace(/(Z|T|.000)/g,' ');
+        }
+        
     }),
     function (data) {
         console.log("Error");
