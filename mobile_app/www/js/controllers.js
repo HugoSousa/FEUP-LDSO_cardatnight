@@ -669,8 +669,10 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
             console.log($scope.places);
 
-            $scope.average = (totalPrice / $scope.dates.length).toFixed(2);
-
+            var avg = (totalPrice / $scope.dates.length).toFixed(2);
+            if (isNaN(avg)) $scope.average = 0;
+            else $scope.average = avg;
+            console.log( $scope.average);
             $scope.chartConfig = {
                 options: {
                     chart: {
@@ -700,7 +702,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
                     data: $scope.prices
                 }],
                 title: {
-                    text: 'Test'
+                    text: ''
                 },
                 xAxis: {
                     type: "category",
