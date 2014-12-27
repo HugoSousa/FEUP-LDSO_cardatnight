@@ -664,7 +664,7 @@ exports.getUserOrder = function (orderId, callback){
             callback({ error: 'Failed to connect do database' }, null);
         }
         else {
-            client.query({ text: "SELECT person.personid, person.username FROM orders, cart, customer, person WHERE cart.cartid = orders.cartid AND customer.customerid = cart.customerid AND person.personid = customer.customerid AND orders.ordersid = $1", name: 'userorder', values: [orderId] }, function (err, result) {
+            client.query({ text: "SELECT ordercode.code, person.personid, person.username FROM orders, cart, customer, person, ordercode WHERE orders.ordercodeid = ordercode.ordercodeid AND cart.cartid = orders.cartid AND customer.customerid = cart.customerid AND person.personid = customer.customerid AND orders.ordersid = $1", name: 'userorder', values: [orderId] }, function (err, result) {
                 if (err) {
                     //any specific error?
                     callback({ error: "Error occurred" }, null);

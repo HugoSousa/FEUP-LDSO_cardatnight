@@ -507,6 +507,7 @@ module.exports = function (app, io, passport) {
 
                 //lookup for the socket of that username
                 console.log("USER ID OF THIS ORDER: " + result.username);
+                console.log(result.code);
                 for(var a=0; a < clients.length; a++){
                     console.log("USERNAME: " + clients[a].username + "\n");
                     if(clients[a].username == result.username){
@@ -514,13 +515,14 @@ module.exports = function (app, io, passport) {
                         var toSocket = clients[a].clientId;
 
                         //send the notified orderid
-                        io.to(toSocket).emit('notify', orderid);
+
+                        io.to(toSocket).emit('notify', result.code);
                     }
                 }
 
-                db.notifyOrder(orderid, function(err, result){
-                    if (err) res.status(409).json(err);
-                    else res.status(200).json(result);
+                db.notifyOrder(orderid, function(err1, result1){
+                    if (err1) res.status(409).json(err1);
+                    else res.status(200).json(result1);
                 });
             }
         });
@@ -695,8 +697,6 @@ module.exports = function (app, io, passport) {
             printEmps();
         });
 
-
-        socket.emit('text', 'wow. such event. very real time.');
     });
 
 
