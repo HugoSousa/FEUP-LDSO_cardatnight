@@ -24,17 +24,18 @@ app.controller('CustomerDeleteConsumptionCtrl', function ($scope, $state, $modal
 
 });
 
-app.controller('CustomerMarkPaidCtrl', function ($scope, $modalInstance, Restangular, alertService) {
+app.controller('CustomerMarkPaidCtrl', function ($scope, $state,$modalInstance, Restangular, alertService) {
 
 
     $scope.ok = function (parameter) {
+        alert(JSON.stringify($scope.customer));
         Restangular.all('mark-cart-paid').post({
-            "cartId": $scope.customer.cartid
+            "cartId": $scope.customer.info.cartid
         }).then(function (resp) {
-
-            $scope.customer.paid = true;
-            $scope.customer.shown = ($scope.showAll == 'showAll');
             alertService.add('success', 'Customer cart paid successfully');
+            $scope.customer.info.paid=true;
+            $scope.customer.shown=false;
+            $state.go("customers");
         }, function (resp) {
             alert("Error notifying user");
         });
@@ -388,6 +389,7 @@ app.controller('CustomerCtrl',function($state,$scope,$stateParams,Restangular,$m
     $scope.updateChart = function() {
         var xdata = [];
         var ydata = [];
+        
         Restangular.all('customer_managerHistory').customGET($scope.customer.customerid + "/" + AuthService.loggedUser().establishmentid, {}, {
             'x-access-token': AuthService.token()
         }).then(function (data) {
@@ -396,6 +398,12 @@ app.controller('CustomerCtrl',function($state,$scope,$stateParams,Restangular,$m
                         xdata.push(data[i].entrancetime);
                         ydata.push(parseFloat(data[i].balance));
                         }
+            for(var i = 0;i<xdata.length;i++)
+        {
+            var d = new Date(xdata[i]);
+            xdata[i]=d;
+            xdata[i] = xdata[i].getDate()+"-"+(xdata[i].getMonth()+1)+"-"+xdata[i].getFullYear() + " @ " + xdata[i].getHours() +":"+ xdata[i].getMinutes();
+        }
                     });
         
             $scope.chartConfig = {
@@ -424,17 +432,25 @@ app.controller('CustomerCtrl',function($state,$scope,$stateParams,Restangular,$m
 
                 },
                 series: [{
+                    name: 'Customer consumption',
                     data: ydata
                 }],
                 title: {
                     text: 'Customer history'
                 },
                 xAxis: {
+                    title: {
+                        text: 'Entrance time'
+                    },
+                    categories: xdata,
                     labels: {
                         enabled: false
                     }
                 },
                 yAxis: {
+                    title: {
+                        text: 'Amount spent (€)'
+                    },
                     min: 0
                 },
                 loading: false
@@ -461,10 +477,6 @@ app.controller('CustomersCtrl', function($state, $scope, $stateParams,Restangula
                 customers[$scope.customers[i].name].cart=new Array();
                 var cart={};
                 cart.exittime=$scope.customers[i].exittime;
-                if(cart.exittime==null)
-                {
-                    customers[$scope.customers[i].name].paid=false;
-                }
                 cart.entrancetime=$scope.customers[i].entrancetime;
                 cart.balance=$scope.customers[i].balance;
                 cart.cartid=$scope.customers[i].cartid;
@@ -474,10 +486,6 @@ app.controller('CustomersCtrl', function($state, $scope, $stateParams,Restangula
             {
                  var cart={};
                 cart.exittime=$scope.customers[i].exittime;
-                if(cart.exittime==null)
-                {
-                    customers[$scope.customers[i].name].paid=false;
-                }
                 cart.entrancetime=$scope.customers[i].entrancetime;
                 cart.balance=$scope.customers[i].balance;
                 cart.cartid=$scope.customers[i].cartid;
@@ -503,7 +511,6 @@ app.controller('CustomersCtrl', function($state, $scope, $stateParams,Restangula
 			else
 				$scope.customers[customer].shown = true;
                }
-            console.log($scope.customers[customer]);
         }
 	}
 	$scope.getTotal = function (customerId) {
@@ -519,18 +526,7 @@ app.controller('CustomersCtrl', function($state, $scope, $stateParams,Restangula
 		return total;
 	}
 
-	$scope.openCartPaid = function (size, customer) {
-		$scope.customer = customer;
-        $scope.title="Confirm payment";
-        $scope.body="Confirm payment of "+customer.name+"?";
-        $scope.isPayCart=true;
-		var modalInstance = $modal.open({
-			templateUrl: 'myModalContent.html',
-			controller: 'CustomerMarkPaidCtrl',
-			size: size,
-			scope: $scope
-		});
-	};
+	
     $scope.openCartsAvailable = function (size, customer) {
 		$scope.customer = customer;
         $scope.title="Check carts";
@@ -558,32 +554,32 @@ app.controller('CartCtrl',function($state, $scope, $stateParams, Restangular,Aut
 		}
 		else
 			$scope.customer.cart = [];
-        $scope.updateChart();
 	});
 
 	$scope.open = function (size, customer) {
 
 		console.log(customer);
 		$scope.cartId = customer;
+        $scope.title="Delete consumption";
+        $scope.body="Delete "+customer.name+"'s consumption?";
 		var modalInstance = $modal.open({
 			templateUrl: 'myModalContent.html',
 			controller: 'CustomerDeleteConsumptionCtrl',
 			size: size,
 			scope: $scope
 		});
-
-		$scope.open = function (size, customer) {
-
-			console.log(customer);
-			$scope.cartId = customer;
-			var modalInstance = $modalInstance.open({
-				templateUrl: 'myModalContent.html',
-				controller: 'CustomerDeleteConsumptionCtrl',
-				size: size,
-				scope: $scope
-			});
-		}
-	}
+    }
+    $scope.openCartPaid = function (size) {
+        $scope.title="Confirm payment";
+        var customer=$scope.customer.info;
+        $scope.body="Confirm payment of "+customer.name+"?";
+		var modalInstance = $modal.open({
+			templateUrl: 'myModalContent.html',
+			controller: 'CustomerMarkPaidCtrl',
+			size: size,
+			scope: $scope
+		});
+	};
     });
 
 

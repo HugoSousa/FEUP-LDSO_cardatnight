@@ -92,9 +92,6 @@
     <th>
       Check cart
     </th>
-    <th>
-      Pay cart
-    </th>
   </tr>
   <tr ng-repeat="customer in customers | orderBy : 'entrancetime' : true|filter:{name: filterName}" ng-show="customer.shown" >
     <td>
@@ -121,14 +118,6 @@
             <a href="#/cart/{{customer.cartid}}" class="btn btn-default">
               Check cart
             </a>
-          </td>
-          <td>
-            <button class="btn btn-default" ng-click="openCartPaid('lg',customer)" ng-show="!customer.paid">
-              Mark as paid
-            </button>
-            <span ng-show="customer.paid">
-              Already paid
-            </span>
           </td>
       </tr>
 </table>
