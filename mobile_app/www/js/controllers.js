@@ -129,8 +129,7 @@ app.controller('NavCtrl', function ($scope, $state, $ionicPopup, AuthService) {
     if (!loggedUser) $scope.logout();
 
 
-    $scope.loggedUser = AuthService.loggedUser().username;
-
+    $scope.loggedUser = AuthService.loggedUser();
     $scope.logout = function () {
 
         AuthService.logout();

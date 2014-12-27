@@ -294,7 +294,7 @@ module.exports = function (app, io, passport) {
     }
 
 
-
+    //requested by doorman to enter/exit customer
     app.post('/gate/:token', function (req, res) {
 
 
