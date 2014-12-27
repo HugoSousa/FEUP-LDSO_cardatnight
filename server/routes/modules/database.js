@@ -708,13 +708,13 @@ exports.deliverOrder = function (orderId, callback){
             callback({ error: 'Failed to connect do database' }, null);
         }
         else {
-            client.query({ text: "UPDATE orders SET orderstate = 'delivered' WHERE ordersid = $1", name: 'notifyorder', values: [orderId] }, function (err, result) {
+            client.query({ text: "UPDATE orders SET orderstate = 'delivered' WHERE ordersid = $1", name: 'deliverorder', values: [orderId] }, function (err, result) {
                 if (err) {
                     //any specific error?
                     callback({ error: "Error occurred" }, null);
                 }
                 else {
-                    callback(null, {success: "Order " + orderId + " has successully been delivered"});
+                    callback(null, {success: "Order " + orderId + " has successully been delivered", result: result});
                 }
             });
         }
