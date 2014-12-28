@@ -314,6 +314,7 @@ app.controller('ProductCtrl', function ($state, $scope, $stateParams, Restangula
 
                 },
                 series: [{
+                    name: 'Units sold',
                     data: ydata
                 }],
                 title: {
