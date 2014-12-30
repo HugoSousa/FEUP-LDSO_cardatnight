@@ -68,8 +68,8 @@ app.factory('SocketService', ['$window', function($window){
             return socket;
         },
         connectSocket: function(establishment) {
-            //socket = io.connect('http://nightout-app.herokuapp.com:80', {'force new connection': true});
-            socket = io.connect('http://localhost:1337', {'force new connection': true});
+            socket = io.connect('http://nightout-app.herokuapp.com:80', {'force new connection': true});
+            //socket = io.connect('http://localhost:1337', {'force new connection': true});
 
             socket.on('connect', function() {
                 console.log("connected");

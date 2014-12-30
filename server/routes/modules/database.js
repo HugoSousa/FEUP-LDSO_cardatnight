@@ -396,13 +396,13 @@ exports.addOrder = function (orderstate, cartid, productid, quantity, code, call
         }
         else {
             console.log("BEFORE QUERY -> CODE: " + code);
-            client.query({ text: "INSERT INTO orders(orderstate, cartid, productid, quantity, ordercodeid) VALUES($1, $2, $3, $4, $5)", name: 'insert orders', values: [orderstate, cartid, productid, quantity, code] }, function (err, result) {
+            client.query({ text: "INSERT INTO orders(orderstate, cartid, productid, quantity, ordercodeid) VALUES($1, $2, $3, $4, $5) RETURNING ordersid", name: 'insert orders', values: [orderstate, cartid, productid, quantity, code] }, function (err, result) {
 
                 if (err) {                    
                     callback(err , null);
                 }
                 else {
-                    callback(null, result);
+                    callback(null, result.rows[0]);
                 }
 
             });

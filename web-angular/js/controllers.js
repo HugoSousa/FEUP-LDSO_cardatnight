@@ -92,8 +92,8 @@ app.controller('IncomingOrdersCtrl', function($scope, $state, Restangular, alert
 		//console.log("NEW ORDER");
 		//console.log(data);
 		var parsed_data = JSON.parse(data);
-        parsed_data.orderstime = parsed_data.orderstime.replace(/(Z|T|.000)/g,' ');
-		$scope.orders.push({orderstime: parsed_data.date, code: parsed_data.code, name: parsed_data.product, quantity: parsed_data.quantity, orderstate: "ordered"});
+        parsed_data.date = parsed_data.date.replace(/(Z|T|.000)/g,' ');
+		$scope.orders.push({orderstime: parsed_data.date, code: parsed_data.code, name: parsed_data.product, quantity: parsed_data.quantity, orderstate: "ordered", ordersid: parsed_data.ordersid});
 		$scope.$apply();
 	});
 

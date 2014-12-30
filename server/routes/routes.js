@@ -175,19 +175,22 @@ module.exports = function (app, io, passport) {
                                             if (err) res.status(409).json(err3);
                                             else{
                                                 //enviar para todos deste estabelecimento
-                                                for(var i=0; i < managers_employees.length; i++){
-                                                    if(managers_employees[i].establishmentid == result1.rows[0].establishmentid){
-                                                        console.log("emiting to employee/manager");
-                                                        var toSocket = managers_employees[i].clientId;
-                                                        var product = {date: new Date().toJSON(), code: result2.rows[randomNumber].code, product: result3[0].name, quantity: quantity};
-                                                        //enviar objeto com os dados da order
-                                                        io.to(toSocket).emit('new_order', JSON.stringify(product));
-                                                    }
-                                                }
-
                                                 db.addOrder('ordered', cartid, productid, quantity, code.toString(), function (err4, result4) {
                                                     if (err4) res.status(409).json(err4);
-                                                    else res.status(200).json(result4);
+                                                    else{
+                                                        res.status(200).json(result4);
+                                                        console.log("NOVA ORDER: " + result4.ordersid);
+
+                                                        for(var i=0; i < managers_employees.length; i++){
+                                                            if(managers_employees[i].establishmentid == result1.rows[0].establishmentid){
+                                                                console.log("emiting to employee/manager");
+                                                                var toSocket = managers_employees[i].clientId;
+                                                                var product = {date: new Date().toJSON(), code: result2.rows[randomNumber].code, product: result3[0].name, quantity: quantity, ordersid: result4.ordersid};
+                                                                //enviar objeto com os dados da order
+                                                                io.to(toSocket).emit('new_order', JSON.stringify(product));
+                                                            }
+                                                        }
+                                                    }
                                                 });
                                             }
                                         });
