@@ -133,7 +133,7 @@ insert into ordercode(ordercodeid, code) values(14, 'open mind');
 insert into ordercode(ordercodeid, code) values(15, 'perfect code');
 insert into ordercode(ordercodeid, code) values(16, 'puzzling pajama');
 insert into ordercode(ordercodeid, code) values(17, 'chubby potion');
-insert into ordercode(ordercodeid, code) values(18, 'learned swallow');
+insert into ordercode(ordercodeid, code) values(18, 'learned surf');
 insert into ordercode(ordercodeid, code) values(19, 'hearty dumbo');
 insert into ordercode(ordercodeid, code) values(20, 'other joker');
 insert into ordercode(ordercodeid, code) values(21, 'greedy orange');
